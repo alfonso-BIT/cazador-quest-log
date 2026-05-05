@@ -16,6 +16,18 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   --s:#ff6b35;--a:#c084fc;--b:#60a5fa;--c:#4ade80;--d:#94a3b8;
   --danger:#ff4466;--green:#4ade80;
   --base-font:15px;
+  /* Font scale: 1.0 = base (15px). Adjusted by +/- control */
+  --fs-scale:1;
+  /* Convenience scaled sizes used throughout tabs */
+  --fs-xxs:calc(7px * var(--fs-scale));
+  --fs-xs: calc(9px * var(--fs-scale));
+  --fs-sm: calc(11px * var(--fs-scale));
+  --fs-md: calc(13px * var(--fs-scale));
+  --fs-lg: calc(15px * var(--fs-scale));
+  --fs-xl: calc(18px * var(--fs-scale));
+  --fs-2xl:calc(20px * var(--fs-scale));
+  --fs-3xl:calc(22px * var(--fs-scale));
+  --fs-4xl:calc(28px * var(--fs-scale));
 }
 .scanlines{position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,20,50,0.025) 2px,rgba(0,20,50,0.025) 4px);pointer-events:none;z-index:1000;}
 .gridbg{position:fixed;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,100,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
@@ -158,7 +170,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .claimbtn:hover:not(:disabled){background:rgba(0,170,255,0.09);box-shadow:0 0 15px rgba(0,170,255,0.2);}
 .claimbtn:disabled{opacity:.3;cursor:default;}
 /* SHOP & INVENTORY GRID */
-.invgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;}
+.invgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(max(140px, 10em),1fr));gap:8px;}
 .icard{background:rgba(0,15,35,0.92);border:1px solid rgba(0,100,200,0.18);padding:13px;cursor:pointer;transition:all .18s;position:relative;}
 .icard:hover:not(.locked){border-color:rgba(240,192,64,0.4);}
 .icard.locked{opacity:.45;cursor:default;}
@@ -296,6 +308,159 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:#020810;}
 ::-webkit-scrollbar-thumb{background:rgba(0,170,255,0.3);border-radius:2px;}
+/* ═══════════════ MÓDULO DINERO ═══════════════ */
+.fin-summary{display:grid;grid-template-columns:repeat(3,minmax(72px,1fr));gap:8px;margin-bottom:14px;}
+.fin-box{background:rgba(0,15,35,0.97);border:1px solid rgba(0,100,200,0.22);padding:12px 10px;text-align:center;position:relative;overflow:hidden;}
+.fin-box::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;}
+.fin-box.income::before{background:var(--green);}
+.fin-box.expense::before{background:var(--danger);}
+.fin-box.balance::before{background:var(--gold);}
+.fin-box-val{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--bright);word-break:break-all;overflow-wrap:break-word;line-height:1.2;}
+.fin-box-lbl{font-size:8px;color:var(--muted);letter-spacing:2px;margin-top:3px;text-transform:uppercase;}
+.fin-period-bar{display:flex;gap:0;margin-bottom:12px;border:1px solid rgba(0,100,200,0.22);}
+.fin-ptbtn{flex:1;padding:7px 4px;font-family:'Orbitron',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .2s;text-align:center;}
+.fin-ptbtn.active{color:var(--gold);background:rgba(240,192,64,0.08);}
+.fin-ptbtn:hover:not(.active){color:#8bb8d0;}
+/* Chart canvas wrapper */
+.fin-chart-wrap{background:rgba(0,10,25,0.85);border:1px solid rgba(0,100,200,0.2);padding:14px;margin-bottom:12px;position:relative;}
+.fin-chart-title{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;color:var(--blue);margin-bottom:10px;}
+.fin-chart-canvas{width:100%;height:160px;display:block;}
+/* Transaction list */
+.fin-txlist{background:var(--panel);border:1px solid rgba(0,100,200,0.18);margin-bottom:12px;}
+.fin-tx{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(0,100,200,0.08);transition:background .15s;}
+.fin-tx:last-child{border-bottom:none;}
+.fin-tx:hover{background:rgba(0,25,55,0.5);}
+.fin-tx-ico{font-size:18px;width:26px;text-align:center;flex-shrink:0;}
+.fin-tx-info{flex:1;min-width:0;}
+.fin-tx-name{font-size:13px;font-weight:600;color:var(--bright);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fin-tx-meta{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px;}
+.fin-tx-amt{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;white-space:nowrap;}
+.fin-tx-amt.pos{color:var(--green);}
+.fin-tx-amt.neg{color:var(--danger);}
+.fin-tx-del{background:none;border:1px solid rgba(255,70,102,0.2);color:rgba(255,70,102,0.5);font-size:10px;cursor:pointer;padding:2px 6px;transition:all .15s;flex-shrink:0;}
+.fin-tx-del:hover{color:var(--danger);border-color:rgba(255,70,102,0.5);}
+/* Add transaction form */
+.fin-form{background:var(--panel);border:1px solid rgba(0,100,200,0.18);padding:14px;margin-bottom:12px;}
+.fin-type-toggle{display:flex;gap:0;margin-bottom:12px;border:1px solid rgba(0,100,200,0.22);}
+.fin-type-btn{flex:1;padding:9px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;cursor:pointer;border:none;background:transparent;transition:all .2s;color:var(--muted);}
+.fin-type-btn.active-income{color:var(--green);background:rgba(74,222,128,0.08);}
+.fin-type-btn.active-expense{color:var(--danger);background:rgba(255,68,102,0.08);}
+.fin-type-btn:hover:not(.active-income):not(.active-expense){color:#8bb8d0;}
+.fin-cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;}
+.fin-cat-btn{padding:6px 4px;font-size:10px;cursor:pointer;border:1px solid rgba(0,100,200,0.2);background:rgba(0,15,35,0.7);color:var(--muted);text-align:center;transition:all .15s;line-height:1.3;}
+.fin-cat-btn:hover{border-color:var(--blue);color:var(--bright);}
+.fin-cat-btn.sel{border-color:var(--gold);color:var(--gold);background:rgba(240,192,64,0.08);}
+.fin-empty{text-align:center;color:var(--muted);padding:28px;font-size:11px;letter-spacing:2px;}
+/* Bar chart bars */
+.fin-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.fin-bar-lbl{font-size:9px;color:var(--muted);width:28px;text-align:right;flex-shrink:0;letter-spacing:1px;}
+.fin-bar-track{flex:1;height:14px;background:rgba(0,100,200,0.1);border:1px solid rgba(0,100,200,0.15);position:relative;overflow:hidden;}
+.fin-bar-fill-inc{height:100%;background:linear-gradient(90deg,#006633,#4ade80);transition:width .7s cubic-bezier(.4,0,.2,1);}
+.fin-bar-fill-exp{height:100%;background:linear-gradient(90deg,#660022,#ff4466);transition:width .7s cubic-bezier(.4,0,.2,1);}
+.fin-bar-val{font-family:'Orbitron',monospace;font-size:8px;color:var(--bright);width:56px;text-align:right;flex-shrink:0;}
+@media(max-width:480px){.fin-summary{grid-template-columns:1fr 1fr;}.fin-cat-grid{grid-template-columns:repeat(3,1fr);}}
+
+/* ═══════════════════════════════════════════════════════
+   FONT SCALE — applies to all tab content elements.
+   --fs-scale is set by changeFontSize(). Base = 1.0 (15px).
+   Elements outside .tabcontent (header, player card top, login)
+   keep their fixed sizes for stability.
+   ═══════════════════════════════════════════════════════ */
+
+/* TABS bar */
+.tab{font-size:calc(9px * var(--fs-scale));}
+
+/* TAB content general */
+.tabcontent .stitle{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .shdr .stitle{font-size:calc(10px * var(--fs-scale));}
+
+/* MISIONES tab */
+.tabcontent .rlbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .rcd{font-size:calc(14px * var(--fs-scale));}
+.tabcontent #resetHourLbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .rh-val{font-size:calc(14px * var(--fs-scale));}
+.tabcontent .pentext{font-size:calc(12px * var(--fs-scale));}
+.tabcontent .pentitle{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .mname{font-size:calc(15px * var(--fs-scale));}
+.tabcontent .mdesc{font-size:calc(11px * var(--fs-scale));}
+.tabcontent .mxp{font-size:calc(11px * var(--fs-scale));}
+.tabcontent .mrnk{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .mtype{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .act-btn{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .progtxt{font-size:calc(11px * var(--fs-scale));}
+.tabcontent .claimbtn{font-size:calc(11px * var(--fs-scale));}
+.tabcontent .fixed-badge{font-size:calc(8px * var(--fs-scale));}
+
+/* MOOD widget */
+.tabcontent .mood-title{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .mood-subtitle{font-size:calc(11px * var(--fs-scale));}
+.tabcontent .mood-face{font-size:calc(28px * var(--fs-scale));}
+.tabcontent .mood-lbl{font-size:calc(7px * var(--fs-scale));}
+.tabcontent .mood-saved{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .mood-xp-badge{font-size:calc(9px * var(--fs-scale));}
+
+/* TODAS / BANCO DE MISIONES */
+.tabcontent .search-inp{font-size:calc(13px * var(--fs-scale));}
+.tabcontent .ie-sel{font-size:calc(13px * var(--fs-scale));}
+
+/* TIENDA & INVENTARIO */
+.tabcontent .ptbtn{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .irarity{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .iico{font-size:calc(28px * var(--fs-scale));}
+.tabcontent .iname{font-size:calc(13px * var(--fs-scale));}
+.tabcontent .iprice{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .icostval{font-size:calc(12px * var(--fs-scale));}
+.tabcontent .icostlbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .ilock{font-size:calc(12px * var(--fs-scale));}
+.tabcontent .iunlbdg{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .iptbtn{font-size:calc(7px * var(--fs-scale));}
+.tabcontent .ipd-lbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .ipd-val{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .ipct{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .idate{font-size:calc(9px * var(--fs-scale));}
+
+/* PERFIL */
+.tabcontent .profile-name{font-size:calc(20px * var(--fs-scale));}
+.tabcontent .profile-class{font-size:calc(12px * var(--fs-scale));}
+.tabcontent .profile-lvlbig{font-size:calc(32px * var(--fs-scale));}
+.tabcontent .profile-lvllbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .radar-title{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .sbar-ico{font-size:calc(16px * var(--fs-scale));}
+.tabcontent .sbar-lbl{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .sbar-val{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .smval{font-size:calc(22px * var(--fs-scale));}
+.tabcontent .smkey{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .achiev-name{font-size:calc(12px * var(--fs-scale));}
+.tabcontent .achiev-desc{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .achiev-ico{font-size:calc(18px * var(--fs-scale));}
+.tabcontent .achiev-badge{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .period-toggle .ptbtn{font-size:calc(9px * var(--fs-scale));}
+
+/* CONFIGURAR */
+.tabcontent .flbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .finput{font-size:calc(14px * var(--fs-scale));}
+.tabcontent .fselect{font-size:calc(14px * var(--fs-scale));}
+.tabcontent .fabtn{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .rank-box-lbl{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .rank-inp{font-size:calc(12px * var(--fs-scale));}
+.tabcontent .ie-inp{font-size:calc(13px * var(--fs-scale));}
+.tabcontent .ie-btn{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .ie-lbl{font-size:calc(9px * var(--fs-scale));}
+
+/* DINERO / FINANZAS */
+.tabcontent .fin-box-val{font-size:calc(14px * var(--fs-scale));}
+.tabcontent .fin-box-lbl{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .fin-ptbtn{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .fin-chart-title{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .fin-tx-name{font-size:calc(13px * var(--fs-scale));}
+.tabcontent .fin-tx-meta{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .fin-tx-amt{font-size:calc(13px * var(--fs-scale));}
+.tabcontent .fin-tx-del{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .fin-type-btn{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .fin-cat-btn{font-size:calc(10px * var(--fs-scale));}
+.tabcontent .fin-bar-lbl{font-size:calc(9px * var(--fs-scale));}
+.tabcontent .fin-bar-val{font-size:calc(8px * var(--fs-scale));}
+.tabcontent .fin-empty{font-size:calc(11px * var(--fs-scale));}
 </style>
 </head>
 <body>
@@ -308,11 +473,11 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 <div class="loginover" id="loginOver">
   <div class="login-box">
     <div class="login-title">▸ SISTEMA DE CAZADOR ◂</div>
-    <div class="login-sub">Ingresa un nombre de usuario para guardar tu progreso.<br>El mismo nombre en cualquier navegador restaura tus datos.</div>
+    <div class="login-sub">Ingresa tu nombre de usuario para acceder.<br>Tus misiones, XP y objetos se guardan automáticamente en este navegador — <strong style="color:var(--blue)">no se pierden al recargar.</strong><br><span style="color:rgba(96,165,250,0.5);">Si eres nuevo, se creará tu perfil al instante.</span></div>
     <input class="login-inp" id="loginUser" placeholder="Nombre de usuario..." maxlength="30" onkeydown="if(event.key==='Enter')doLogin()">
     <input class="login-inp" id="loginPass" type="password" placeholder="Contraseña (opcional)..." maxlength="30" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">◈ ENTRAR AL SISTEMA ◈</button>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:1px;">Si eres nuevo, se creará tu perfil automáticamente.</div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:1px;">💾 Datos guardados localmente — permanentes en este navegador.</div>
   </div>
 </div>
 
@@ -340,6 +505,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <!-- USER BAR -->
   <div class="login-user-bar" id="userBar" style="display:none">
     <span>Cazador: <strong id="userBarName">—</strong></span>
+    <span id="saveIndicator" style="font-size:9px;color:var(--green);letter-spacing:1px;opacity:0;transition:opacity 0.5s;">💾 GUARDADO</span>
     <button class="logout-btn" onclick="doLogout()">CAMBIAR USUARIO</button>
   </div>
 
@@ -390,6 +556,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     <button class="tab" onclick="switchTab('shop')">TIENDA</button>
     <button class="tab" onclick="switchTab('inventory')">INVENTARIO</button>
     <button class="tab" onclick="switchTab('perfil')">PERFIL</button>
+    <button class="tab" onclick="switchTab('dinero')">💰 DINERO</button>
     <button class="tab" onclick="switchTab('config')">CONFIGURAR</button>
   </div>
 
@@ -399,7 +566,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
       <div>
         <div class="rlbl">RESET DIARIO EN</div>
         <div class="rcd" id="rcd">23:59:59</div>
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px;" id="resetHourLbl">RESET A LAS 00:00</div>
+        <div style="font-size:calc(9px * var(--fs-scale));color:var(--muted);letter-spacing:1px;margin-top:2px;" id="resetHourLbl">RESET A LAS 00:00</div>
       </div>
       <div>
         <div class="rlbl">HORA DE RESET</div>
@@ -419,7 +586,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
       <div class="pentext">No completaste todas tus misiones mínimas ayer. El Sistema observa tu progreso, Cazador.</div>
     </div>
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ MISIONES FIJAS HOY</span><div class="sline"></div></div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">4 misiones mínimas de hoy (una por categoría). El sistema las rota automáticamente.</div>
+    <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);margin-bottom:8px;letter-spacing:1px;">4 misiones mínimas de hoy (una por categoría). El sistema las rota automáticamente.</div>
     <div id="mlist"></div>
     <div class="progtxt" id="progtxt">0 / 4 misiones mínimas completadas</div>
     <button class="claimbtn" id="claimbtn" onclick="claimDaily()" disabled>◈ RECLAMAR RECOMPENSA DIARIA ◈</button>
@@ -428,7 +595,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     <div class="shdr" style="margin-top:18px;"><div class="sline"></div><span class="stitle">◈ ESTADO MENTAL DEL DÍA</span><div class="sline"></div></div>
     <div class="mood-card" id="moodCard">
       <div class="mood-title">▸ SISTEMA DE MONITOREO MENTAL</div>
-      <div class="mood-subtitle">¿Cómo te sentiste hoy, Cazador?<br><span style="font-size:10px;color:rgba(96,165,250,0.6);">Tu estado emocional se registra en Salud Mental y contribuye a tu progreso.</span></div>
+      <div class="mood-subtitle">¿Cómo te sentiste hoy, Cazador?<br><span style="font-size:calc(10px * var(--fs-scale));color:rgba(96,165,250,0.6);">Tu estado emocional se registra en Salud Mental y contribuye a tu progreso.</span></div>
       <div class="mood-xp-badge" id="moodXpBadge">+XP MENTAL</div>
       <div class="mood-faces" id="moodFaces">
         <button class="mood-btn" id="mood-0" onclick="setMood(0)">
@@ -459,10 +626,10 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <!-- TAB: TODAS LAS MISIONES -->
   <div class="tabcontent" id="tab-allquests">
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ BANCO DE MISIONES</span><div class="sline"></div></div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">Todas tus misiones. Márcalas como completadas si las realizaste hoy aunque no estén en el mínimo diario.</div>
+    <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);margin-bottom:8px;letter-spacing:1px;">Todas tus misiones. Márcalas como completadas si las realizaste hoy aunque no estén en el mínimo diario.</div>
     <div class="searchbar">
       <input class="search-inp" id="questSearch" placeholder="🔍 Buscar misión..." oninput="renderAllQuests()">
-      <select class="ie-sel" id="questCatFilter" onchange="renderAllQuests()" style="width:auto;padding:8px 10px;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;">
+      <select class="ie-sel" id="questCatFilter" onchange="renderAllQuests()" style="width:auto;padding:8px 10px;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:calc(13px * var(--fs-scale));outline:none;">
         <option value="">Todas las categorías</option>
         <option value="salud">💪 Salud/Ejercicio</option>
         <option value="guerrero">⚔️ Guerrero/Pesas</option>
@@ -479,7 +646,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <!-- TAB: TIENDA -->
   <div class="tabcontent" id="tab-shop">
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ TIENDA — CANJEA TUS DESEOS</span><div class="sline"></div></div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.8;">
+    <div style="font-size:calc(11px * var(--fs-scale));color:var(--muted);margin-bottom:10px;line-height:1.8;">
       Cada objeto muestra cuánto XP ganaste hoy, esta semana o este mes hacia su meta.
     </div>
     <!-- Selector de periodo global para la tienda -->
@@ -489,15 +656,15 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
       <button class="ptbtn"        id="sp-month" onclick="setShopPeriod('month')">▸ MES</button>
     </div>
     <div class="invgrid" id="shopGrid"></div>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;">Añade objetos en CONFIGURAR → TIENDA</div>
+    <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;">Añade objetos en CONFIGURAR → TIENDA</div>
   </div>
 
   <!-- TAB: INVENTARIO (lo comprado) -->
   <div class="tabcontent" id="tab-inventory">
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ INVENTARIO — OBJETOS OBTENIDOS</span><div class="sline"></div></div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.8;">Aquí aparecen los objetos que ya canjeaste en la Tienda.</div>
+    <div style="font-size:calc(11px * var(--fs-scale));color:var(--muted);margin-bottom:12px;line-height:1.8;">Aquí aparecen los objetos que ya canjeaste en la Tienda.</div>
     <div class="invgrid" id="invgrid"></div>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;" id="invEmpty">Aún no has canjeado ningún objeto.</div>
+    <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;" id="invEmpty">Aún no has canjeado ningún objeto.</div>
   </div>
 
   <!-- TAB: PERFIL -->
@@ -557,7 +724,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ CONFIGURAR RANGOS (XP)</span><div class="sline"></div></div>
     <div class="aform">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.7;">Ajusta cuánto XP otorga cada rango de misión.</div>
+      <div style="font-size:calc(11px * var(--fs-scale));color:var(--muted);margin-bottom:10px;line-height:1.7;">Ajusta cuánto XP otorga cada rango de misión.</div>
       <div class="rank-cfg-grid">
         <div class="rank-box"><div class="rank-box-lbl rd" style="color:var(--d)">D</div><input class="rank-inp" id="xp-D" type="number" min="1"></div>
         <div class="rank-box"><div class="rank-box-lbl" style="color:var(--c)">C</div><input class="rank-inp" id="xp-C" type="number" min="1"></div>
@@ -570,7 +737,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ AÑADIR MISIÓN AL BANCO</span><div class="sline"></div></div>
     <div class="aform">
-      <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:1px;">Las misiones se rotan automáticamente en los días. Puedes crear decenas y el sistema selecciona 4 al día (1 por categoría principal).</div>
+      <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);margin-bottom:10px;letter-spacing:1px;">Las misiones se rotan automáticamente en los días. Puedes crear decenas y el sistema selecciona 4 al día (1 por categoría principal).</div>
       <div class="frow">
         <label class="flbl">Nombre de la misión</label>
         <input class="finput" id="mNameInp" placeholder="Ej: Correr 30 minutos">
@@ -647,10 +814,10 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ LOGROS PERSONALIZADOS</span><div class="sline"></div></div>
     <div class="aform">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.7;">
+      <div style="font-size:calc(11px * var(--fs-scale));color:var(--muted);margin-bottom:10px;line-height:1.7;">
         Crea y edita tus logros. Elige el tipo de condición y la meta numérica. Los cambios se reflejan automáticamente en la pestaña <strong style="color:var(--blue)">PERFIL</strong>.
       </div>
-      <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;display:grid;grid-template-columns:40px 1fr 1fr 110px 36px;gap:6px;padding:0 4px;">
+      <div style="font-size:calc(9px * var(--fs-scale));color:var(--muted);letter-spacing:1px;margin-bottom:8px;display:grid;grid-template-columns:40px 1fr 1fr 110px 36px;gap:6px;padding:0 4px;">
         <span>ÍCONO</span><span>NOMBRE</span><span>DESCRIPCIÓN</span><span>CONDICIÓN</span><span></span>
       </div>
       <div id="achievEditor"></div>
@@ -660,7 +827,88 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ ZONA DE PELIGRO</span><div class="sline"></div></div>
     <button class="fabtn red" style="width:100%" onclick="resetAll()">⚠ REINICIAR TODO EL SISTEMA</button>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px;letter-spacing:1px;">Esto borrará todo tu progreso permanentemente.</div>
+    <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);text-align:center;margin-top:8px;letter-spacing:1px;">Esto borrará todo tu progreso permanentemente.</div>
+  </div>
+
+  <!-- TAB: DINERO -->
+  <div class="tabcontent" id="tab-dinero">
+    <div class="shdr"><div class="sline"></div><span class="stitle">💰 CONTROL DE FINANZAS</span><div class="sline"></div></div>
+
+    <!-- Period selector -->
+    <div class="fin-period-bar">
+      <button class="fin-ptbtn active" id="fp-day"   onclick="setFinPeriod('day')">▸ HOY</button>
+      <button class="fin-ptbtn"        id="fp-week"  onclick="setFinPeriod('week')">▸ SEMANA</button>
+      <button class="fin-ptbtn"        id="fp-month" onclick="setFinPeriod('month')">▸ MES</button>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="fin-summary">
+      <div class="fin-box income">
+        <div class="fin-box-val" id="finIncome">$0</div>
+        <div class="fin-box-lbl">INGRESOS</div>
+      </div>
+      <div class="fin-box expense">
+        <div class="fin-box-val" id="finExpense">$0</div>
+        <div class="fin-box-lbl">GASTOS</div>
+      </div>
+      <div class="fin-box balance">
+        <div class="fin-box-val" id="finBalance">$0</div>
+        <div class="fin-box-lbl">BALANCE</div>
+      </div>
+    </div>
+
+    <!-- Bar chart by day -->
+    <div class="fin-chart-wrap">
+      <div class="fin-chart-title">◈ GASTOS VS INGRESOS</div>
+      <div id="finChartBars"></div>
+    </div>
+
+    <!-- Category breakdown chart -->
+    <div class="fin-chart-wrap">
+      <div class="fin-chart-title">◈ GASTOS POR CATEGORÍA</div>
+      <div id="finCatChart"></div>
+    </div>
+
+    <!-- Add transaction form -->
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ REGISTRAR MOVIMIENTO</span><div class="sline"></div></div>
+    <div class="fin-form">
+      <div class="fin-type-toggle">
+        <button class="fin-type-btn active-expense" id="fin-btn-expense" onclick="setFinType('expense')">▼ GASTO</button>
+        <button class="fin-type-btn" id="fin-btn-income" onclick="setFinType('income')">▲ INGRESO</button>
+      </div>
+      <div class="frow">
+        <label class="flbl">Descripción</label>
+        <input class="finput" id="finDesc" placeholder="Ej: Almuerzo, Nómina, Transporte...">
+      </div>
+      <div class="fgrid" style="margin-bottom:10px;">
+        <div class="frow" style="margin-bottom:0;">
+          <label class="flbl">Monto ($)</label>
+          <input type="number" class="finput" id="finAmt" placeholder="Ej: 15000" min="1" onkeydown="if(event.key==='Enter')addTransaction()">
+        </div>
+        <div class="frow" style="margin-bottom:0;">
+          <label class="flbl">Emoji</label>
+          <input class="finput" id="finIco" placeholder="💸" style="font-size:20px;text-align:center;" maxlength="4">
+        </div>
+      </div>
+      <div class="frow">
+        <label class="flbl">Categoría de gasto</label>
+        <div class="fin-cat-grid" id="finCatGrid">
+          <div class="fin-cat-btn sel" data-cat="comida" onclick="selectFinCat(this)">🍔<br>Comida</div>
+          <div class="fin-cat-btn" data-cat="transporte" onclick="selectFinCat(this)">🚌<br>Transp.</div>
+          <div class="fin-cat-btn" data-cat="salud" onclick="selectFinCat(this)">💊<br>Salud</div>
+          <div class="fin-cat-btn" data-cat="ocio" onclick="selectFinCat(this)">🎮<br>Ocio</div>
+          <div class="fin-cat-btn" data-cat="compras" onclick="selectFinCat(this)">🛍️<br>Compras</div>
+          <div class="fin-cat-btn" data-cat="educacion" onclick="selectFinCat(this)">📚<br>Educ.</div>
+          <div class="fin-cat-btn" data-cat="hogar" onclick="selectFinCat(this)">🏠<br>Hogar</div>
+          <div class="fin-cat-btn" data-cat="otro" onclick="selectFinCat(this)">📦<br>Otro</div>
+        </div>
+      </div>
+      <button class="fabtn" id="finAddBtn" onclick="addTransaction()" style="border-color:rgba(255,68,102,0.5);color:#ff6688;">+ REGISTRAR GASTO</button>
+    </div>
+
+    <!-- Transaction list -->
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ MOVIMIENTOS DEL PERÍODO</span><div class="sline"></div></div>
+    <div id="finTxList"><div class="fin-empty">Sin movimientos registrados.</div></div>
   </div>
 
 </div><!-- end .wrap -->
@@ -696,6 +944,7 @@ const PRANK = [
 let XPR = {D:15, C:30, B:50, A:80, S:120};
 let S, pendingId=null, editingMissionId=null, currentUser=null;
 let shopPeriod = 'day'; // 'day' | 'week' | 'month'
+let currentPeriod = 'week'; // 'week' | 'month' — moved here for early access
 
 // ═══════════════════════════════════════════════════════
 // MULTI-USER STORAGE (localStorage keyed by user)
@@ -707,12 +956,23 @@ function loadState(user){
     const raw = localStorage.getItem(getUserKey(user));
     if(raw){
       const d=JSON.parse(raw);
-      XPR=d.xprConfig||XPR;
-      if(!d.achievements||!d.achievements.length) d.achievements=defaultAchievements();
-      if(!d.dailyLog) d.dailyLog=[];
-      return d;
+      // Merge with defaults to fill in any missing fields added in newer versions
+      const def = defaultState();
+      const merged = Object.assign({}, def, d);
+      // Always ensure critical arrays/objects exist
+      if(!merged.achievements||!merged.achievements.length) merged.achievements=defaultAchievements();
+      if(!merged.dailyLog) merged.dailyLog=[];
+      if(!merged.missions) merged.missions=[];
+      if(!merged.items) merged.items=[];
+      if(!merged.catCounts) merged.catCounts={};
+      if(!merged.dailyAssigned) merged.dailyAssigned=null;
+      if(!merged.transactions) merged.transactions=[];
+      if(!merged.nTid) merged.nTid=1;
+      if(!merged.finPeriod) merged.finPeriod='day';
+      if(merged.xprConfig) XPR=merged.xprConfig;
+      return merged;
     }
-  } catch(e){}
+  } catch(e){ console.warn('Error loading state:', e); }
   return defaultState();
 }
 
@@ -734,20 +994,33 @@ function defaultState(){
     name:'CAZADOR', lvl:1, totalXP:0, curXP:0, nextXP:100,
     streak:0, totalComp:0, todayXP:0, lastDate:'', claimed:false,
     missions:[], items:[], nMid:100, nIid:100, resetHour:0,
-    catCounts:{}, dailyAssigned:{}, xprConfig:{...XPR},
+    catCounts:{}, dailyAssigned:null, xprConfig:{...XPR},
     dailyLog:[],
     achievements: defaultAchievements(),
     shopPeriod:'day',
     profilePeriod:'week',
-    activeTab:'missions'
+    activeTab:'missions',
+    // Finance module
+    transactions: [],
+    nTid: 1,
+    finPeriod: 'day'
   };
 }
 
 function save(){
   if(!currentUser) return;
   S.xprConfig = {...XPR};
-  try{ localStorage.setItem(getUserKey(currentUser), JSON.stringify(S)); }
-  catch(e){ notif('⚠ ERROR AL GUARDAR'); }
+  try{
+    localStorage.setItem(getUserKey(currentUser), JSON.stringify(S));
+    // Flash save indicator
+    const ind = document.getElementById('saveIndicator');
+    if(ind){
+      ind.style.opacity='1';
+      clearTimeout(ind._t);
+      ind._t = setTimeout(()=>{ ind.style.opacity='0'; }, 1500);
+    }
+  }
+  catch(e){ notif('⚠ ERROR AL GUARDAR — ALMACENAMIENTO LLENO'); }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -763,23 +1036,39 @@ function doLogin(){
   // Restaurar preferencias de UI
   shopPeriod    = S.shopPeriod    || 'day';
   currentPeriod = S.profilePeriod || 'week';
+  finPeriod     = S.finPeriod     || 'day';
   document.getElementById('loginOver').classList.remove('show');
   document.getElementById('userBar').style.display='flex';
   document.getElementById('userBarName').textContent = u.toUpperCase();
+  // Restaurar tamaño de fuente
+  const savedFont=parseInt(localStorage.getItem(getUserKey(u)+'_font'));
+  if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
+  // Restaurar selectors de período
+  ['day','week','month'].forEach(x=>{
+    const el=document.getElementById('sp-'+x);
+    if(el) el.classList.toggle('active', x===shopPeriod);
+  });
+  const ptW=document.getElementById('pt-week');
+  const ptM=document.getElementById('pt-month');
+  if(ptW) ptW.classList.toggle('active', currentPeriod==='week');
+  if(ptM) ptM.classList.toggle('active', currentPeriod==='month');
   checkReset();
   render();
   // Restaurar tab activo
-  if(S.activeTab) switchTab(S.activeTab);
-  tick();
+  if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
   notif('▸ BIENVENIDO, ' + u.toUpperCase() + ' ◂');
 }
 
 function doLogout(){
   if(!confirm('¿Cambiar de usuario? Tu progreso está guardado.')) return;
   currentUser = null;
+  S = null;
   localStorage.removeItem('sl_current_user');
   document.getElementById('loginOver').classList.add('show');
   document.getElementById('userBar').style.display='none';
+  // Clear login input for fresh entry
+  const inp = document.getElementById('loginUser');
+  if(inp) inp.value = '';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -873,18 +1162,30 @@ function getDailyMissions(){
 // ═══════════════════════════════════════════════════════
 function checkReset(){
   const key = getTodayKey();
+  // Always hide penalty bar on page load — it will re-show if needed
+  const penbar = document.getElementById('penbar');
+  if(penbar) penbar.style.display='none';
+
   if(S.lastDate !== key){
     if(S.lastDate){
-      // streak check
-      const prev = new Date(); prev.setDate(prev.getDate()-1);
-      const prevKey = prev.toDateString()+'_h'+(S.resetHour||0);
+      // streak check — build yesterday's key using same resetHour offset as getTodayKey
+      const rh = S.resetHour||0;
+      const now2 = new Date();
+      const base = new Date(now2);
+      if(now2.getHours()<rh) base.setDate(base.getDate()-1); // same offset as getTodayKey
+      base.setDate(base.getDate()-1); // go one day back from the "today" anchor
+      const prevKey = base.toDateString()+'_h'+rh;
       if(S.lastDate===prevKey) S.streak++;
       else if(S.todayXP===0) S.streak=0;
-      // penalty
+      // penalty — only show if yesterday had activity but not all missions done
       const daily = getDailyMissions();
       const doneMin = daily.filter(m=>m.done).length;
       if(doneMin < Math.min(4,daily.length) && S.todayXP>0){
-        document.getElementById('penbar').style.display='block';
+        if(penbar){
+          penbar.style.display='block';
+          // Auto-hide after 10 seconds
+          setTimeout(()=>{ penbar.style.display='none'; }, 10000);
+        }
       }
     }
     S.missions.forEach(m=>m.done=false);
@@ -917,15 +1218,20 @@ function updateResetUI(){
 // XP / NIVEL
 // ═══════════════════════════════════════════════════════
 function gainXP(amt){
-  S.totalXP=Math.max(0,S.totalXP+amt);
-  S.todayXP=Math.max(0,S.todayXP+amt);
-  S.curXP+=amt;
-  while(S.curXP>=S.nextXP&&S.curXP>0){
-    S.curXP-=S.nextXP; S.lvl++;
-    S.nextXP=Math.floor(S.nextXP*1.42);
+  // Guard: don't let totals go below zero
+  if(amt < 0){
+    amt = -Math.min(-amt, S.totalXP); // can't lose more than what we have
+  }
+  S.totalXP = Math.max(0, S.totalXP + amt);
+  S.todayXP = Math.max(0, S.todayXP + amt);
+  S.curXP  += amt;
+  // Level up loop
+  while(S.curXP >= S.nextXP && S.nextXP > 0){
+    S.curXP -= S.nextXP; S.lvl++;
+    S.nextXP = Math.floor(S.nextXP * 1.42);
     doFlash();
   }
-  if(S.curXP<0) S.curXP=0;
+  if(S.curXP < 0) S.curXP = 0;
 }
 function doFlash(){
   const f=document.getElementById('lvlf');
@@ -985,6 +1291,7 @@ function notif(msg){
 // ═══════════════════════════════════════════════════════
 function render(){
   if(!S) return;
+  // ── Player card ──
   document.getElementById('pname').textContent=S.name;
   document.getElementById('plvl').textContent='LV.'+S.lvl;
   document.getElementById('prank').textContent=getRank();
@@ -995,17 +1302,22 @@ function render(){
   document.getElementById('stStreak').textContent=S.streak;
   document.getElementById('stComp').textContent=S.totalComp;
   document.getElementById('todayxp').textContent='+'+S.todayXP;
-  // rank config inputs
+  // ── Config inputs ──
   ['D','C','B','A','S'].forEach(r=>{
     const el=document.getElementById('xp-'+r);
     if(el) el.value=XPR[r];
   });
   updateResetUI();
   updateClassUI();
+  // ── Always render tabs that users navigate quickly between ──
   renderDailyMissions();
   renderAllQuests();
   renderShop();
   renderInventory();
+  // ── Perfil tab is expensive (SVG radar) — only render when visible ──
+  const activeTab = S.activeTab || 'missions';
+  if(activeTab === 'perfil') renderPerfil();
+  renderMoodWidget();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1015,7 +1327,7 @@ function renderDailyMissions(){
   const el=document.getElementById('mlist');
   const daily=getDailyMissions();
   if(!daily.length){
-    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:12px;letter-spacing:2px;">SIN MISIONES — AÑADE EN CONFIGURAR</div>';
+    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:calc(12px * var(--fs-scale));letter-spacing:2px;">SIN MISIONES — AÑADE EN CONFIGURAR</div>';
     document.getElementById('progtxt').textContent='0 / 0 misiones mínimas completadas';
     document.getElementById('claimbtn').disabled=true;
     return;
@@ -1108,7 +1420,7 @@ function renderAllQuests(){
     return matchQ&&matchC;
   });
   if(!list.length){
-    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:12px;letter-spacing:2px;">SIN RESULTADOS</div>';
+    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:calc(12px * var(--fs-scale));letter-spacing:2px;">SIN RESULTADOS</div>';
     return;
   }
   el.innerHTML=list.map(m=>renderMissionCard(m,false)).join('');
@@ -1122,7 +1434,7 @@ function getTodayISODate(){
   const rh = S.resetHour||0;
   const d = new Date(now);
   if(now.getHours()<rh) d.setDate(d.getDate()-1);
-  return d.toISOString().slice(0,10); // YYYY-MM-DD
+  return localISO(d);
 }
 
 function logDailyMission(cat, xp, add){
@@ -1136,7 +1448,7 @@ function logDailyMission(cat, xp, add){
     entry.xp=(entry.xp||0)+xp;
     entry.missions=(entry.missions||0)+1;
   } else {
-    entry.cats[cat]=Math.max(0,(entry.cats[cat]||1)-1);
+    entry.cats[cat]=Math.max(0,(entry.cats[cat]||0)-1);
     entry.xp=Math.max(0,(entry.xp||0)-xp);
     entry.missions=Math.max(0,(entry.missions||0)-1);
   }
@@ -1163,7 +1475,7 @@ function toggle(id){
     if(!S.catCounts) S.catCounts={};
     S.catCounts[m.cat]=(S.catCounts[m.cat]||0)+1;
     logDailyMission(m.cat, m.xp||XPR[m.rank]||50, true);
-    notif('+'+(m.xp||XPR[m.rank])+' XP ◈ '+m.name);
+    notif('+'+(m.xp||XPR[m.rank]||50)+' XP ◈ '+m.name);
   }
   save(); render();
 }
@@ -1229,10 +1541,10 @@ function getXPForPeriod(period){
     cutoffStr = getTodayISODate();
   } else if(period === 'week'){
     const c = new Date(now); c.setDate(now.getDate()-7);
-    cutoffStr = c.toISOString().slice(0,10);
+    cutoffStr = localISO(c);
   } else {
     const c = new Date(now); c.setDate(now.getDate()-30);
-    cutoffStr = c.toISOString().slice(0,10);
+    cutoffStr = localISO(c);
   }
   return S.dailyLog
     .filter(e => e.date >= cutoffStr)
@@ -1250,7 +1562,7 @@ function renderShop(){
   const el=document.getElementById('shopGrid'); if(!el) return;
   const shop=S.items.filter(it=>!it.red);
   if(!shop.length){
-    el.innerHTML='<div style="color:var(--muted);text-align:center;padding:28px;font-size:12px;grid-column:1/-1;">Añade objetos en CONFIGURAR → TIENDA</div>';
+    el.innerHTML='<div style="color:var(--muted);text-align:center;padding:28px;font-size:calc(12px * var(--fs-scale));grid-column:1/-1;">Añade objetos en CONFIGURAR → TIENDA</div>';
     return;
   }
   el.innerHTML=shop.map(it=>renderItemCard(it,true)).join('');
@@ -1274,12 +1586,14 @@ function renderItemCard(it, isShop){
   if(isShop && !it.red){
     const periodXP   = getXPForPeriod(shopPeriod);
     const periodPct  = Math.min(100, Math.round((periodXP / it.cost) * 100));
-    const daysLeft   = periodXP >= it.cost ? 0 : Math.ceil((it.cost - S.totalXP) / Math.max(1, periodXP / (shopPeriod==='day'?1:shopPeriod==='week'?7:30)));
+    const xpPerDay   = periodXP / (shopPeriod==='day'?1:shopPeriod==='week'?7:30);
+    const remaining  = Math.max(0, it.cost - S.totalXP);
+    const daysLeft   = (periodXP >= it.cost || xpPerDay <= 0) ? 0 : Math.ceil(remaining / xpPerDay);
     const lbl        = getPeriodLabel(shopPeriod);
     const col        = periodPct >= 100 ? 'var(--gold)' : periodPct >= 50 ? 'var(--blue)' : 'rgba(0,100,200,0.6)';
     const pace       = shopPeriod==='day'
       ? (periodXP > 0 ? `+${periodXP} XP hoy` : 'Sin XP hoy')
-      : (daysLeft > 0 && periodXP > 0 ? `~${daysLeft} días restantes` : periodXP >= it.cost ? '¡Meta alcanzable!' : 'Sin datos aún');
+      : (xpPerDay > 0 && daysLeft > 0 ? `~${daysLeft} días restantes` : periodXP >= it.cost ? '¡Meta alcanzable!' : 'Sin datos aún');
 
     periodBlock = `
   <div class="item-progress-detail">
@@ -1289,8 +1603,8 @@ function renderItemCard(it, isShop){
     </div>
     <div class="ipd-bar"><div class="ipd-barfill" style="width:${periodPct}%;background:${col}"></div></div>
     <div style="display:flex;justify-content:space-between;">
-      <span style="font-size:9px;color:var(--muted);letter-spacing:1px;">${pace}</span>
-      <span style="font-family:'Orbitron',monospace;font-size:9px;color:${periodPct>=100?'var(--gold)':'var(--muted)'};">${periodPct}%</span>
+      <span style="font-size:calc(9px * var(--fs-scale));color:var(--muted);letter-spacing:1px;">${pace}</span>
+      <span style="font-family:'Orbitron',monospace;font-size:calc(9px * var(--fs-scale));color:${periodPct>=100?'var(--gold)':'var(--muted)'};">${periodPct}%</span>
     </div>
   </div>`;
   }
@@ -1337,9 +1651,21 @@ function openRedeem(id){
 function confirmRedeem(){
   if(!pendingId) return;
   const it=S.items.find(x=>x.id===pendingId);
-  if(it&&S.totalXP>=it.cost){
-    S.totalXP-=it.cost; it.red=true;
-    it.redDate=new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
+  if(it && S.totalXP >= it.cost){
+    S.totalXP -= it.cost;
+    it.red = true;
+    it.redDate = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
+    // Rebuild level/curXP/nextXP from scratch based on new totalXP
+    // Walk forward from level 1, consuming XP thresholds
+    let lvl=1, threshold=100, remaining=S.totalXP;
+    while(remaining >= threshold){
+      remaining -= threshold;
+      lvl++;
+      threshold = Math.floor(threshold * 1.42);
+    }
+    S.lvl    = lvl;
+    S.nextXP = threshold;
+    S.curXP  = remaining;
     save(); render(); notif('◈ '+it.ico+' '+it.name+' — OBTENIDO ◈');
   }
   closeModal();
@@ -1461,7 +1787,18 @@ function saveRanks(){
 function resetAll(){
   if(confirm('¿Reiniciar TODO el sistema? Perderás todo el progreso permanentemente.')){
     if(currentUser) localStorage.removeItem(getUserKey(currentUser));
-    S=defaultState(); save(); render();
+    S = defaultState();
+    // Reset module-level UI state vars
+    shopPeriod = 'day';
+    currentPeriod = 'week';
+    finPeriod = 'day';
+    finType = 'expense';
+    finCat = 'comida';
+    editingMissionId = null;
+    pendingId = null;
+    save();
+    switchTab('missions');
+    render();
     notif('▸ SISTEMA REINICIADO');
   }
 }
@@ -1471,10 +1808,12 @@ function resetAll(){
 // ═══════════════════════════════════════════════════════
 let currentFontSize = 15;
 const FONT_MIN = 11, FONT_MAX = 22;
+const FONT_BASE = 15; // base px for scale calculation
 
 function changeFontSize(delta){
   currentFontSize = Math.min(FONT_MAX, Math.max(FONT_MIN, currentFontSize + delta));
   document.documentElement.style.setProperty('--base-font', currentFontSize+'px');
+  document.documentElement.style.setProperty('--fs-scale', (currentFontSize / FONT_BASE).toFixed(4));
   document.body.style.fontSize = currentFontSize+'px';
   const el = document.getElementById('fontVal');
   if(el) el.textContent = currentFontSize+'px';
@@ -1484,6 +1823,7 @@ function changeFontSize(delta){
 function setFont(size){
   currentFontSize = size;
   document.documentElement.style.setProperty('--base-font', size+'px');
+  document.documentElement.style.setProperty('--fs-scale', (size / FONT_BASE).toFixed(4));
   document.body.style.fontSize = size+'px';
   const el = document.getElementById('fontVal');
   if(el) el.textContent = size+'px';
@@ -1494,14 +1834,18 @@ function setFont(size){
 // TABS
 // ═══════════════════════════════════════════════════════
 function switchTab(tab){
-  const tabs=['missions','allquests','shop','inventory','perfil','config'];
+  const tabs=['missions','allquests','shop','inventory','perfil','dinero','config'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
   document.querySelectorAll('.tabcontent').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   if(tab==='perfil') renderPerfil();
   if(tab==='config') renderAchievEditor();
-  // Persistir tab activo
-  if(S){ S.activeTab=tab; save(); }
+  if(tab==='dinero'){ renderFinTab(); }
+  // Persist active tab only when it actually changes
+  if(S && S.activeTab !== tab){
+    S.activeTab = tab;
+    save();
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1509,26 +1853,31 @@ function switchTab(tab){
 // ═══════════════════════════════════════════════════════
 function tick(){
   const now=new Date();
-  document.getElementById('sysTime').textContent=
-    now.toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase()
-    +' — '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-  const rh=S?S.resetHour||0:0;
-  const md=new Date(); md.setHours(rh,0,0,0);
+  const sysTimeEl=document.getElementById('sysTime');
+  if(sysTimeEl){
+    sysTimeEl.textContent=
+      now.toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase()
+      +' — '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+  const rh=(S&&S.resetHour)||0;
+  const md=new Date(now); md.setHours(rh,0,0,0);
   if(md<=now) md.setDate(md.getDate()+1);
-  const d=md-now;
-  const h=String(Math.floor(d/3600000)).padStart(2,'0');
-  const m=String(Math.floor((d%3600000)/60000)).padStart(2,'0');
-  const s=String(Math.floor((d%60000)/1000)).padStart(2,'0');
+  const diff=md-now;
+  const hh=String(Math.floor(diff/3600000)).padStart(2,'0');
+  const mm=String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  const ss=String(Math.floor((diff%60000)/1000)).padStart(2,'0');
   const rcd=document.getElementById('rcd');
-  if(rcd) rcd.textContent=h+':'+m+':'+s;
+  if(rcd) rcd.textContent=hh+':'+mm+':'+ss;
 }
 
 function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// Returns YYYY-MM-DD using LOCAL time (avoids UTC offset bugs for users in Colombia / other TZ)
+function localISO(d){ const dt=d||new Date(); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
 
 // ═══════════════════════════════════════════════════════
 // PERFIL — RADAR + ESTADÍSTICAS
 // ═══════════════════════════════════════════════════════
-let currentPeriod = 'week';
+// currentPeriod declared at top-level scope
 
 function setPeriod(p){
   currentPeriod = p;
@@ -1549,7 +1898,7 @@ function getCatDataForPeriod(){
   } else {
     cutoff.setDate(now.getDate() - 30);
   }
-  const cutoffStr = cutoff.toISOString().slice(0,10);
+  const cutoffStr = localISO(cutoff);
   const result = {};
   S.dailyLog.forEach(entry=>{
     if(entry.date >= cutoffStr){
@@ -1569,7 +1918,7 @@ function getPeriodTotals(){
   const cutoff = new Date(now);
   if(currentPeriod === 'week') cutoff.setDate(now.getDate()-7);
   else cutoff.setDate(now.getDate()-30);
-  const cutoffStr = cutoff.toISOString().slice(0,10);
+  const cutoffStr = localISO(cutoff);
   let xp=0, missions=0;
   S.dailyLog.forEach(e=>{
     if(e.date>=cutoffStr){ xp+=(e.xp||0); missions+=(e.missions||0); }
@@ -1603,6 +1952,7 @@ function renderPerfil(){
 
 function renderMoodHistory(){
   const el = document.getElementById('moodHistory'); if(!el) return;
+  if(!S) return;
   const FACES = ['😭','😔','😐','😄','🤩'];
   const LABELS_S = ['PÉSIMO','MAL','REGULAR','BIEN','EXCELENTE'];
   const COLORS = ['#ff4466','#f0a040','#f0c040','#4ade80','#c084fc'];
@@ -1618,7 +1968,7 @@ function renderMoodHistory(){
   for(let i=13;i>=0;i--){
     const d = new Date(now);
     d.setDate(now.getDate()-i);
-    const iso = d.toISOString().slice(0,10);
+    const iso = localISO(d);
     const entry = S.dailyLog.find(e=>e.date===iso);
     const mood = entry&&entry.mood!==undefined ? entry.mood : null;
     const dayLabel = d.toLocaleDateString('es-CO',{weekday:'short',day:'numeric'}).toUpperCase();
@@ -1629,7 +1979,7 @@ function renderMoodHistory(){
   const cutoff = new Date(now);
   if(currentPeriod==='week') cutoff.setDate(now.getDate()-7);
   else cutoff.setDate(now.getDate()-30);
-  const cutoffStr = cutoff.toISOString().slice(0,10);
+  const cutoffStr = localISO(cutoff);
 
   // Weekly average
   const withMood = days.filter(d=>d.mood!==null && d.iso>=cutoffStr);
@@ -1638,7 +1988,7 @@ function renderMoodHistory(){
 
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
-      <span style="font-family:'Orbitron',monospace;font-size:9px;color:#60a5fa;letter-spacing:2px;">ÚNTIMOS 14 DÍAS</span>
+      <span style="font-family:'Orbitron',monospace;font-size:9px;color:#60a5fa;letter-spacing:2px;">ÚLTIMOS 14 DÍAS</span>
       <span style="font-family:'Orbitron',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">PROMEDIO: <span style="color:var(--bright)">${avgLabel}</span></span>
     </div>
     <div style="display:flex;gap:4px;align-items:flex-end;justify-content:space-between;height:60px;">
@@ -1751,7 +2101,7 @@ function renderSummary(){
     <div class="smbox"><div class="smval" style="color:var(--gold)">${totals.xp}</div><div class="smkey">XP ESTA ${period}</div></div>
     <div class="smbox"><div class="smval" style="color:var(--green)">${totals.missions}</div><div class="smkey">MISIONES ${period}</div></div>
     <div class="smbox"><div class="smval" style="color:var(--blue)">${S.streak}</div><div class="smkey">RACHA DÍAS</div></div>
-    <div class="smbox"><div class="smval" style="font-size:13px;letter-spacing:0;">${topLabel}</div><div class="smkey">CAT. DOMINANTE</div></div>
+    <div class="smbox"><div class="smval" style="font-size:calc(13px * var(--fs-scale));letter-spacing:0;">${topLabel}</div><div class="smkey">CAT. DOMINANTE</div></div>
   `;
 }
 
@@ -1807,6 +2157,7 @@ function renderAchievements(){
 // ─── EDITOR DE LOGROS EN CONFIGURACIÓN ───
 function renderAchievEditor(){
   const el = document.getElementById('achievEditor'); if(!el) return;
+  if(!S) return;
   if(!S.achievements) S.achievements=defaultAchievements();
   el.innerHTML = S.achievements.map((a,i)=>`
     <div class="achiev-edit-row" style="background:rgba(0,15,35,0.9);border:1px solid rgba(0,100,200,0.18);padding:10px;margin-bottom:6px;display:grid;grid-template-columns:40px 1fr 1fr 110px 36px;gap:6px;align-items:center;">
@@ -1861,15 +2212,257 @@ function addAchiev(){
 }
 
 // ═══════════════════════════════════════════════════════
+// MÓDULO DINERO / FINANZAS
+// ═══════════════════════════════════════════════════════
+let finPeriod = 'day';
+let finType   = 'expense';
+let finCat    = 'comida';
+
+const FIN_CAT_LABELS = {
+  comida:'Comida', transporte:'Transporte', salud:'Salud',
+  ocio:'Ocio', compras:'Compras', educacion:'Educación',
+  hogar:'Hogar', otro:'Otro', ingreso:'Ingreso'
+};
+const FIN_CAT_COLORS = {
+  comida:'#f0c040', transporte:'#60a5fa', salud:'#4ade80',
+  ocio:'#c084fc', compras:'#ff6b35', educacion:'#a855f7',
+  hogar:'#94a3b8', otro:'#6b7280', ingreso:'#4ade80'
+};
+
+function formatCOP(n){
+  if(n>=1000000) return '$'+(n/1000000).toFixed(1)+'M';
+  if(n>=1000) return '$'+(n/1000).toFixed(0)+'K';
+  return '$'+n.toLocaleString('es-CO');
+}
+
+function setFinPeriod(p){
+  finPeriod = p;
+  if(S){ S.finPeriod = p; save(); }
+  ['day','week','month'].forEach(x=>{
+    const el=document.getElementById('fp-'+x);
+    if(el) el.classList.toggle('active', x===p);
+  });
+  renderFinTab();
+}
+
+function setFinType(t){
+  finType = t;
+  const eb = document.getElementById('fin-btn-expense');
+  const ib = document.getElementById('fin-btn-income');
+  const ab = document.getElementById('finAddBtn');
+  const cg = document.getElementById('finCatGrid');
+  if(eb) eb.className = 'fin-type-btn' + (t==='expense'?' active-expense':'');
+  if(ib) ib.className = 'fin-type-btn' + (t==='income'?' active-income':'');
+  if(cg) cg.style.opacity = t==='income'?'0.35':'1';
+  if(cg) cg.style.pointerEvents = t==='income'?'none':'auto';
+  if(ab){
+    if(t==='income'){
+      ab.textContent='+ REGISTRAR INGRESO';
+      ab.style.borderColor='rgba(74,222,128,0.5)';
+      ab.style.color='#4ade80';
+    } else {
+      ab.textContent='+ REGISTRAR GASTO';
+      ab.style.borderColor='rgba(255,68,102,0.5)';
+      ab.style.color='#ff6688';
+    }
+  }
+}
+
+function selectFinCat(el){
+  document.querySelectorAll('.fin-cat-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  finCat = el.dataset.cat;
+}
+
+function getFinCutoff(period){
+  const now = new Date();
+  if(period==='day') return new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(period==='week'){ const d=new Date(now); d.setDate(d.getDate()-6); d.setHours(0,0,0,0); return d; }
+  const d=new Date(now); d.setDate(d.getDate()-29); d.setHours(0,0,0,0); return d;
+}
+
+function getFinTransactions(period){
+  if(!S||!S.transactions) return [];
+  const cutoff = getFinCutoff(period).getTime();
+  return S.transactions.filter(t=>t.ts>=cutoff).sort((a,b)=>b.ts-a.ts);
+}
+
+function addTransaction(){
+  const desc = (document.getElementById('finDesc').value||'').trim();
+  const amt  = parseFloat(document.getElementById('finAmt').value);
+  const ico  = (document.getElementById('finIco').value||'').trim();
+  if(!desc){ notif('▸ INGRESA UNA DESCRIPCIÓN'); return; }
+  if(!amt||amt<=0){ notif('▸ INGRESA UN MONTO VÁLIDO'); return; }
+  if(!S.transactions) S.transactions=[];
+  if(!S.nTid) S.nTid=1;
+  const now2 = new Date();
+  const localDate = localISO(now2);
+  const tx = {
+    id: 't'+S.nTid++,
+    desc, amt, type: finType,
+    cat: finType==='income' ? 'ingreso' : finCat,
+    ico: ico || (finType==='income'?'💵':'💸'),
+    ts: Date.now(),
+    date: localDate
+  };
+  S.transactions.push(tx);
+  // Keep max 500 transactions (oldest first)
+  if(S.transactions.length>500) S.transactions=S.transactions.slice(-500);
+  document.getElementById('finDesc').value='';
+  document.getElementById('finAmt').value='';
+  document.getElementById('finIco').value='';
+  save();
+  renderFinTab();
+  notif((finType==='income'?'▲ INGRESO: ':'▼ GASTO: ')+formatCOP(amt)+' — '+desc);
+}
+
+function delTransaction(id){
+  if(!S.transactions) return;
+  S.transactions = S.transactions.filter(t=>t.id!==id);
+  save(); renderFinTab();
+  notif('▸ MOVIMIENTO ELIMINADO');
+}
+
+// ── Charts ──
+function renderFinChartBars(txs, period){
+  const el = document.getElementById('finChartBars'); if(!el) return;
+  // Build day buckets
+  const now = new Date();
+  const buckets = [];
+  let numDays = period==='day'?1:period==='week'?7:30;
+
+  for(let i=numDays-1;i>=0;i--){
+    const d = new Date(now); d.setDate(now.getDate()-i); d.setHours(0,0,0,0);
+    const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const lbl = numDays===1 ? 'HOY' : d.toLocaleDateString('es-CO',{day:'numeric',month:'short'}).toUpperCase();
+    buckets.push({iso, lbl, income:0, expense:0});
+  }
+
+  txs.forEach(t=>{
+    const b = buckets.find(b=>b.iso===t.date);
+    if(!b) return;
+    if(t.type==='income') b.income+=t.amt;
+    else b.expense+=t.amt;
+  });
+
+  const maxVal = Math.max(...buckets.map(b=>Math.max(b.income,b.expense)), 1);
+
+  if(numDays===1){
+    // Single day: category breakdown bars
+    const catTotals = {};
+    txs.filter(t=>t.type==='expense').forEach(t=>{ catTotals[t.cat]=(catTotals[t.cat]||0)+t.amt; });
+    const cats = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+    if(!cats.length){ el.innerHTML='<div class="fin-empty" style="padding:14px">Sin gastos hoy.</div>'; return; }
+    const maxC = cats[0][1];
+    el.innerHTML = cats.map(([cat,amt])=>`
+      <div class="fin-bar-row">
+        <div class="fin-bar-lbl">${(FIN_CAT_LABELS[cat]||cat).slice(0,6).toUpperCase()}</div>
+        <div class="fin-bar-track"><div class="fin-bar-fill-exp" style="width:${Math.round(amt/maxC*100)}%"></div></div>
+        <div class="fin-bar-val">${formatCOP(amt)}</div>
+      </div>`).join('');
+    return;
+  }
+
+  // Multi-day bars: show income (green) and expense (red) side by side using simple HTML bars
+  el.innerHTML = buckets.map(b=>`
+    <div style="margin-bottom:7px;">
+      <div style="font-size:8px;color:var(--muted);letter-spacing:1px;margin-bottom:3px;">${b.lbl}</div>
+      ${b.income>0?`<div class="fin-bar-row" style="margin-bottom:3px;">
+        <div style="font-size:8px;color:var(--green);width:22px;flex-shrink:0;">ING</div>
+        <div class="fin-bar-track"><div class="fin-bar-fill-inc" style="width:${Math.round(b.income/maxVal*100)}%"></div></div>
+        <div class="fin-bar-val" style="color:var(--green);">${formatCOP(b.income)}</div>
+      </div>`:''}
+      ${b.expense>0?`<div class="fin-bar-row">
+        <div style="font-size:8px;color:var(--danger);width:22px;flex-shrink:0;">GAS</div>
+        <div class="fin-bar-track"><div class="fin-bar-fill-exp" style="width:${Math.round(b.expense/maxVal*100)}%"></div></div>
+        <div class="fin-bar-val" style="color:var(--danger);">${formatCOP(b.expense)}</div>
+      </div>`:''}
+      ${b.income===0&&b.expense===0?`<div style="font-size:9px;color:rgba(96,130,180,0.3);padding-left:26px;letter-spacing:1px;">SIN MOVIMIENTOS</div>`:''}
+    </div>`).join('');
+}
+
+function renderFinCatChart(txs){
+  const el = document.getElementById('finCatChart'); if(!el) return;
+  const catTotals = {};
+  txs.filter(t=>t.type==='expense').forEach(t=>{ catTotals[t.cat]=(catTotals[t.cat]||0)+t.amt; });
+  const cats = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  if(!cats.length){ el.innerHTML='<div class="fin-empty" style="padding:10px">Sin gastos en este período.</div>'; return; }
+  const total = cats.reduce((s,[,v])=>s+v,0);
+  const maxC = cats[0][1];
+  el.innerHTML = cats.map(([cat,amt])=>{
+    const col = FIN_CAT_COLORS[cat]||'#60a5fa';
+    const pct = Math.round(amt/total*100);
+    return `<div class="fin-bar-row">
+      <div class="fin-bar-lbl" style="width:56px;font-size:8px;">${(FIN_CAT_LABELS[cat]||cat).slice(0,7).toUpperCase()}</div>
+      <div class="fin-bar-track"><div style="height:100%;background:${col};width:${Math.round(amt/maxC*100)}%;transition:width .7s;"></div></div>
+      <div class="fin-bar-val" style="color:${col};width:68px;">${formatCOP(amt)} <span style="color:var(--muted);font-size:7px;">${pct}%</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderFinTab(){
+  if(!S) return;
+  // Restore period preference
+  finPeriod = S.finPeriod || 'day';
+  ['day','week','month'].forEach(x=>{
+    const el=document.getElementById('fp-'+x);
+    if(el) el.classList.toggle('active', x===finPeriod);
+  });
+
+  const txs = getFinTransactions(finPeriod);
+  const income  = txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amt,0);
+  const expense = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amt,0);
+  const balance = income - expense;
+
+  const incEl = document.getElementById('finIncome');
+  const expEl = document.getElementById('finExpense');
+  const balEl = document.getElementById('finBalance');
+  if(incEl) incEl.textContent = formatCOP(income);
+  if(expEl) expEl.textContent = formatCOP(expense);
+  if(balEl){
+    balEl.textContent = (balance<0?'-':'')+formatCOP(Math.abs(balance));
+    balEl.style.color = balance<0?'var(--danger)':balance>0?'var(--green)':'var(--bright)';
+  }
+
+  renderFinChartBars(txs, finPeriod);
+  renderFinCatChart(txs);
+  renderFinTxList(txs);
+}
+
+function renderFinTxList(txs){
+  const el = document.getElementById('finTxList'); if(!el) return;
+  if(!txs.length){
+    el.innerHTML='<div class="fin-empty">Sin movimientos en este período.<br><span style="font-size:10px;opacity:.5">Registra tu primer movimiento arriba.</span></div>';
+    return;
+  }
+  el.innerHTML = '<div class="fin-txlist">'+txs.map(t=>{
+    const isInc = t.type==='income';
+    const d = new Date(t.ts);
+    const dateStr = d.toLocaleDateString('es-CO',{day:'numeric',month:'short'}).toUpperCase()
+      +' '+d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="fin-tx">
+      <div class="fin-tx-ico">${t.ico||'💸'}</div>
+      <div class="fin-tx-info">
+        <div class="fin-tx-name">${escH(t.desc)}</div>
+        <div class="fin-tx-meta">${(FIN_CAT_LABELS[t.cat]||t.cat).toUpperCase()} — ${dateStr}</div>
+      </div>
+      <div class="fin-tx-amt ${isInc?'pos':'neg'}">${isInc?'+':'-'}${formatCOP(t.amt)}</div>
+      <button class="fin-tx-del" onclick="delTransaction('${t.id}')">✕</button>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+// ═══════════════════════════════════════════════════════
 // ESTADO DE ÁNIMO (MOOD)
 // ═══════════════════════════════════════════════════════
 // mood 0=pésimo 1=mal 2=regular 3=bien 4=excelente
 // XP otorgado por registrar el ánimo (independiente del valor)
-const MOOD_XP = [20, 20, 20, 20, 20]; // igual para todas — lo que importa es reconocerlo
-const MOOD_SEL_CLASSES = ['sel-0','sel-1','sel-2','sel-3','sel-4'];
+const MOOD_XP = [20, 20, 20, 20, 20];
 const MOOD_LABELS = ['PÉSIMO','MAL','REGULAR','BIEN','EXCELENTE'];
 
 function setMood(val){
+  // Ensure the day is current before logging mood
+  checkReset();
   const today = getTodayISODate();
   if(!S.dailyLog) S.dailyLog=[];
   let entry = S.dailyLog.find(e=>e.date===today);
@@ -1884,7 +2477,7 @@ function setMood(val){
     gainXP(-prevXp);
     S.totalComp = Math.max(0, S.totalComp-1);
     if(S.catCounts&&S.catCounts['mental']) S.catCounts['mental']=Math.max(0,(S.catCounts['mental']||1)-1);
-    entry.cats['mental']=Math.max(0,(entry.cats['mental']||1)-1);
+    entry.cats['mental']=Math.max(0,(entry.cats['mental']||0)-1);
     entry.xp=Math.max(0,(entry.xp||0)-prevXp);
   }
 
@@ -1907,8 +2500,7 @@ function setMood(val){
   });
 
   save();
-  renderMoodWidget();
-  render();
+  render(); // render() already calls renderMoodWidget() internally
   notif('▸ ESTADO MENTAL: ' + MOOD_LABELS[val] + ' +' + xp + ' XP MENTAL');
 }
 
@@ -1943,12 +2535,8 @@ function renderMoodWidget(){
   }
 }
 
-// Hook renderMoodWidget into render
-const _origRender = render;
-function render(){
-  _origRender();
-  renderMoodWidget();
-}
+// Hook renderMoodWidget into render — called directly at end of render()
+// (no wrapper needed; renderMoodWidget is called explicitly in render)
 
 // ═══════════════════════════════════════════════════════
 // INICIO
@@ -1961,28 +2549,30 @@ if(savedUser){
   // Restaurar preferencias de UI
   shopPeriod    = S.shopPeriod    || 'day';
   currentPeriod = S.profilePeriod || 'week';
+  finPeriod     = S.finPeriod     || 'day';
   document.getElementById('userBar').style.display='flex';
   document.getElementById('userBarName').textContent=savedUser.toUpperCase();
-  checkReset(); render();
-  // Restaurar tab activo (después del render para que el contenido esté listo)
-  if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
-  // Restaurar selector de período del shop
+  // Restaurar tamaño de fuente
+  const savedFont=parseInt(localStorage.getItem(getUserKey(savedUser)+'_font'));
+  if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
+  // Restaurar selectors de período
   ['day','week','month'].forEach(x=>{
     const el=document.getElementById('sp-'+x);
     if(el) el.classList.toggle('active', x===shopPeriod);
   });
-  // Restaurar selector de período del perfil
   const ptW=document.getElementById('pt-week');
   const ptM=document.getElementById('pt-month');
   if(ptW) ptW.classList.toggle('active', currentPeriod==='week');
   if(ptM) ptM.classList.toggle('active', currentPeriod==='month');
-  // Restaurar tamaño de fuente
-  const savedFont=parseInt(localStorage.getItem(getUserKey(savedUser)+'_font'));
-  if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
+  checkReset();
+  render();
+  // Restaurar tab activo (después del render para que el contenido esté listo)
+  if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
 } else {
   document.getElementById('loginOver').classList.add('show');
 }
 
+// Tick siempre activo — muestra el reloj aunque no haya sesión
 tick();
 setInterval(tick,1000);
 </script>
