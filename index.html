@@ -659,14 +659,6 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     </div>
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ ZONA DE PELIGRO</span><div class="sline"></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <button class="fabtn" style="border-color:rgba(74,222,128,0.35);color:var(--green);" onclick="exportData()">⬇ EXPORTAR BACKUP</button>
-      <button class="fabtn" style="border-color:rgba(96,165,250,0.35);color:#60a5fa;" onclick="importData()">⬆ IMPORTAR BACKUP</button>
-    </div>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:1px;line-height:1.7;">
-      Guarda un <strong style="color:var(--green)">backup .json</strong> para no perder tu progreso si el navegador limpia los datos.<br>
-      Puedes importarlo en cualquier momento para restaurar todo.
-    </div>
     <button class="fabtn red" style="width:100%" onclick="resetAll()">⚠ REINICIAR TODO EL SISTEMA</button>
     <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px;letter-spacing:1px;">Esto borrará todo tu progreso permanentemente.</div>
   </div>
@@ -706,139 +698,25 @@ let S, pendingId=null, editingMissionId=null, currentUser=null;
 let shopPeriod = 'day'; // 'day' | 'week' | 'month'
 
 // ═══════════════════════════════════════════════════════
-// ALMACENAMIENTO — TRIPLE CAPA
-// localStorage (principal) + sessionStorage (respaldo) + IndexedDB (persistente)
+// MULTI-USER STORAGE (localStorage keyed by user)
 // ═══════════════════════════════════════════════════════
 function getUserKey(user){ return 'sl_v3_' + user.toLowerCase().replace(/\s+/g,'_'); }
 
-// ── IndexedDB helpers ──────────────────────────────────
-let _idb = null;
-
-function openIDB(){
-  return new Promise((res, rej) => {
-    if(_idb){ res(_idb); return; }
-    const req = indexedDB.open('sl_cazador_db', 1);
-    req.onupgradeneeded = e => {
-      e.target.result.createObjectStore('states', {keyPath:'key'});
-    };
-    req.onsuccess = e => { _idb = e.target.result; res(_idb); };
-    req.onerror   = () => res(null); // falla silenciosa
-  });
-}
-
-async function idbSet(key, value){
-  try {
-    const db = await openIDB(); if(!db) return;
-    const tx = db.transaction('states','readwrite');
-    tx.objectStore('states').put({key, value});
-  } catch(e){}
-}
-
-async function idbGet(key){
-  try {
-    const db = await openIDB(); if(!db) return null;
-    return new Promise(res => {
-      const tx  = db.transaction('states','readonly');
-      const req = tx.objectStore('states').get(key);
-      req.onsuccess = () => res(req.result ? req.result.value : null);
-      req.onerror   = () => res(null);
-    });
-  } catch(e){ return null; }
-}
-
-// ── Guardar en las 3 capas ─────────────────────────────
-function save(){
-  if(!currentUser) return;
-  S.xprConfig = {...XPR};
-  const key  = getUserKey(currentUser);
-  const data = JSON.stringify(S);
-  try { localStorage.setItem(key, data); }   catch(e){}
-  try { sessionStorage.setItem(key, data); } catch(e){}
-  idbSet(key, data).catch(()=>{});
-}
-
-// ── Cargar: localStorage → sessionStorage → IndexedDB ─
-async function loadStateAsync(user){
-  const key = getUserKey(user);
-  let raw = null;
-
-  // 1. localStorage
-  try { raw = localStorage.getItem(key); } catch(e){}
-
-  // 2. sessionStorage como respaldo
-  if(!raw){ try { raw = sessionStorage.getItem(key); } catch(e){} }
-
-  // 3. IndexedDB como última línea
-  if(!raw){ raw = await idbGet(key); }
-
-  if(raw){
-    try {
-      const d = JSON.parse(raw);
-      XPR = d.xprConfig || XPR;
-      if(!d.achievements || !d.achievements.length) d.achievements = defaultAchievements();
-      if(!d.dailyLog) d.dailyLog = [];
-      // Si venía de IDB pero no estaba en localStorage, restaurarlo
-      try { localStorage.setItem(key, raw); } catch(e){}
-      try { sessionStorage.setItem(key, raw); } catch(e){}
-      return d;
-    } catch(e){}
-  }
-  return defaultState();
-}
-
-// Versión síncrona para compatibilidad (solo localStorage/sessionStorage)
 function loadState(user){
-  const key = getUserKey(user);
-  let raw = null;
-  try { raw = localStorage.getItem(key); } catch(e){}
-  if(!raw){ try { raw = sessionStorage.getItem(key); } catch(e){} }
-  if(raw){
-    try {
-      const d = JSON.parse(raw);
-      XPR = d.xprConfig || XPR;
-      if(!d.achievements || !d.achievements.length) d.achievements = defaultAchievements();
-      if(!d.dailyLog) d.dailyLog = [];
+  try {
+    const raw = localStorage.getItem(getUserKey(user));
+    if(raw){
+      const d=JSON.parse(raw);
+      XPR=d.xprConfig||XPR;
+      if(!d.achievements||!d.achievements.length) d.achievements=defaultAchievements();
+      if(!d.dailyLog) d.dailyLog=[];
       return d;
-    } catch(e){}
-  }
+    }
+  } catch(e){}
   return defaultState();
 }
 
-// ── Exportar / Importar ────────────────────────────────
-function exportData(){
-  if(!S) return;
-  const blob = new Blob([JSON.stringify({user: currentUser, state: S}, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'cazador_backup_' + (currentUser||'user').replace(/\s+/g,'_') + '_' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  notif('▸ BACKUP EXPORTADO ◂');
-}
-
-function importData(){
-  const input = document.createElement('input');
-  input.type = 'file'; input.accept = '.json';
-  input.onchange = e => {
-    const file = e.target.files[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const parsed = JSON.parse(ev.target.result);
-        const state  = parsed.state || parsed; // soporta formato viejo y nuevo
-        if(!state.missions) throw new Error('Formato inválido');
-        S = state;
-        XPR = S.xprConfig || {D:15,C:30,B:50,A:80,S:120};
-        save();
-        render();
-        notif('▸ DATOS IMPORTADOS CORRECTAMENTE ◂');
-      } catch(err) {
-        notif('⚠ ERROR AL IMPORTAR — ARCHIVO INVÁLIDO');
-      }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
+function defaultAchievements(){
   return [
     { id:'a1', ico:'🌅', name:'Primer Paso',   desc:'Completa tu primera misión',           type:'totalComp', target:1   },
     { id:'a2', ico:'🔥', name:'Racha de 3',    desc:'Mantén 3 días consecutivos',           type:'streak',    target:3   },
@@ -880,37 +758,26 @@ function doLogin(){
   if(!u){ notif('▸ INGRESA UN NOMBRE DE USUARIO'); return; }
   currentUser = u;
   localStorage.setItem('sl_current_user', u);
-  sessionStorage.setItem('sl_current_user', u);
-  loadStateAsync(u).then(state => {
-    S = state;
-    XPR = S.xprConfig || {D:15,C:30,B:50,A:80,S:120};
-    shopPeriod    = S.shopPeriod    || 'day';
-    currentPeriod = S.profilePeriod || 'week';
-    document.getElementById('loginOver').classList.remove('show');
-    document.getElementById('userBar').style.display='flex';
-    document.getElementById('userBarName').textContent = u.toUpperCase();
-    checkReset();
-    render();
-    if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
-    ['day','week','month'].forEach(x=>{
-      const el=document.getElementById('sp-'+x);
-      if(el) el.classList.toggle('active', x===shopPeriod);
-    });
-    const ptW=document.getElementById('pt-week');
-    const ptM=document.getElementById('pt-month');
-    if(ptW) ptW.classList.toggle('active', currentPeriod==='week');
-    if(ptM) ptM.classList.toggle('active', currentPeriod==='month');
-    const savedFont=parseInt(localStorage.getItem(getUserKey(u)+'_font'));
-    if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
-    notif('▸ BIENVENIDO, ' + u.toUpperCase() + ' ◂');
-  });
+  S = loadState(u);
+  XPR = S.xprConfig || {D:15,C:30,B:50,A:80,S:120};
+  // Restaurar preferencias de UI
+  shopPeriod    = S.shopPeriod    || 'day';
+  currentPeriod = S.profilePeriod || 'week';
+  document.getElementById('loginOver').classList.remove('show');
+  document.getElementById('userBar').style.display='flex';
+  document.getElementById('userBarName').textContent = u.toUpperCase();
+  checkReset();
+  render();
+  // Restaurar tab activo
+  if(S.activeTab) switchTab(S.activeTab);
+  tick();
+  notif('▸ BIENVENIDO, ' + u.toUpperCase() + ' ◂');
 }
 
 function doLogout(){
   if(!confirm('¿Cambiar de usuario? Tu progreso está guardado.')) return;
   currentUser = null;
   localStorage.removeItem('sl_current_user');
-  sessionStorage.removeItem('sl_current_user');
   document.getElementById('loginOver').classList.add('show');
   document.getElementById('userBar').style.display='none';
 }
@@ -2086,37 +1953,32 @@ function render(){
 // ═══════════════════════════════════════════════════════
 // INICIO
 // ═══════════════════════════════════════════════════════
-function restoreUIPrefs(){
+const savedUser = localStorage.getItem('sl_current_user');
+if(savedUser){
+  currentUser=savedUser;
+  S=loadState(savedUser);
+  XPR=S.xprConfig||{D:15,C:30,B:50,A:80,S:120};
+  // Restaurar preferencias de UI
   shopPeriod    = S.shopPeriod    || 'day';
   currentPeriod = S.profilePeriod || 'week';
+  document.getElementById('userBar').style.display='flex';
+  document.getElementById('userBarName').textContent=savedUser.toUpperCase();
+  checkReset(); render();
+  // Restaurar tab activo (después del render para que el contenido esté listo)
+  if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
+  // Restaurar selector de período del shop
   ['day','week','month'].forEach(x=>{
     const el=document.getElementById('sp-'+x);
     if(el) el.classList.toggle('active', x===shopPeriod);
   });
+  // Restaurar selector de período del perfil
   const ptW=document.getElementById('pt-week');
   const ptM=document.getElementById('pt-month');
   if(ptW) ptW.classList.toggle('active', currentPeriod==='week');
   if(ptM) ptM.classList.toggle('active', currentPeriod==='month');
-}
-
-let savedUser = null;
-try { savedUser = localStorage.getItem('sl_current_user'); } catch(e){}
-if(!savedUser){ try { savedUser = sessionStorage.getItem('sl_current_user'); } catch(e){} }
-
-if(savedUser){
-  currentUser = savedUser;
-  loadStateAsync(savedUser).then(state => {
-    S = state;
-    XPR = S.xprConfig || {D:15,C:30,B:50,A:80,S:120};
-    document.getElementById('userBar').style.display='flex';
-    document.getElementById('userBarName').textContent = savedUser.toUpperCase();
-    checkReset();
-    render();
-    restoreUIPrefs();
-    if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
-    const savedFont = parseInt(localStorage.getItem(getUserKey(savedUser)+'_font'));
-    if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
-  });
+  // Restaurar tamaño de fuente
+  const savedFont=parseInt(localStorage.getItem(getUserKey(savedUser)+'_font'));
+  if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
 } else {
   document.getElementById('loginOver').classList.add('show');
 }
