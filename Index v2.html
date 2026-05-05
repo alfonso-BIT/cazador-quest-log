@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Cazador — Daily Quest Log</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhani',sans-serif;font-size:var(--base-font,15px);overflow-x:hidden;}
+:root{
+  --blue:#00aaff;--blue-dim:#0066aa;--blue-dark:#001833;
+  --gold:#f0c040;--gold-dim:#8a6a00;
+  --panel:rgba(0,15,35,0.97);--border:rgba(0,170,255,0.35);
+  --bright:#e8f4ff;--muted:#6090b0;
+  --s:#ff6b35;--a:#c084fc;--b:#60a5fa;--c:#4ade80;--d:#94a3b8;
+  --danger:#ff4466;--green:#4ade80;
+  --base-font:15px;
+}
+.scanlines{position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,20,50,0.025) 2px,rgba(0,20,50,0.025) 4px);pointer-events:none;z-index:1000;}
+.gridbg{position:fixed;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,100,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.wrap{max-width:760px;margin:0 auto;padding:16px;position:relative;}
+/* FONT SIZE CONTROL */
+.fontbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:8px;}
+.fontbar-lbl{font-size:10px;color:var(--muted);letter-spacing:2px;}
+.fontbtn{background:none;border:1px solid rgba(0,170,255,0.3);color:var(--blue);font-family:'Orbitron',monospace;font-size:13px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.fontbtn:hover{background:rgba(0,170,255,0.1);}
+.font-val{font-family:'Orbitron',monospace;font-size:12px;color:var(--bright);min-width:36px;text-align:center;letter-spacing:1px;}
+/* USER LOGIN */
+.loginover{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,5,15,0.97);z-index:9500;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.loginover.show{display:flex;}
+.login-box{background:#020c1e;border:1px solid var(--blue);box-shadow:0 0 40px rgba(0,170,255,0.15);padding:30px;width:90%;max-width:380px;}
+.login-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:3px;color:var(--bright);margin-bottom:6px;}
+.login-sub{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:18px;line-height:1.7;}
+.login-inp{width:100%;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.35);color:var(--bright);padding:10px 12px;font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;margin-bottom:10px;}
+.login-inp:focus{border-color:var(--blue);}
+.login-btn{width:100%;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;padding:11px;cursor:pointer;transition:all .2s;margin-top:4px;}
+.login-btn:hover{background:rgba(0,170,255,0.09);}
+.login-user-bar{display:flex;align-items:center;gap:8px;background:rgba(0,10,25,0.7);border:1px solid rgba(0,100,200,0.2);padding:8px 14px;margin-bottom:10px;font-size:11px;}
+.login-user-bar span{color:var(--muted);flex:1;}
+.login-user-bar strong{color:var(--blue);font-family:'Orbitron',monospace;font-size:10px;letter-spacing:1px;}
+.logout-btn{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--danger);cursor:pointer;background:none;border:1px solid rgba(255,70,102,.25);padding:3px 8px;transition:all .2s;}
+.logout-btn:hover{background:rgba(255,70,102,.05);}
+/* HEADER */
+.hdr{text-align:center;padding:22px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.hdr-sub{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:6px;color:var(--blue);opacity:.7;margin-bottom:4px;}
+.hdr-title{font-family:'Orbitron',monospace;font-size:24px;font-weight:900;color:var(--bright);letter-spacing:4px;text-shadow:0 0 20px rgba(0,170,255,0.45);}
+.hdr-time{font-size:10px;color:var(--muted);margin-top:6px;font-family:'Orbitron',monospace;letter-spacing:2px;}
+/* PLAYER CARD */
+.pcard{background:var(--panel);border:1px solid var(--border);border-radius:2px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.pcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--blue);box-shadow:0 0 10px rgba(0,170,255,0.6);}
+.phdr{display:flex;align-items:center;gap:14px;}
+.avatar{width:62px;height:62px;background:linear-gradient(135deg,#001833,#003366);border:2px solid var(--blue);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 0 14px rgba(0,170,255,0.28);flex-shrink:0;}
+.pinfo{flex:1;}
+.pname{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--bright);letter-spacing:2px;}
+.pclass{font-size:11px;color:var(--blue);letter-spacing:3px;margin:3px 0;}
+.prank{display:inline-block;padding:3px 12px;background:rgba(192,132,252,0.12);border:1px solid rgba(192,132,252,0.45);color:#c084fc;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;margin-top:4px;}
+.plvl{text-align:right;}
+.plvlnum{font-family:'Orbitron',monospace;font-size:30px;font-weight:900;color:var(--bright);}
+.plvllbl{font-size:9px;color:var(--muted);letter-spacing:2px;}
+/* CLASS BANNER */
+.class-banner{margin-top:10px;padding:8px 12px;background:rgba(0,170,255,0.06);border:1px solid rgba(0,170,255,0.2);border-left:3px solid var(--blue);display:none;}
+.class-banner.show{display:block;}
+.class-banner-title{font-family:'Orbitron',monospace;font-size:9px;color:var(--blue);letter-spacing:3px;margin-bottom:3px;}
+.class-banner-name{font-size:14px;font-weight:700;color:var(--bright);}
+.class-banner-desc{font-size:11px;color:var(--muted);margin-top:2px;}
+/* XP */
+.xpsec{margin-top:14px;}
+.xprow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.xplbl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.xpval{font-family:'Orbitron',monospace;font-size:13px;color:var(--gold);}
+.xptrack{height:8px;background:rgba(0,100,200,0.12);border:1px solid rgba(0,100,200,0.25);position:relative;overflow:hidden;}
+.xpfill{height:100%;background:linear-gradient(90deg,#0044aa,#00aaff);transition:width 1s cubic-bezier(.4,0,.2,1);position:relative;}
+.xpfill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:18px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4));animation:sh 2s infinite;}
+@keyframes sh{0%,100%{opacity:.3}50%{opacity:1}}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.sbox{background:rgba(0,30,60,0.5);border:1px solid rgba(0,100,200,0.18);padding:9px 10px;text-align:center;}
+.sval{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--bright);}
+.skey{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px;}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid rgba(0,100,200,0.22);margin-bottom:12px;flex-wrap:wrap;}
+.tab{padding:9px 14px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab:hover:not(.active){color:#8bb8d0;}
+.tabcontent{display:none;}
+.tabcontent.active{display:block;}
+/* SECTION HDR */
+.shdr{display:flex;align-items:center;gap:8px;margin:14px 0 10px;}
+.sline{flex:1;height:1px;background:var(--border);}
+.stitle{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--blue);letter-spacing:3px;white-space:nowrap;}
+/* RESET BAR */
+.resetbar{display:flex;align-items:center;justify-content:space-between;background:rgba(0,10,25,0.8);border:1px solid rgba(0,100,200,0.18);padding:10px 14px;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.rlbl{color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-size:9px;}
+.rcd{font-family:'Orbitron',monospace;font-size:14px;color:var(--blue);letter-spacing:2px;}
+/* RESET HOUR CONTROLS */
+.reset-hour-ctrl{display:flex;align-items:center;gap:6px;margin-top:4px;}
+.rhbtn{background:none;border:1px solid rgba(0,170,255,0.3);color:var(--blue);font-family:'Orbitron',monospace;font-size:12px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.rhbtn:hover{background:rgba(0,170,255,0.1);}
+.rh-val{font-family:'Orbitron',monospace;font-size:14px;color:var(--bright);min-width:44px;text-align:center;}
+/* PENALTY */
+.penbar{background:rgba(255,30,60,0.07);border:1px solid rgba(255,30,60,0.28);border-left:3px solid var(--danger);padding:10px 14px;margin-bottom:10px;display:none;}
+.pentitle{font-family:'Orbitron',monospace;font-size:9px;color:var(--danger);letter-spacing:3px;margin-bottom:3px;}
+.pentext{font-size:12px;color:#ff8899;}
+/* MISSION CARDS */
+.mcard{background:var(--panel);border:1px solid rgba(0,100,200,0.22);border-left:3px solid var(--blue);padding:12px 14px;margin-bottom:8px;transition:all .18s;position:relative;overflow:hidden;}
+.mcard:hover{border-color:var(--blue);background:rgba(0,25,55,.98);}
+.mcard.done{border-left-color:var(--green);opacity:.6;}
+.mcard.done .mname{text-decoration:line-through;color:var(--muted);}
+.mcard.editing{border-color:var(--gold);border-left-color:var(--gold);}
+.mcard.fixed-mission{border-left-color:var(--gold);}
+.mtop{display:flex;align-items:flex-start;gap:10px;}
+.mchk{width:20px;height:20px;border:2px solid var(--blue);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .18s;cursor:pointer;font-size:12px;font-weight:700;user-select:none;}
+.mchk.yes{background:var(--green);border-color:var(--green);color:#001a00;}
+.mcontent{flex:1;}
+.mname{font-size:15px;font-weight:600;color:var(--bright);line-height:1.3;}
+.mdesc{font-size:11px;color:var(--muted);margin-top:2px;}
+.mfoot{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.mxp{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--gold);background:rgba(240,192,64,0.09);border:1px solid rgba(240,192,64,0.28);padding:2px 8px;}
+.mrnk{font-size:10px;font-weight:700;padding:2px 8px;border:1px solid;letter-spacing:1px;}
+.rs{color:var(--s);border-color:rgba(255,107,53,.45);background:rgba(255,107,53,.07);}
+.ra{color:var(--a);border-color:rgba(192,132,252,.45);background:rgba(192,132,252,.07);}
+.rb{color:var(--b);border-color:rgba(96,165,250,.45);background:rgba(96,165,250,.07);}
+.rc{color:var(--c);border-color:rgba(74,222,128,.45);background:rgba(74,222,128,.07);}
+.rd{color:var(--d);border-color:rgba(148,163,184,.45);background:rgba(148,163,184,.07);}
+.mtype{font-size:9px;color:var(--muted);letter-spacing:2px;}
+.mactions{display:flex;gap:4px;margin-left:auto;}
+.act-btn{font-size:10px;cursor:pointer;padding:2px 7px;border:1px solid;background:none;font-family:'Rajdhani',sans-serif;transition:all .15s;}
+.act-btn.edit{color:rgba(96,165,250,.7);border-color:rgba(96,165,250,.25);}
+.act-btn.edit:hover{color:var(--b);border-color:rgba(96,165,250,.5);}
+.act-btn.del{color:rgba(255,70,102,.5);border-color:rgba(255,70,102,.2);}
+.act-btn.del:hover{color:var(--danger);border-color:rgba(255,70,102,.5);}
+.act-btn.save{color:rgba(74,222,128,.8);border-color:rgba(74,222,128,.3);}
+.act-btn.save:hover{color:var(--green);border-color:rgba(74,222,128,.6);}
+.act-btn.cancel{color:var(--muted);border-color:rgba(96,130,180,.25);}
+.fixed-badge{font-size:8px;letter-spacing:2px;color:var(--gold);background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);padding:1px 5px;font-family:'Orbitron',monospace;}
+.progtxt{font-size:11px;color:var(--muted);text-align:right;margin-top:4px;}
+/* INLINE EDIT */
+.inline-edit{background:rgba(0,20,50,0.95);border:1px solid rgba(240,192,64,0.3);padding:12px;margin-top:10px;display:none;}
+.inline-edit.show{display:block;}
+.ie-row{margin-bottom:8px;}
+.ie-lbl{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;display:block;}
+.ie-inp{width:100%;background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.3);color:var(--bright);padding:6px 9px;font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;}
+.ie-inp:focus{border-color:var(--gold);}
+.ie-sel{width:100%;background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.3);color:var(--bright);padding:6px 9px;font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;}
+.ie-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ie-btns{display:flex;gap:6px;margin-top:8px;}
+.ie-btn{flex:1;padding:7px;font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;cursor:pointer;border:1px solid;background:transparent;transition:all .2s;}
+.ie-btn.ok{border-color:rgba(74,222,128,.4);color:var(--green);}
+.ie-btn.ok:hover{background:rgba(74,222,128,.07);}
+.ie-btn.ko{border-color:rgba(0,100,200,.3);color:var(--muted);}
+.ie-btn.ko:hover{background:rgba(0,100,200,.05);}
+/* SEARCH BAR */
+.searchbar{display:flex;gap:8px;margin-bottom:10px;}
+.search-inp{flex:1;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);padding:8px 10px;font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;}
+.search-inp:focus{border-color:var(--blue);}
+/* CLAIM */
+.claimbtn{width:100%;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:4px;padding:13px;cursor:pointer;margin-top:12px;transition:all .2s;}
+.claimbtn:hover:not(:disabled){background:rgba(0,170,255,0.09);box-shadow:0 0 15px rgba(0,170,255,0.2);}
+.claimbtn:disabled{opacity:.3;cursor:default;}
+/* SHOP & INVENTORY GRID */
+.invgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;}
+.icard{background:rgba(0,15,35,0.92);border:1px solid rgba(0,100,200,0.18);padding:13px;cursor:pointer;transition:all .18s;position:relative;}
+.icard:hover:not(.locked){border-color:rgba(240,192,64,0.4);}
+.icard.locked{opacity:.45;cursor:default;}
+.icard-actions{display:flex;gap:4px;margin-top:8px;}
+.irarity{font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;font-weight:700;}
+.rleg{color:#f0c040;}.rep{color:#c084fc;}.rrare{color:#60a5fa;}.rcom{color:#94a3b8;}
+.iico{font-size:28px;margin-bottom:6px;}
+.iname{font-size:13px;font-weight:600;color:var(--bright);line-height:1.3;}
+.iprice{font-size:10px;color:var(--muted);margin-top:2px;}
+.icost{display:flex;align-items:center;gap:4px;margin-top:8px;}
+.icostval{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--gold);}
+.icostlbl{font-size:9px;color:var(--muted);letter-spacing:1px;}
+.ilock{position:absolute;top:8px;right:9px;font-size:12px;}
+.iunlbdg{position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:1px;color:var(--green);font-weight:700;}
+.ibar{margin-top:8px;height:3px;background:rgba(0,100,200,0.12);border:1px solid rgba(0,100,200,0.18);}
+.ibarfill{height:100%;transition:width .5s;}
+.ipct{font-size:9px;color:var(--muted);text-align:right;margin-top:3px;}
+.idate{font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:1px;}
+/* FORMS */
+.aform{background:var(--panel);border:1px solid rgba(0,100,200,0.18);padding:14px;margin-bottom:12px;}
+.frow{margin-bottom:10px;}
+.flbl{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;display:block;}
+.finput{width:100%;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);padding:8px 10px;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;}
+.finput:focus{border-color:var(--blue);}
+.fselect{background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);padding:8px 10px;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;width:100%;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fabtn{width:100%;background:transparent;border:1px solid rgba(0,170,255,0.35);color:var(--blue);font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;padding:10px;cursor:pointer;margin-top:4px;transition:all .2s;}
+.fabtn:hover{background:rgba(0,170,255,0.07);}
+.fabtn.gold{border-color:rgba(240,192,64,0.35);color:var(--gold);}
+.fabtn.gold:hover{background:rgba(240,192,64,0.07);}
+.fabtn.red{border-color:rgba(255,50,80,0.35);color:#ff6688;}
+.fabtn.red:hover{background:rgba(255,50,80,0.05);}
+.fabtn.green{border-color:rgba(74,222,128,0.35);color:var(--green);}
+.fabtn.green:hover{background:rgba(74,222,128,0.05);}
+/* RANK CONFIG */
+.rank-cfg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px;}
+.rank-box{background:rgba(0,20,50,0.7);border:1px solid rgba(0,100,200,0.2);padding:8px;text-align:center;}
+.rank-box-lbl{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;margin-bottom:4px;}
+.rank-inp{width:100%;background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.25);color:var(--bright);padding:4px 6px;font-family:'Orbitron',monospace;font-size:12px;text-align:center;outline:none;}
+.rank-inp:focus{border-color:var(--gold);}
+/* NOTIFICATION */
+.notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(0,10,30,0.97);border:1px solid var(--blue);box-shadow:0 0 20px rgba(0,170,255,0.2);color:var(--bright);font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;padding:10px 22px;z-index:9999;opacity:0;transition:opacity .3s;white-space:nowrap;text-align:center;max-width:90vw;overflow:hidden;text-overflow:ellipsis;}
+.notif.show{opacity:1;}
+.lvlflash{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,170,255,0.07);z-index:5000;pointer-events:none;opacity:0;transition:opacity .3s;}
+.lvlflash.show{opacity:1;}
+/* MODAL */
+.modover{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,5,15,0.88);z-index:8000;align-items:center;justify-content:center;}
+.modover.show{display:flex;}
+.modal{background:#020c1e;border:1px solid var(--blue);box-shadow:0 0 40px rgba(0,170,255,0.15);padding:24px;width:90%;max-width:420px;max-height:85vh;overflow-y:auto;}
+.modtitle{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;color:var(--bright);margin-bottom:16px;border-bottom:1px solid rgba(0,170,255,0.2);padding-bottom:12px;}
+.modbody{font-size:13px;color:var(--muted);line-height:1.8;}
+.modacts{display:flex;gap:8px;margin-top:16px;}
+.mbtn{flex:1;padding:10px;font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;font-weight:700;cursor:pointer;border:1px solid;background:transparent;transition:all .2s;}
+.mbtn.ok{border-color:var(--gold);color:var(--gold);}
+.mbtn.ok:hover{background:rgba(240,192,64,0.09);}
+.mbtn.no{border-color:rgba(0,100,200,0.35);color:var(--muted);}
+.mbtn.no:hover{background:rgba(0,100,200,0.05);}
+.edit-item-form .ie-row{margin-bottom:8px;}
+@media(max-width:480px){
+  .hdr-title{font-size:17px;}
+  .stats3{grid-template-columns:repeat(3,1fr);}
+  .fgrid{grid-template-columns:1fr;}
+  .invgrid{grid-template-columns:repeat(2,1fr);}
+  .ie-grid{grid-template-columns:1fr;}
+  .rank-cfg-grid{grid-template-columns:repeat(3,1fr);}
+}
+/* PROFILE / RADAR */
+.profile-hero{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold);padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
+.profile-avatar-big{width:72px;height:72px;background:linear-gradient(135deg,#001833,#003366);border:2px solid var(--gold);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;box-shadow:0 0 18px rgba(240,192,64,0.2);}
+.profile-info{flex:1;}
+.profile-name{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--bright);letter-spacing:3px;}
+.profile-class{font-size:12px;color:var(--gold);letter-spacing:3px;margin:4px 0;}
+.profile-lvlbig{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;color:var(--bright);}
+.profile-lvllbl{font-size:9px;color:var(--muted);letter-spacing:2px;}
+.period-toggle{display:flex;gap:0;margin-bottom:14px;border:1px solid rgba(0,170,255,0.25);}
+.ptbtn{flex:1;padding:8px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .2s;}
+.ptbtn.active{color:var(--blue);background:rgba(0,170,255,0.08);}
+.ptbtn:hover:not(.active){color:#8bb8d0;}
+.radar-wrap{background:rgba(0,10,25,0.8);border:1px solid rgba(0,100,200,0.2);padding:16px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;}
+.radar-title{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;color:var(--blue);margin-bottom:12px;align-self:flex-start;}
+.stats-bars{background:var(--panel);border:1px solid rgba(0,100,200,0.18);padding:14px;margin-bottom:12px;}
+.sbar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.sbar-ico{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
+.sbar-lbl{font-size:10px;color:var(--muted);letter-spacing:1px;width:80px;flex-shrink:0;}
+.sbar-track{flex:1;height:6px;background:rgba(0,100,200,0.12);border:1px solid rgba(0,100,200,0.18);position:relative;overflow:hidden;}
+.sbar-fill{height:100%;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.sbar-val{font-family:'Orbitron',monospace;font-size:10px;color:var(--bright);width:28px;text-align:right;flex-shrink:0;}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+.smbox{background:rgba(0,30,60,0.5);border:1px solid rgba(0,100,200,0.18);padding:12px;text-align:center;}
+.smval{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:var(--bright);}
+.smkey{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:3px;}
+.achiev-list{background:var(--panel);border:1px solid rgba(0,100,200,0.18);padding:14px;}
+.achiev-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(0,100,200,0.1);}
+.achiev-row:last-child{border-bottom:none;}
+.achiev-ico{font-size:18px;width:24px;text-align:center;}
+.achiev-txt{flex:1;}
+.achiev-name{font-size:12px;font-weight:600;color:var(--bright);}
+.achiev-desc{font-size:10px;color:var(--muted);}
+.achiev-badge{font-family:'Orbitron',monospace;font-size:8px;padding:2px 7px;border:1px solid;letter-spacing:1px;}
+.achiev-badge.done{color:var(--green);border-color:rgba(74,222,128,.4);}
+.achiev-badge.pend{color:var(--muted);border-color:rgba(0,100,200,.25);}
+/* MOOD WIDGET */
+.mood-card{background:var(--panel);border:1px solid rgba(0,100,200,0.22);border-left:3px solid #60a5fa;padding:14px 16px;margin-bottom:12px;position:relative;}
+.mood-title{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;color:#60a5fa;margin-bottom:4px;}
+.mood-subtitle{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6;}
+.mood-faces{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.mood-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(0,20,50,0.7);border:2px solid rgba(0,100,200,0.18);padding:10px 14px;cursor:pointer;transition:all .2s;min-width:56px;flex:1;max-width:90px;}
+.mood-btn:hover{border-color:rgba(96,165,250,0.5);background:rgba(0,30,70,0.9);}
+.mood-btn.selected{border-color:#60a5fa;background:rgba(96,165,250,0.1);box-shadow:0 0 10px rgba(96,165,250,0.2);}
+.mood-btn.sel-0{border-color:#ff4466;background:rgba(255,68,102,0.1);box-shadow:0 0 8px rgba(255,68,102,0.2);}
+.mood-btn.sel-1{border-color:#f0a040;background:rgba(240,160,64,0.1);}
+.mood-btn.sel-2{border-color:#f0c040;background:rgba(240,192,64,0.1);}
+.mood-btn.sel-3{border-color:#4ade80;background:rgba(74,222,128,0.1);}
+.mood-btn.sel-4{border-color:#c084fc;background:rgba(192,132,252,0.1);box-shadow:0 0 10px rgba(192,132,252,0.2);}
+.mood-face{font-size:28px;line-height:1;transition:transform .2s;}
+.mood-btn:hover .mood-face{transform:scale(1.15);}
+.mood-btn.selected .mood-face{transform:scale(1.2);}
+.mood-lbl{font-family:'Orbitron',monospace;font-size:7px;letter-spacing:1px;color:var(--muted);text-align:center;}
+.mood-btn.selected .mood-lbl{color:var(--bright);}
+.mood-saved{font-size:10px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:1px;display:none;}
+.mood-saved.show{display:block;}
+.mood-xp-badge{position:absolute;top:12px;right:14px;font-family:'Orbitron',monospace;font-size:9px;color:#60a5fa;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.25);padding:2px 8px;display:none;}
+.mood-xp-badge.show{display:block;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:#020810;}
+::-webkit-scrollbar-thumb{background:rgba(0,170,255,0.3);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="gridbg"></div>
+<div class="scanlines"></div>
+<div class="notif" id="notif"></div>
+<div class="lvlflash" id="lvlf"></div>
+
+<!-- LOGIN OVERLAY -->
+<div class="loginover" id="loginOver">
+  <div class="login-box">
+    <div class="login-title">▸ SISTEMA DE CAZADOR ◂</div>
+    <div class="login-sub">Ingresa un nombre de usuario para guardar tu progreso.<br>El mismo nombre en cualquier navegador restaura tus datos.</div>
+    <input class="login-inp" id="loginUser" placeholder="Nombre de usuario..." maxlength="30" onkeydown="if(event.key==='Enter')doLogin()">
+    <input class="login-inp" id="loginPass" type="password" placeholder="Contraseña (opcional)..." maxlength="30" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">◈ ENTRAR AL SISTEMA ◈</button>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:1px;">Si eres nuevo, se creará tu perfil automáticamente.</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modover" id="modal">
+  <div class="modal">
+    <div class="modtitle" id="modT">ACCIÓN</div>
+    <div class="modbody" id="modB"></div>
+    <div class="modacts" id="modActs">
+      <button class="mbtn ok" onclick="confirmRedeem()">CONFIRMAR</button>
+      <button class="mbtn no" onclick="closeModal()">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- FONT SIZE BAR -->
+  <div class="fontbar">
+    <span class="fontbar-lbl">TEXTO</span>
+    <button class="fontbtn" onclick="changeFontSize(-1)">−</button>
+    <div class="font-val" id="fontVal">15px</div>
+    <button class="fontbtn" onclick="changeFontSize(1)">+</button>
+  </div>
+
+  <!-- USER BAR -->
+  <div class="login-user-bar" id="userBar" style="display:none">
+    <span>Cazador: <strong id="userBarName">—</strong></span>
+    <button class="logout-btn" onclick="doLogout()">CAMBIAR USUARIO</button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-sub">▸ SISTEMA DE CAZADOR ◂</div>
+    <div class="hdr-title">DAILY QUEST LOG</div>
+    <div class="hdr-time" id="sysTime">—</div>
+  </div>
+
+  <!-- PLAYER CARD -->
+  <div class="pcard">
+    <div class="phdr">
+      <div class="avatar" id="avatarEl">⚔️</div>
+      <div class="pinfo">
+        <div class="pname" id="pname">CAZADOR</div>
+        <div class="pclass" id="pclass">▸ CAZADOR INDEPENDIENTE</div>
+        <div class="prank" id="prank">RANGO E</div>
+      </div>
+      <div class="plvl">
+        <div class="plvlnum" id="plvl">LV.1</div>
+        <div class="plvllbl">NIVEL</div>
+      </div>
+    </div>
+    <div class="class-banner" id="classBanner">
+      <div class="class-banner-title">▸ CLASE DETECTADA</div>
+      <div class="class-banner-name" id="classNameEl">—</div>
+      <div class="class-banner-desc" id="classDescEl">—</div>
+    </div>
+    <div class="xpsec">
+      <div class="xprow">
+        <span class="xplbl">▸ EXPERIENCIA</span>
+        <span class="xpval" id="xpdisp">0 / 100 XP</span>
+      </div>
+      <div class="xptrack"><div class="xpfill" id="xpbar" style="width:0%"></div></div>
+    </div>
+    <div class="stats3">
+      <div class="sbox"><div class="sval" id="stTotal">0</div><div class="skey">TOTAL XP</div></div>
+      <div class="sbox"><div class="sval" id="stStreak">0</div><div class="skey">RACHA DÍAS</div></div>
+      <div class="sbox"><div class="sval" id="stComp">0</div><div class="skey">MISIONES ✓</div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('missions')">MISIONES</button>
+    <button class="tab" onclick="switchTab('allquests')">TODAS</button>
+    <button class="tab" onclick="switchTab('shop')">TIENDA</button>
+    <button class="tab" onclick="switchTab('inventory')">INVENTARIO</button>
+    <button class="tab" onclick="switchTab('perfil')">PERFIL</button>
+    <button class="tab" onclick="switchTab('config')">CONFIGURAR</button>
+  </div>
+
+  <!-- TAB: MISIONES DIARIAS -->
+  <div class="tabcontent active" id="tab-missions">
+    <div class="resetbar">
+      <div>
+        <div class="rlbl">RESET DIARIO EN</div>
+        <div class="rcd" id="rcd">23:59:59</div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px;" id="resetHourLbl">RESET A LAS 00:00</div>
+      </div>
+      <div>
+        <div class="rlbl">HORA DE RESET</div>
+        <div class="reset-hour-ctrl">
+          <button class="rhbtn" onclick="changeResetHour(-1)">−</button>
+          <div class="rh-val" id="rhVal">00:00</div>
+          <button class="rhbtn" onclick="changeResetHour(1)">+</button>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="rlbl">XP HOY</div>
+        <div class="rcd" id="todayxp" style="color:var(--gold)">+0</div>
+      </div>
+    </div>
+    <div class="penbar" id="penbar">
+      <div class="pentitle">⚠ AVISO DEL SISTEMA</div>
+      <div class="pentext">No completaste todas tus misiones mínimas ayer. El Sistema observa tu progreso, Cazador.</div>
+    </div>
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ MISIONES FIJAS HOY</span><div class="sline"></div></div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">4 misiones mínimas de hoy (una por categoría). El sistema las rota automáticamente.</div>
+    <div id="mlist"></div>
+    <div class="progtxt" id="progtxt">0 / 4 misiones mínimas completadas</div>
+    <button class="claimbtn" id="claimbtn" onclick="claimDaily()" disabled>◈ RECLAMAR RECOMPENSA DIARIA ◈</button>
+
+    <!-- MOOD WIDGET -->
+    <div class="shdr" style="margin-top:18px;"><div class="sline"></div><span class="stitle">◈ ESTADO MENTAL DEL DÍA</span><div class="sline"></div></div>
+    <div class="mood-card" id="moodCard">
+      <div class="mood-title">▸ SISTEMA DE MONITOREO MENTAL</div>
+      <div class="mood-subtitle">¿Cómo te sentiste hoy, Cazador?<br><span style="font-size:10px;color:rgba(96,165,250,0.6);">Tu estado emocional se registra en Salud Mental y contribuye a tu progreso.</span></div>
+      <div class="mood-xp-badge" id="moodXpBadge">+XP MENTAL</div>
+      <div class="mood-faces" id="moodFaces">
+        <button class="mood-btn" id="mood-0" onclick="setMood(0)">
+          <div class="mood-face">😭</div>
+          <div class="mood-lbl">PÉSIMO</div>
+        </button>
+        <button class="mood-btn" id="mood-1" onclick="setMood(1)">
+          <div class="mood-face">😔</div>
+          <div class="mood-lbl">MAL</div>
+        </button>
+        <button class="mood-btn" id="mood-2" onclick="setMood(2)">
+          <div class="mood-face">😐</div>
+          <div class="mood-lbl">REGULAR</div>
+        </button>
+        <button class="mood-btn" id="mood-3" onclick="setMood(3)">
+          <div class="mood-face">😄</div>
+          <div class="mood-lbl">BIEN</div>
+        </button>
+        <button class="mood-btn" id="mood-4" onclick="setMood(4)">
+          <div class="mood-face">🤩</div>
+          <div class="mood-lbl">EXCELENTE</div>
+        </button>
+      </div>
+      <div class="mood-saved" id="moodSaved">▸ ESTADO REGISTRADO HOY</div>
+    </div>
+  </div>
+
+  <!-- TAB: TODAS LAS MISIONES -->
+  <div class="tabcontent" id="tab-allquests">
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ BANCO DE MISIONES</span><div class="sline"></div></div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:1px;">Todas tus misiones. Márcalas como completadas si las realizaste hoy aunque no estén en el mínimo diario.</div>
+    <div class="searchbar">
+      <input class="search-inp" id="questSearch" placeholder="🔍 Buscar misión..." oninput="renderAllQuests()">
+      <select class="ie-sel" id="questCatFilter" onchange="renderAllQuests()" style="width:auto;padding:8px 10px;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;">
+        <option value="">Todas las categorías</option>
+        <option value="salud">💪 Salud/Ejercicio</option>
+        <option value="guerrero">⚔️ Guerrero/Pesas</option>
+        <option value="estudio">📚 Estudio/Trabajo</option>
+        <option value="lectura">📖 Lectura/Mago</option>
+        <option value="habitos">🌟 Hábitos</option>
+        <option value="creatividad">🎨 Creatividad</option>
+        <option value="mental">🧘 Salud Mental</option>
+      </select>
+    </div>
+    <div id="allQuestList"></div>
+  </div>
+
+  <!-- TAB: TIENDA -->
+  <div class="tabcontent" id="tab-shop">
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ TIENDA — CANJEA TUS DESEOS</span><div class="sline"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.8;">Acumula XP completando misiones. Cuando alcances el costo de un objeto puedes comprarlo.</div>
+    <div class="invgrid" id="shopGrid"></div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;">Añade objetos en CONFIGURAR → TIENDA</div>
+  </div>
+
+  <!-- TAB: INVENTARIO (lo comprado) -->
+  <div class="tabcontent" id="tab-inventory">
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ INVENTARIO — OBJETOS OBTENIDOS</span><div class="sline"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.8;">Aquí aparecen los objetos que ya canjeaste en la Tienda.</div>
+    <div class="invgrid" id="invgrid"></div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;" id="invEmpty">Aún no has canjeado ningún objeto.</div>
+  </div>
+
+  <!-- TAB: PERFIL -->
+  <div class="tabcontent" id="tab-perfil">
+    <!-- Hero Card -->
+    <div class="profile-hero">
+      <div class="profile-avatar-big" id="profileAvatar">⚔️</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">CAZADOR</div>
+        <div class="profile-class" id="profileClass">▸ CAZADOR INDEPENDIENTE</div>
+        <div style="margin-top:6px;display:flex;align-items:baseline;gap:8px;">
+          <div class="profile-lvlbig" id="profileLvl">LV.1</div>
+          <div class="profile-lvllbl">NIVEL ACTUAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selector semana / mes -->
+    <div class="period-toggle">
+      <button class="ptbtn active" id="pt-week" onclick="setPeriod('week')">▸ ESTA SEMANA</button>
+      <button class="ptbtn" id="pt-month" onclick="setPeriod('month')">▸ ESTE MES</button>
+    </div>
+
+    <!-- RADAR SVG -->
+    <div class="radar-wrap">
+      <div class="radar-title">◈ RADAR DE ATRIBUTOS</div>
+      <svg id="radarSVG" viewBox="0 0 320 280" width="100%" style="max-width:360px;" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <!-- Barras por categoría -->
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ DESGLOSE POR CATEGORÍA</span><div class="sline"></div></div>
+    <div class="stats-bars" id="catBars"></div>
+
+    <!-- Resumen numérico -->
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ RESUMEN DEL PERÍODO</span><div class="sline"></div></div>
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <!-- Logros -->
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ LOGROS</span><div class="sline"></div></div>
+    <div class="achiev-list" id="achievList"></div>
+
+    <div class="shdr" style="margin-top:16px;"><div class="sline"></div><span class="stitle">◈ HISTORIAL DE ÁNIMO</span><div class="sline"></div></div>
+    <div id="moodHistory" style="background:rgba(0,10,25,0.8);border:1px solid rgba(96,165,250,0.2);padding:14px;"></div>
+  </div>
+
+  <!-- TAB: CONFIGURAR -->
+  <div class="tabcontent" id="tab-config">
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ PERFIL DE CAZADOR</span><div class="sline"></div></div>
+    <div class="aform">
+      <div class="frow">
+        <label class="flbl">Nombre visible en pantalla</label>
+        <input class="finput" id="nameInp" placeholder="Ej: SUNG JIN-WOO">
+      </div>
+      <button class="fabtn" onclick="saveName()">GUARDAR NOMBRE</button>
+    </div>
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ CONFIGURAR RANGOS (XP)</span><div class="sline"></div></div>
+    <div class="aform">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.7;">Ajusta cuánto XP otorga cada rango de misión.</div>
+      <div class="rank-cfg-grid">
+        <div class="rank-box"><div class="rank-box-lbl rd" style="color:var(--d)">D</div><input class="rank-inp" id="xp-D" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--c)">C</div><input class="rank-inp" id="xp-C" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--b)">B</div><input class="rank-inp" id="xp-B" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--a)">A</div><input class="rank-inp" id="xp-A" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--s)">S</div><input class="rank-inp" id="xp-S" type="number" min="1"></div>
+      </div>
+      <button class="fabtn" style="margin-top:10px" onclick="saveRanks()">GUARDAR RANGOS</button>
+    </div>
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ AÑADIR MISIÓN AL BANCO</span><div class="sline"></div></div>
+    <div class="aform">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:10px;letter-spacing:1px;">Las misiones se rotan automáticamente en los días. Puedes crear decenas y el sistema selecciona 4 al día (1 por categoría principal).</div>
+      <div class="frow">
+        <label class="flbl">Nombre de la misión</label>
+        <input class="finput" id="mNameInp" placeholder="Ej: Correr 30 minutos">
+      </div>
+      <div class="frow">
+        <label class="flbl">Descripción (opcional)</label>
+        <input class="finput" id="mDescInp" placeholder="Más detalles">
+      </div>
+      <div class="fgrid">
+        <div class="frow" style="margin-bottom:0">
+          <label class="flbl">Categoría / Clase</label>
+          <select class="fselect" id="mCatInp">
+            <option value="salud">💪 Salud / Sanador</option>
+            <option value="guerrero">⚔️ Ejercicio Pesas / Guerrero</option>
+            <option value="estudio">📚 Estudio / Mago</option>
+            <option value="lectura">📖 Lectura / Archimago</option>
+            <option value="habitos">🌟 Hábitos / Asesino</option>
+            <option value="creatividad">🎨 Creatividad / Bardo</option>
+            <option value="mental">🧘 Salud Mental / Monje</option>
+          </select>
+        </div>
+        <div class="frow" style="margin-bottom:0">
+          <label class="flbl">Rango / XP</label>
+          <select class="fselect" id="mRankInp">
+            <option value="D">D — fácil</option>
+            <option value="C">C</option>
+            <option value="B" selected>B</option>
+            <option value="A">A</option>
+            <option value="S">S — épico</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow" style="margin-top:10px">
+        <label class="flbl">¿Es misión fija diaria? (aparece siempre)</label>
+        <select class="fselect" id="mFixedInp">
+          <option value="0">No — rotar automáticamente</option>
+          <option value="1">Sí — mostrar siempre</option>
+        </select>
+      </div>
+      <button class="fabtn" style="margin-top:10px" onclick="addMission()">+ AÑADIR MISIÓN</button>
+    </div>
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ AÑADIR OBJETO A LA TIENDA</span><div class="sline"></div></div>
+    <div class="aform">
+      <div class="frow">
+        <label class="flbl">Nombre del objeto</label>
+        <input class="finput" id="iNameInp" placeholder="Ej: Audífonos Sony WH-1000XM5">
+      </div>
+      <div class="fgrid">
+        <div class="frow" style="margin-bottom:0">
+          <label class="flbl">Emoji / Ícono</label>
+          <input class="finput" id="iIcoInp" placeholder="🎧" style="font-size:22px;text-align:center" maxlength="4">
+        </div>
+        <div class="frow" style="margin-bottom:0">
+          <label class="flbl">Costo en XP</label>
+          <input type="number" class="finput" id="iCostInp" placeholder="Ej: 300" min="1">
+        </div>
+      </div>
+      <div class="frow" style="margin-top:10px">
+        <label class="flbl">Precio real (COP)</label>
+        <input class="finput" id="iPriceInp" placeholder="Ej: $45.000">
+      </div>
+      <div class="frow">
+        <label class="flbl">Rareza</label>
+        <select class="fselect" id="iRarInp">
+          <option value="common">Común — objetos pequeños</option>
+          <option value="rare">Raro — deseos medianos</option>
+          <option value="epic">Épico — algo especial</option>
+          <option value="legendary">Legendario — gran recompensa</option>
+        </select>
+      </div>
+      <button class="fabtn gold" onclick="addItem()">+ AÑADIR A LA TIENDA</button>
+    </div>
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ LOGROS PERSONALIZADOS</span><div class="sline"></div></div>
+    <div class="aform">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.7;">
+        Crea y edita tus logros. Elige el tipo de condición y la meta numérica. Los cambios se reflejan automáticamente en la pestaña <strong style="color:var(--blue)">PERFIL</strong>.
+      </div>
+      <div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;display:grid;grid-template-columns:40px 1fr 1fr 110px 36px;gap:6px;padding:0 4px;">
+        <span>ÍCONO</span><span>NOMBRE</span><span>DESCRIPCIÓN</span><span>CONDICIÓN</span><span></span>
+      </div>
+      <div id="achievEditor"></div>
+      <button class="fabtn gold" style="margin-top:8px;" onclick="addAchiev()">+ AÑADIR LOGRO</button>
+      <button class="fabtn" style="margin-top:6px;" onclick="S.achievements=defaultAchievements();save();renderAchievEditor();notif('LOGROS RESTAURADOS');">↺ RESTAURAR LOGROS ORIGINALES</button>
+    </div>
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ ZONA DE PELIGRO</span><div class="sline"></div></div>
+    <button class="fabtn red" style="width:100%" onclick="resetAll()">⚠ REINICIAR TODO EL SISTEMA</button>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:8px;letter-spacing:1px;">Esto borrará todo tu progreso permanentemente.</div>
+  </div>
+
+</div><!-- end .wrap -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CLASES (basadas en categoría dominante — estilo Solo Leveling)
+// ═══════════════════════════════════════════════════════
+const CLASSES = {
+  salud:      { name:'SANADOR', emoji:'💚', avatar:'🧬', desc:'Tu dedicación a la salud te convierte en fuente de vida para quienes te rodean.', color:'#4ade80' },
+  guerrero:   { name:'GUERRERO', emoji:'⚔️', avatar:'⚔️', desc:'La forja del cuerpo es tu templo. La fuerza física es tu legado.', color:'#ff6b35' },
+  estudio:    { name:'MAGO', emoji:'📚', avatar:'🔮', desc:'El conocimiento es poder absoluto. Tu mente trasciende los límites mundanos.', color:'#c084fc' },
+  lectura:    { name:'ARCHIMAGO', emoji:'📖', avatar:'✨', desc:'La sabiduría ancestral fluye por tus venas. Eres el receptor del conocimiento eterno.', color:'#a855f7' },
+  habitos:    { name:'ASESINO', emoji:'🌟', avatar:'🗡️', desc:'Preciso. Constante. Letal en tus rutinas. Nadie ve venir tu disciplina.', color:'#94a3b8' },
+  creatividad:{ name:'BARDO', emoji:'🎨', avatar:'🎭', desc:'Tu creatividad es magia pura. Transformas el mundo con cada obra que produces.', color:'#f0c040' },
+  mental:     { name:'MONJE', emoji:'🧘', avatar:'☯️', desc:'El equilibrio interior es tu arma suprema. La mente en calma todo lo puede.', color:'#60a5fa' },
+};
+
+const CAT_LABELS = {
+  salud:'💪 Salud', guerrero:'⚔️ Guerrero', estudio:'📚 Estudio',
+  lectura:'📖 Lectura', habitos:'🌟 Hábitos', creatividad:'🎨 Creatividad', mental:'🧘 Mental'
+};
+
+// 4 categorías principales para la rotación diaria
+const DAILY_CATS = ['salud','guerrero','estudio','habitos'];
+
+const RARLBL = {common:'Común', rare:'Raro', epic:'Épico', legendary:'Legendario'};
+const PRANK = [
+  {lvl:1,r:'RANGO E'},{lvl:5,r:'RANGO D'},{lvl:10,r:'RANGO C'},
+  {lvl:20,r:'RANGO B'},{lvl:35,r:'RANGO A'},{lvl:50,r:'RANGO S'}
+];
+
+let XPR = {D:15, C:30, B:50, A:80, S:120};
+let S, pendingId=null, editingMissionId=null, currentUser=null;
+
+// ═══════════════════════════════════════════════════════
+// MULTI-USER STORAGE (localStorage keyed by user)
+// ═══════════════════════════════════════════════════════
+function getUserKey(user){ return 'sl_v3_' + user.toLowerCase().replace(/\s+/g,'_'); }
+
+function loadState(user){
+  try {
+    const raw = localStorage.getItem(getUserKey(user));
+    if(raw){
+      const d=JSON.parse(raw);
+      XPR=d.xprConfig||XPR;
+      if(!d.achievements||!d.achievements.length) d.achievements=defaultAchievements();
+      if(!d.dailyLog) d.dailyLog=[];
+      return d;
+    }
+  } catch(e){}
+  return defaultState();
+}
+
+function defaultAchievements(){
+  return [
+    { id:'a1', ico:'🌅', name:'Primer Paso',   desc:'Completa tu primera misión',           type:'totalComp', target:1   },
+    { id:'a2', ico:'🔥', name:'Racha de 3',    desc:'Mantén 3 días consecutivos',           type:'streak',    target:3   },
+    { id:'a3', ico:'⚡',     name:'Racha de 7',    desc:'7 días sin fallar',                    type:'streak',    target:7   },
+    { id:'a4', ico:'💯', name:'Centurión',     desc:'Alcanza 100 misiones completadas',     type:'totalComp', target:100 },
+    { id:'a5', ico:'🏆', name:'Elite S',       desc:'Sube al nivel 35',                     type:'level',     target:35  },
+    { id:'a6', ico:'💎', name:'Veterano',      desc:'Acumula 500 XP en total',              type:'totalXP',   target:500 },
+    { id:'a7', ico:'🎯', name:'Especialista',  desc:'Domina una categoría con 20 misiones', type:'catMax',    target:20  },
+    { id:'a8', ico:'🛒', name:'Primer Canje',  desc:'Canjea tu primer objeto en la tienda', type:'redeem',    target:1   },
+  ];
+}
+
+function defaultState(){
+  return {
+    name:'CAZADOR', lvl:1, totalXP:0, curXP:0, nextXP:100,
+    streak:0, totalComp:0, todayXP:0, lastDate:'', claimed:false,
+    missions:[], items:[], nMid:100, nIid:100, resetHour:0,
+    catCounts:{}, dailyAssigned:{}, xprConfig:{...XPR},
+    dailyLog:[],
+    achievements: defaultAchievements()
+  };
+}
+
+function save(){
+  if(!currentUser) return;
+  S.xprConfig = {...XPR};
+  try{ localStorage.setItem(getUserKey(currentUser), JSON.stringify(S)); }
+  catch(e){ notif('⚠ ERROR AL GUARDAR'); }
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGIN / LOGOUT
+// ═══════════════════════════════════════════════════════
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  if(!u){ notif('▸ INGRESA UN NOMBRE DE USUARIO'); return; }
+  currentUser = u;
+  localStorage.setItem('sl_current_user', u);
+  S = loadState(u);
+  XPR = S.xprConfig || {D:15,C:30,B:50,A:80,S:120};
+  document.getElementById('loginOver').classList.remove('show');
+  document.getElementById('userBar').style.display='flex';
+  document.getElementById('userBarName').textContent = u.toUpperCase();
+  checkReset();
+  render();
+  tick();
+  notif('▸ BIENVENIDO, ' + u.toUpperCase() + ' ◂');
+}
+
+function doLogout(){
+  if(!confirm('¿Cambiar de usuario? Tu progreso está guardado.')) return;
+  currentUser = null;
+  localStorage.removeItem('sl_current_user');
+  document.getElementById('loginOver').classList.add('show');
+  document.getElementById('userBar').style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════
+// DAILY ROTATION — 4 misiones mínimas (1 por categoría principal)
+// ═══════════════════════════════════════════════════════
+function getTodayKey(){
+  const now = new Date();
+  const rh = S.resetHour||0;
+  const d = new Date(now);
+  if(now.getHours()<rh) d.setDate(d.getDate()-1);
+  return d.toDateString()+'_h'+rh;
+}
+
+function assignDailyMissions(){
+  const todayKey = getTodayKey();
+  if(S.dailyAssigned && S.dailyAssigned.key === todayKey) return;
+
+  const TARGET = 4;
+  const assigned = { key: todayKey, ids: [] };
+  const used = new Set();
+
+  // Helper: pick the least-recently-done mission from a pool, excluding used
+  function pickBest(pool){
+    const avail = pool.filter(m=>!used.has(m.id));
+    if(!avail.length) return null;
+    avail.sort((a,b)=>{
+      const da = a.lastDoneDate || '0000';
+      const db = b.lastDoneDate || '0000';
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+    return avail[0];
+  }
+
+  // 1. Fixed missions always go first (but cap at TARGET)
+  S.missions.filter(m=>m.fixed).forEach(m=>{
+    if(assigned.ids.length < TARGET && !used.has(m.id)){
+      assigned.ids.push(m.id);
+      used.add(m.id);
+    }
+  });
+
+  // 2. Try to fill one slot per DAILY_CAT (rotating, least-recently-done)
+  DAILY_CATS.forEach(cat=>{
+    if(assigned.ids.length >= TARGET) return;
+    // skip if a fixed mission already covers this category
+    if(S.missions.some(m=>m.fixed && m.cat===cat && used.has(m.id))) return;
+    const pool = S.missions.filter(m=>m.cat===cat && !m.fixed);
+    const pick = pickBest(pool);
+    if(pick){ assigned.ids.push(pick.id); used.add(pick.id); }
+  });
+
+  // 3. If still under TARGET, pull from ANY remaining non-fixed missions (any category)
+  //    sorted by least-recently-done to keep variety
+  if(assigned.ids.length < TARGET){
+    const remaining = S.missions
+      .filter(m=>!m.fixed && !used.has(m.id))
+      .sort((a,b)=>{
+        const da = a.lastDoneDate || '0000';
+        const db = b.lastDoneDate || '0000';
+        return da < db ? -1 : da > db ? 1 : 0;
+      });
+    for(const m of remaining){
+      if(assigned.ids.length >= TARGET) break;
+      assigned.ids.push(m.id);
+      used.add(m.id);
+    }
+  }
+
+  // 4. If STILL under TARGET (very few missions), fill with fixed missions again
+  //    (cycle through all missions until we hit 4 or run out)
+  if(assigned.ids.length < TARGET){
+    const all = S.missions.filter(m=>!used.has(m.id));
+    for(const m of all){
+      if(assigned.ids.length >= TARGET) break;
+      assigned.ids.push(m.id);
+      used.add(m.id);
+    }
+  }
+
+  S.dailyAssigned = assigned;
+  save();
+}
+
+function getDailyMissions(){
+  if(!S.dailyAssigned || !S.dailyAssigned.ids) return [];
+  return S.dailyAssigned.ids.map(id=>S.missions.find(m=>m.id===id)).filter(Boolean);
+}
+
+// ═══════════════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════════════
+function checkReset(){
+  const key = getTodayKey();
+  if(S.lastDate !== key){
+    if(S.lastDate){
+      // streak check
+      const prev = new Date(); prev.setDate(prev.getDate()-1);
+      const prevKey = prev.toDateString()+'_h'+(S.resetHour||0);
+      if(S.lastDate===prevKey) S.streak++;
+      else if(S.todayXP===0) S.streak=0;
+      // penalty
+      const daily = getDailyMissions();
+      const doneMin = daily.filter(m=>m.done).length;
+      if(doneMin < Math.min(4,daily.length) && S.todayXP>0){
+        document.getElementById('penbar').style.display='block';
+      }
+    }
+    S.missions.forEach(m=>m.done=false);
+    S.todayXP=0; S.claimed=false; S.lastDate=key;
+    // Assign new daily missions
+    S.dailyAssigned = null;
+    assignDailyMissions();
+    save();
+  } else {
+    assignDailyMissions();
+  }
+}
+
+function changeResetHour(delta){
+  S.resetHour = ((S.resetHour||0)+delta+24)%24;
+  save(); updateResetUI();
+  notif('⚙ RESET A LAS ' + String(S.resetHour).padStart(2,'0') + ':00');
+}
+
+function updateResetUI(){
+  const rh = S.resetHour||0;
+  const s = String(rh).padStart(2,'0')+':00';
+  const lbl=document.getElementById('resetHourLbl');
+  if(lbl)lbl.textContent='RESET A LAS '+s;
+  const rv=document.getElementById('rhVal');
+  if(rv)rv.textContent=s;
+}
+
+// ═══════════════════════════════════════════════════════
+// XP / NIVEL
+// ═══════════════════════════════════════════════════════
+function gainXP(amt){
+  S.totalXP=Math.max(0,S.totalXP+amt);
+  S.todayXP=Math.max(0,S.todayXP+amt);
+  S.curXP+=amt;
+  while(S.curXP>=S.nextXP&&S.curXP>0){
+    S.curXP-=S.nextXP; S.lvl++;
+    S.nextXP=Math.floor(S.nextXP*1.42);
+    doFlash();
+  }
+  if(S.curXP<0) S.curXP=0;
+}
+function doFlash(){
+  const f=document.getElementById('lvlf');
+  f.classList.add('show'); setTimeout(()=>f.classList.remove('show'),700);
+  notif('▸ ¡NIVEL ALCANZADO! — LV.'+S.lvl+' ◂');
+}
+function getRank(){
+  let r=PRANK[0];
+  for(const p of PRANK){if(S.lvl>=p.lvl)r=p;}
+  return r.r;
+}
+
+// ═══════════════════════════════════════════════════════
+// CLASS DETECTION
+// ═══════════════════════════════════════════════════════
+function detectClass(){
+  const counts = S.catCounts||{};
+  let top=null, topN=0;
+  for(const [cat,n] of Object.entries(counts)){
+    if(n>topN){topN=n;top=cat;}
+  }
+  if(!top||topN<5) return null; // need at least 5 missions completed in a category
+  return CLASSES[top]||null;
+}
+
+function updateClassUI(){
+  const cls = detectClass();
+  const banner = document.getElementById('classBanner');
+  const pc = document.getElementById('pclass');
+  const av = document.getElementById('avatarEl');
+  if(cls){
+    banner.classList.add('show');
+    document.getElementById('classNameEl').textContent = cls.emoji+' '+cls.name;
+    document.getElementById('classDescEl').textContent = cls.desc;
+    pc.textContent = '▸ '+cls.name+' — CAZADOR INDEPENDIENTE';
+    av.textContent = cls.avatar;
+    av.style.borderColor = cls.color;
+  } else {
+    banner.classList.remove('show');
+    pc.textContent = '▸ CAZADOR INDEPENDIENTE';
+    av.textContent = '⚔️';
+    av.style.borderColor = '';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// NOTIFICATION
+// ═══════════════════════════════════════════════════════
+function notif(msg){
+  const n=document.getElementById('notif');
+  n.textContent=msg; n.classList.add('show');
+  clearTimeout(n._t); n._t=setTimeout(()=>n.classList.remove('show'),2800);
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER PRINCIPAL
+// ═══════════════════════════════════════════════════════
+function render(){
+  if(!S) return;
+  document.getElementById('pname').textContent=S.name;
+  document.getElementById('plvl').textContent='LV.'+S.lvl;
+  document.getElementById('prank').textContent=getRank();
+  const pct=Math.min(100,Math.round((S.curXP/S.nextXP)*100));
+  document.getElementById('xpbar').style.width=pct+'%';
+  document.getElementById('xpdisp').textContent=S.curXP+' / '+S.nextXP+' XP';
+  document.getElementById('stTotal').textContent=S.totalXP;
+  document.getElementById('stStreak').textContent=S.streak;
+  document.getElementById('stComp').textContent=S.totalComp;
+  document.getElementById('todayxp').textContent='+'+S.todayXP;
+  // rank config inputs
+  ['D','C','B','A','S'].forEach(r=>{
+    const el=document.getElementById('xp-'+r);
+    if(el) el.value=XPR[r];
+  });
+  updateResetUI();
+  updateClassUI();
+  renderDailyMissions();
+  renderAllQuests();
+  renderShop();
+  renderInventory();
+}
+
+// ═══════════════════════════════════════════════════════
+// MISIONES DIARIAS (las 4 mínimas)
+// ═══════════════════════════════════════════════════════
+function renderDailyMissions(){
+  const el=document.getElementById('mlist');
+  const daily=getDailyMissions();
+  if(!daily.length){
+    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:12px;letter-spacing:2px;">SIN MISIONES — AÑADE EN CONFIGURAR</div>';
+    document.getElementById('progtxt').textContent='0 / 0 misiones mínimas completadas';
+    document.getElementById('claimbtn').disabled=true;
+    return;
+  }
+  el.innerHTML=daily.map(m=>renderMissionCard(m,true)).join('');
+  const done=daily.filter(m=>m.done).length;
+  document.getElementById('progtxt').textContent=done+' / '+daily.length+' misiones mínimas completadas';
+  const allDone=daily.length>0&&daily.every(m=>m.done);
+  const cb=document.getElementById('claimbtn');
+  cb.disabled=!allDone||S.claimed;
+  cb.textContent=S.claimed?'◈ RECOMPENSA YA RECLAMADA HOY ◈':'◈ RECLAMAR RECOMPENSA DIARIA ◈';
+}
+
+function renderMissionCard(m, fromDaily){
+  const xp=m.xp||XPR[m.rank]||50;
+  const ico=CAT_LABELS[m.cat]||'⚡';
+  const isEditing=editingMissionId===m.id;
+  return `
+<div class="mcard ${m.done?'done':''} ${isEditing?'editing':''} ${m.fixed?'fixed-mission':''}" id="mc-${m.id}">
+  <div class="mtop">
+    <div class="mchk ${m.done?'yes':''}" onclick="toggle('${m.id}')">${m.done?'✓':''}</div>
+    <div class="mcontent">
+      <div class="mname">${escH(m.name)}</div>
+      ${m.desc?`<div class="mdesc">${escH(m.desc)}</div>`:''}
+      <div class="mfoot">
+        <span class="mxp">+${xp} XP</span>
+        <span class="mrnk r${m.rank.toLowerCase()}">${m.rank}-RANK</span>
+        <span class="mtype">${ico}</span>
+        ${m.fixed?'<span class="fixed-badge">FIJA</span>':''}
+        <div class="mactions">
+          <button class="act-btn edit" onclick="startEditMission('${m.id}',event)">✏</button>
+          <button class="act-btn del" onclick="delMission('${m.id}',event)">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="inline-edit ${isEditing?'show':''}" id="ie-${m.id}">
+    <div class="ie-row"><label class="ie-lbl">Nombre</label><input class="ie-inp" id="ie-name-${m.id}" value="${escH(m.name)}"></div>
+    <div class="ie-row"><label class="ie-lbl">Descripción</label><input class="ie-inp" id="ie-desc-${m.id}" value="${escH(m.desc||'')}"></div>
+    <div class="ie-grid">
+      <div class="ie-row">
+        <label class="ie-lbl">Categoría</label>
+        <select class="ie-sel" id="ie-cat-${m.id}">
+          <option value="salud" ${m.cat==='salud'?'selected':''}>💪 Salud/Sanador</option>
+          <option value="guerrero" ${m.cat==='guerrero'?'selected':''}>⚔️ Guerrero</option>
+          <option value="estudio" ${m.cat==='estudio'?'selected':''}>📚 Mago</option>
+          <option value="lectura" ${m.cat==='lectura'?'selected':''}>📖 Archimago</option>
+          <option value="habitos" ${m.cat==='habitos'?'selected':''}>🌟 Asesino</option>
+          <option value="creatividad" ${m.cat==='creatividad'?'selected':''}>🎨 Bardo</option>
+          <option value="mental" ${m.cat==='mental'?'selected':''}>🧘 Monje</option>
+        </select>
+      </div>
+      <div class="ie-row">
+        <label class="ie-lbl">Rango</label>
+        <select class="ie-sel" id="ie-rank-${m.id}">
+          <option value="D" ${m.rank==='D'?'selected':''}>D — ${XPR.D} XP</option>
+          <option value="C" ${m.rank==='C'?'selected':''}>C — ${XPR.C} XP</option>
+          <option value="B" ${m.rank==='B'?'selected':''}>B — ${XPR.B} XP</option>
+          <option value="A" ${m.rank==='A'?'selected':''}>A — ${XPR.A} XP</option>
+          <option value="S" ${m.rank==='S'?'selected':''}>S — ${XPR.S} XP</option>
+        </select>
+      </div>
+    </div>
+    <div class="ie-row">
+      <label class="ie-lbl">¿Misión fija?</label>
+      <select class="ie-sel" id="ie-fixed-${m.id}">
+        <option value="0" ${!m.fixed?'selected':''}>No — rotar</option>
+        <option value="1" ${m.fixed?'selected':''}>Sí — siempre</option>
+      </select>
+    </div>
+    <div class="ie-btns">
+      <button class="ie-btn ok" onclick="saveEditMission('${m.id}')">✓ GUARDAR</button>
+      <button class="ie-btn ko" onclick="cancelEditMission()">✕ CANCELAR</button>
+    </div>
+  </div>
+</div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// TODAS LAS MISIONES (banco completo con búsqueda)
+// ═══════════════════════════════════════════════════════
+function renderAllQuests(){
+  const el=document.getElementById('allQuestList');
+  if(!el) return;
+  const q=(document.getElementById('questSearch')||{}).value||'';
+  const cat=(document.getElementById('questCatFilter')||{}).value||'';
+  let list=S.missions.filter(m=>{
+    const matchQ=!q||m.name.toLowerCase().includes(q.toLowerCase())||((m.desc||'').toLowerCase().includes(q.toLowerCase()));
+    const matchC=!cat||m.cat===cat;
+    return matchQ&&matchC;
+  });
+  if(!list.length){
+    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:12px;letter-spacing:2px;">SIN RESULTADOS</div>';
+    return;
+  }
+  el.innerHTML=list.map(m=>renderMissionCard(m,false)).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// MISSION ACTIONS
+// ═══════════════════════════════════════════════════════
+function getTodayISODate(){
+  const now = new Date();
+  const rh = S.resetHour||0;
+  const d = new Date(now);
+  if(now.getHours()<rh) d.setDate(d.getDate()-1);
+  return d.toISOString().slice(0,10); // YYYY-MM-DD
+}
+
+function logDailyMission(cat, xp, add){
+  if(!S.dailyLog) S.dailyLog=[];
+  const today = getTodayISODate();
+  let entry = S.dailyLog.find(e=>e.date===today);
+  if(!entry){ entry={date:today,cats:{},xp:0,missions:0}; S.dailyLog.push(entry); }
+  if(!entry.cats) entry.cats={};
+  if(add){
+    entry.cats[cat]=(entry.cats[cat]||0)+1;
+    entry.xp=(entry.xp||0)+xp;
+    entry.missions=(entry.missions||0)+1;
+  } else {
+    entry.cats[cat]=Math.max(0,(entry.cats[cat]||1)-1);
+    entry.xp=Math.max(0,(entry.xp||0)-xp);
+    entry.missions=Math.max(0,(entry.missions||0)-1);
+  }
+  // Limit log to last 35 days to save space
+  S.dailyLog = S.dailyLog.filter(e=>{
+    const d=new Date(e.date); const now=new Date();
+    return (now-d)/(1000*60*60*24)<=35;
+  });
+}
+
+function toggle(id){
+  const m=S.missions.find(x=>x.id===id);if(!m)return;
+  if(m.done){
+    m.done=false;
+    gainXP(-(m.xp||XPR[m.rank]||50));
+    S.totalComp=Math.max(0,S.totalComp-1);
+    if(S.catCounts&&S.catCounts[m.cat]) S.catCounts[m.cat]=Math.max(0,(S.catCounts[m.cat]||1)-1);
+    logDailyMission(m.cat, m.xp||XPR[m.rank]||50, false);
+  } else {
+    m.done=true;
+    m.lastDoneDate=new Date().toDateString();
+    gainXP(m.xp||XPR[m.rank]||50);
+    S.totalComp++;
+    if(!S.catCounts) S.catCounts={};
+    S.catCounts[m.cat]=(S.catCounts[m.cat]||0)+1;
+    logDailyMission(m.cat, m.xp||XPR[m.rank]||50, true);
+    notif('+'+(m.xp||XPR[m.rank])+' XP ◈ '+m.name);
+  }
+  save(); render();
+}
+
+function startEditMission(id,e){ e.stopPropagation(); editingMissionId=id; render(); }
+function cancelEditMission(){ editingMissionId=null; render(); }
+
+function saveEditMission(id){
+  const m=S.missions.find(x=>x.id===id); if(!m)return;
+  const name=document.getElementById('ie-name-'+id).value.trim();
+  if(!name){notif('⚠ EL NOMBRE NO PUEDE ESTAR VACÍO');return;}
+  m.name=name;
+  m.desc=document.getElementById('ie-desc-'+id).value.trim();
+  m.cat=document.getElementById('ie-cat-'+id).value;
+  m.rank=document.getElementById('ie-rank-'+id).value;
+  m.xp=XPR[m.rank];
+  m.fixed=document.getElementById('ie-fixed-'+id).value==='1';
+  editingMissionId=null;
+  // reassign daily if needed
+  S.dailyAssigned=null; assignDailyMissions();
+  save(); render(); notif('◈ MISIÓN ACTUALIZADA ◈');
+}
+
+function delMission(id,e){
+  e.stopPropagation();
+  if(confirm('¿Eliminar esta misión?')){
+    const m=S.missions.find(x=>x.id===id);
+    if(m&&m.done){gainXP(-(m.xp||XPR[m.rank]||50));S.totalComp=Math.max(0,S.totalComp-1);}
+    S.missions=S.missions.filter(x=>x.id!==id);
+    if(editingMissionId===id) editingMissionId=null;
+    S.dailyAssigned=null; assignDailyMissions();
+    save(); render();
+  }
+}
+
+function claimDaily(){
+  const daily=getDailyMissions();
+  if(S.claimed||!daily.every(m=>m.done)) return;
+  const bonus=Math.floor(60*(1+S.streak*0.12));
+  gainXP(bonus); S.claimed=true; save(); render();
+  notif('◈ RECOMPENSA DIARIA: +'+bonus+' XP BONUS ◈');
+}
+
+// ═══════════════════════════════════════════════════════
+// TIENDA
+// ═══════════════════════════════════════════════════════
+function renderShop(){
+  const el=document.getElementById('shopGrid'); if(!el) return;
+  const shop=S.items.filter(it=>!it.red);
+  if(!shop.length){
+    el.innerHTML='<div style="color:var(--muted);text-align:center;padding:28px;font-size:12px;grid-column:1/-1;">Añade objetos en CONFIGURAR → TIENDA</div>';
+    return;
+  }
+  el.innerHTML=shop.map(it=>renderItemCard(it,true)).join('');
+}
+
+function renderInventory(){
+  const el=document.getElementById('invgrid'); if(!el)return;
+  const owned=S.items.filter(it=>it.red);
+  document.getElementById('invEmpty').style.display=owned.length?'none':'block';
+  if(!owned.length){el.innerHTML='';return;}
+  el.innerHTML=owned.map(it=>renderItemCard(it,false)).join('');
+}
+
+function renderItemCard(it,isShop){
+  const locked=S.totalXP<it.cost&&!it.red;
+  const pct=Math.min(100,Math.round((S.totalXP/it.cost)*100));
+  const rc={common:'rcom',rare:'rrare',epic:'rep',legendary:'rleg'}[it.rar];
+  return `
+<div class="icard ${locked&&isShop?'locked':''}"
+  style="${it.red?'border-color:rgba(74,222,128,0.35);':((!locked&&isShop)?'border-color:rgba(240,192,64,0.3);':'')}">
+  <div class="irarity ${rc}">${RARLBL[it.rar].toUpperCase()}</div>
+  <div class="iico">${it.ico}</div>
+  <div class="iname">${escH(it.name)}</div>
+  ${it.price?`<div class="iprice">${escH(it.price)}</div>`:''}
+  <div class="icost"><span class="icostval">${it.cost}</span><span class="icostlbl"> XP</span></div>
+  ${isShop&&!it.red?`<div class="ibar"><div class="ibarfill" style="width:${pct}%;background:${pct>=100?'var(--gold)':'var(--blue)'}"></div></div><div class="ipct">${pct}%</div>`:''}
+  ${it.red?`<div class="idate">📦 Creado: ${it.createdDate||'—'}<br>🏆 Ganado: ${it.redDate||'—'}</div>`:''}
+  ${it.red?'<div class="iunlbdg">✓ OBTENIDO</div>':(locked&&isShop?'<div class="ilock">🔒</div>':'<div class="ilock" style="color:var(--gold)">★</div>')}
+  <div class="icard-actions">
+    ${isShop&&!it.red?`<button class="act-btn edit" style="flex:1;text-align:center;" onclick="openEditItem('${it.id}')">✏</button>`:''}
+    ${isShop&&!locked&&!it.red?`<button class="act-btn save" style="flex:1;text-align:center;" onclick="openRedeem('${it.id}')">★ COMPRAR</button>`:''}
+    ${isShop?`<button class="act-btn del" onclick="delItem('${it.id}')">✕</button>`:''}
+  </div>
+</div>`;
+}
+
+function openRedeem(id){
+  const it=S.items.find(x=>x.id===id);
+  if(!it||it.red||S.totalXP<it.cost) return;
+  pendingId=id;
+  document.getElementById('modT').textContent='◈ COMPRAR OBJETO';
+  document.getElementById('modB').innerHTML=
+    `<div style="font-size:32px;margin-bottom:8px;">${it.ico}</div>`
+    +`<div style="font-size:16px;font-weight:600;color:var(--bright);margin-bottom:8px;">${escH(it.name)}</div>`
+    +(it.price?`<div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Precio real: ${escH(it.price)}</div>`:'')
+    +`<div>Costo: <span style="color:var(--gold);font-family:'Orbitron',monospace;">${it.cost} XP</span></div>`
+    +`<div style="margin-top:8px;color:#ff8899;font-size:12px;">XP restante: ${S.totalXP-it.cost}</div>`;
+  document.getElementById('modActs').innerHTML=`
+<button class="mbtn ok" onclick="confirmRedeem()">CONFIRMAR</button>
+<button class="mbtn no" onclick="closeModal()">CANCELAR</button>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+function confirmRedeem(){
+  if(!pendingId) return;
+  const it=S.items.find(x=>x.id===pendingId);
+  if(it&&S.totalXP>=it.cost){
+    S.totalXP-=it.cost; it.red=true;
+    it.redDate=new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
+    save(); render(); notif('◈ '+it.ico+' '+it.name+' — OBTENIDO ◈');
+  }
+  closeModal();
+}
+
+function openEditItem(id){
+  const it=S.items.find(x=>x.id===id); if(!it) return;
+  pendingId=id;
+  document.getElementById('modT').textContent='✏ EDITAR OBJETO';
+  document.getElementById('modB').innerHTML=`
+<div class="edit-item-form">
+  <div class="ie-row"><label class="ie-lbl">Nombre</label><input class="ie-inp" id="ei-name" value="${escH(it.name)}"></div>
+  <div class="ie-grid">
+    <div class="ie-row"><label class="ie-lbl">Emoji</label><input class="ie-inp" id="ei-ico" value="${escH(it.ico)}" style="font-size:20px;text-align:center" maxlength="4"></div>
+    <div class="ie-row"><label class="ie-lbl">Costo XP</label><input type="number" class="ie-inp" id="ei-cost" value="${it.cost}" min="1"></div>
+  </div>
+  <div class="ie-row"><label class="ie-lbl">Precio real</label><input class="ie-inp" id="ei-price" value="${escH(it.price||'')}"></div>
+  <div class="ie-row"><label class="ie-lbl">Rareza</label>
+    <select class="ie-sel" id="ei-rar">
+      <option value="common" ${it.rar==='common'?'selected':''}>Común</option>
+      <option value="rare" ${it.rar==='rare'?'selected':''}>Raro</option>
+      <option value="epic" ${it.rar==='epic'?'selected':''}>Épico</option>
+      <option value="legendary" ${it.rar==='legendary'?'selected':''}>Legendario</option>
+    </select>
+  </div>
+</div>`;
+  document.getElementById('modActs').innerHTML=`
+<button class="mbtn ok" onclick="confirmEditItem()">GUARDAR</button>
+<button class="mbtn no" onclick="closeModal()">CANCELAR</button>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+function confirmEditItem(){
+  const it=S.items.find(x=>x.id===pendingId); if(!it) return;
+  const name=document.getElementById('ei-name').value.trim();
+  const cost=parseInt(document.getElementById('ei-cost').value);
+  if(!name||!cost||cost<1){notif('⚠ COMPLETA NOMBRE Y COSTO');return;}
+  it.name=name; it.ico=document.getElementById('ei-ico').value.trim()||'🎁';
+  it.cost=cost; it.price=document.getElementById('ei-price').value.trim();
+  it.rar=document.getElementById('ei-rar').value;
+  save(); render(); notif('◈ OBJETO ACTUALIZADO ◈'); closeModal();
+}
+
+function delItem(id){
+  if(confirm('¿Eliminar este objeto?')){
+    S.items=S.items.filter(x=>x.id!==id);
+    save(); render(); notif('◈ OBJETO ELIMINADO ◈');
+  }
+}
+
+function closeModal(){ document.getElementById('modal').classList.remove('show'); pendingId=null; }
+
+// ═══════════════════════════════════════════════════════
+// CONFIGURAR
+// ═══════════════════════════════════════════════════════
+function addMission(){
+  const n=document.getElementById('mNameInp').value.trim();
+  if(!n){notif('▸ INGRESA UN NOMBRE PARA LA MISIÓN');return;}
+  const rank=document.getElementById('mRankInp').value;
+  const m={
+    id:'m'+S.nMid++, name:n,
+    desc:document.getElementById('mDescInp').value.trim(),
+    cat:document.getElementById('mCatInp').value,
+    rank, xp:XPR[rank], done:false, fixed:document.getElementById('mFixedInp').value==='1',
+    createdDate:new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'}),
+    lastDoneDate:null
+  };
+  S.missions.push(m);
+  document.getElementById('mNameInp').value='';
+  document.getElementById('mDescInp').value='';
+  S.dailyAssigned=null; assignDailyMissions();
+  save(); render(); switchTab('missions');
+  notif('▸ MISIÓN AÑADIDA: '+n);
+}
+
+function addItem(){
+  const n=document.getElementById('iNameInp').value.trim();
+  const c=parseInt(document.getElementById('iCostInp').value);
+  if(!n||!c||c<1){notif('▸ COMPLETA NOMBRE Y COSTO EN XP');return;}
+  const it={
+    id:'i'+S.nIid++, name:n,
+    ico:document.getElementById('iIcoInp').value.trim()||'🎁',
+    cost:c, price:document.getElementById('iPriceInp').value.trim(),
+    rar:document.getElementById('iRarInp').value, red:false,
+    createdDate:new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'})
+  };
+  S.items.push(it);
+  document.getElementById('iNameInp').value='';
+  document.getElementById('iIcoInp').value='';
+  document.getElementById('iCostInp').value='';
+  document.getElementById('iPriceInp').value='';
+  save(); render(); switchTab('shop');
+  notif('▸ OBJETO AÑADIDO A LA TIENDA');
+}
+
+function saveName(){
+  const n=document.getElementById('nameInp').value.trim();
+  if(!n){notif('▸ INGRESA TU NOMBRE');return;}
+  S.name=n.toUpperCase();
+  document.getElementById('nameInp').value='';
+  save(); render(); notif('▸ PERFIL ACTUALIZADO — '+S.name);
+}
+
+function saveRanks(){
+  ['D','C','B','A','S'].forEach(r=>{
+    const v=parseInt(document.getElementById('xp-'+r).value);
+    if(v>0) XPR[r]=v;
+  });
+  S.xprConfig={...XPR};
+  // update existing missions xp
+  S.missions.forEach(m=>{m.xp=XPR[m.rank];});
+  save(); render(); notif('◈ RANGOS ACTUALIZADOS ◈');
+}
+
+function resetAll(){
+  if(confirm('¿Reiniciar TODO el sistema? Perderás todo el progreso permanentemente.')){
+    if(currentUser) localStorage.removeItem(getUserKey(currentUser));
+    S=defaultState(); save(); render();
+    notif('▸ SISTEMA REINICIADO');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// FONT SIZE — +/- control
+// ═══════════════════════════════════════════════════════
+let currentFontSize = 15;
+const FONT_MIN = 11, FONT_MAX = 22;
+
+function changeFontSize(delta){
+  currentFontSize = Math.min(FONT_MAX, Math.max(FONT_MIN, currentFontSize + delta));
+  document.documentElement.style.setProperty('--base-font', currentFontSize+'px');
+  document.body.style.fontSize = currentFontSize+'px';
+  const el = document.getElementById('fontVal');
+  if(el) el.textContent = currentFontSize+'px';
+  if(currentUser) localStorage.setItem(getUserKey(currentUser)+'_font', currentFontSize);
+}
+
+function setFont(size){
+  currentFontSize = size;
+  document.documentElement.style.setProperty('--base-font', size+'px');
+  document.body.style.fontSize = size+'px';
+  const el = document.getElementById('fontVal');
+  if(el) el.textContent = size+'px';
+  if(currentUser) localStorage.setItem(getUserKey(currentUser)+'_font', size);
+}
+
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
+function switchTab(tab){
+  const tabs=['missions','allquests','shop','inventory','perfil','config'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
+  document.querySelectorAll('.tabcontent').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='perfil') renderPerfil();
+  if(tab==='config') renderAchievEditor();
+}
+
+// ═══════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════
+function tick(){
+  const now=new Date();
+  document.getElementById('sysTime').textContent=
+    now.toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase()
+    +' — '+now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  const rh=S?S.resetHour||0:0;
+  const md=new Date(); md.setHours(rh,0,0,0);
+  if(md<=now) md.setDate(md.getDate()+1);
+  const d=md-now;
+  const h=String(Math.floor(d/3600000)).padStart(2,'0');
+  const m=String(Math.floor((d%3600000)/60000)).padStart(2,'0');
+  const s=String(Math.floor((d%60000)/1000)).padStart(2,'0');
+  const rcd=document.getElementById('rcd');
+  if(rcd) rcd.textContent=h+':'+m+':'+s;
+}
+
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ═══════════════════════════════════════════════════════
+// PERFIL — RADAR + ESTADÍSTICAS
+// ═══════════════════════════════════════════════════════
+let currentPeriod = 'week';
+
+function setPeriod(p){
+  currentPeriod = p;
+  document.getElementById('pt-week').classList.toggle('active', p==='week');
+  document.getElementById('pt-month').classList.toggle('active', p==='month');
+  renderPerfil();
+}
+
+// Obtiene conteo REAL de misiones por categoría filtrando dailyLog por fechas
+function getCatDataForPeriod(){
+  if(!S.dailyLog || !S.dailyLog.length) return {};
+  const now = new Date();
+  const cutoff = new Date(now);
+  if(currentPeriod === 'week'){
+    cutoff.setDate(now.getDate() - 7);
+  } else {
+    cutoff.setDate(now.getDate() - 30);
+  }
+  const cutoffStr = cutoff.toISOString().slice(0,10);
+  const result = {};
+  S.dailyLog.forEach(entry=>{
+    if(entry.date >= cutoffStr){
+      const cats = entry.cats||{};
+      Object.entries(cats).forEach(([cat,n])=>{
+        result[cat]=(result[cat]||0)+n;
+      });
+    }
+  });
+  return result;
+}
+
+// Obtiene XP y misiones totales del período desde dailyLog
+function getPeriodTotals(){
+  if(!S.dailyLog || !S.dailyLog.length) return {xp:0, missions:0};
+  const now = new Date();
+  const cutoff = new Date(now);
+  if(currentPeriod === 'week') cutoff.setDate(now.getDate()-7);
+  else cutoff.setDate(now.getDate()-30);
+  const cutoffStr = cutoff.toISOString().slice(0,10);
+  let xp=0, missions=0;
+  S.dailyLog.forEach(e=>{
+    if(e.date>=cutoffStr){ xp+=(e.xp||0); missions+=(e.missions||0); }
+  });
+  return {xp, missions};
+}
+
+function renderPerfil(){
+  if(!S) return;
+  // Hero
+  const cls = detectClass();
+  document.getElementById('profileName').textContent = S.name;
+  document.getElementById('profileLvl').textContent = 'LV.'+S.lvl;
+  document.getElementById('profileClass').textContent = cls ? '▸ '+cls.emoji+' '+cls.name : '▸ CAZADOR INDEPENDIENTE';
+  document.getElementById('profileAvatar').textContent = cls ? cls.avatar : '⚔️';
+
+  const catData = getCatDataForPeriod();
+  const cats = ['salud','guerrero','estudio','lectura','habitos','creatividad','mental'];
+  const labels = ['💪 SALUD','⚔️ GUERRERO','📚 ESTUDIO','📖 LECTURA','🌟 HÁBITOS','🎨 CREATIVIDAD','🧘 MENTAL'];
+  const colors = ['#4ade80','#ff6b35','#c084fc','#a855f7','#94a3b8','#f0c040','#60a5fa'];
+
+  const vals = cats.map(c => catData[c]||0);
+  const maxVal = Math.max(...vals, 1);
+
+  drawRadar(vals, maxVal, labels, colors);
+  renderCatBars(cats, labels, colors, vals, maxVal);
+  renderSummary();
+  renderAchievements();
+  renderMoodHistory();
+}
+
+function renderMoodHistory(){
+  const el = document.getElementById('moodHistory'); if(!el) return;
+  const FACES = ['😭','😔','😐','😄','🤩'];
+  const LABELS_S = ['PÉSIMO','MAL','REGULAR','BIEN','EXCELENTE'];
+  const COLORS = ['#ff4466','#f0a040','#f0c040','#4ade80','#c084fc'];
+
+  // Get last 14 days with mood data
+  if(!S.dailyLog || !S.dailyLog.length){
+    el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:11px;padding:12px;">Aún no hay registros de ánimo. ¡Empieza hoy en la pestaña MISIONES!</div>';
+    return;
+  }
+
+  const now = new Date();
+  const days = [];
+  for(let i=13;i>=0;i--){
+    const d = new Date(now);
+    d.setDate(now.getDate()-i);
+    const iso = d.toISOString().slice(0,10);
+    const entry = S.dailyLog.find(e=>e.date===iso);
+    const mood = entry&&entry.mood!==undefined ? entry.mood : null;
+    const dayLabel = d.toLocaleDateString('es-CO',{weekday:'short',day:'numeric'}).toUpperCase();
+    days.push({iso, mood, label:dayLabel});
+  }
+
+  // Filter only current period
+  const cutoff = new Date(now);
+  if(currentPeriod==='week') cutoff.setDate(now.getDate()-7);
+  else cutoff.setDate(now.getDate()-30);
+  const cutoffStr = cutoff.toISOString().slice(0,10);
+
+  // Weekly average
+  const withMood = days.filter(d=>d.mood!==null && d.iso>=cutoffStr);
+  const avg = withMood.length ? (withMood.reduce((s,d)=>s+d.mood,0)/withMood.length) : null;
+  const avgLabel = avg!==null ? FACES[Math.round(avg)]+' '+LABELS_S[Math.round(avg)] : 'N/A';
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+      <span style="font-family:'Orbitron',monospace;font-size:9px;color:#60a5fa;letter-spacing:2px;">ÚNTIMOS 14 DÍAS</span>
+      <span style="font-family:'Orbitron',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">PROMEDIO: <span style="color:var(--bright)">${avgLabel}</span></span>
+    </div>
+    <div style="display:flex;gap:4px;align-items:flex-end;justify-content:space-between;height:60px;">
+      ${days.map(d=>{
+        const inPeriod = d.iso>=cutoffStr;
+        if(d.mood===null){
+          return `<div title="${d.label}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <div style="flex:1;border-bottom:1px dashed rgba(0,100,200,0.15);width:100%;"></div>
+            <div style="font-size:7px;color:rgba(96,144,176,0.3);letter-spacing:0;text-align:center;line-height:1.2;">${d.label.split(' ')[0]}</div>
+          </div>`;
+        }
+        const h = [12,24,38,52,60][d.mood];
+        const col = COLORS[d.mood];
+        const op = inPeriod ? 1 : 0.35;
+        return `<div title="${d.label}: ${LABELS_S[d.mood]}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default;opacity:${op};">
+          <div style="font-size:${10+d.mood*2}px;line-height:1;">${FACES[d.mood]}</div>
+          <div style="width:100%;height:${h}px;background:${col};opacity:0.55;border-radius:1px;"></div>
+          <div style="font-size:7px;color:rgba(96,144,176,0.6);letter-spacing:0;text-align:center;line-height:1.2;">${d.label.split(' ')[0]}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function drawRadar(vals, maxVal, labels, colors){
+  const svg = document.getElementById('radarSVG');
+  const cx=160, cy=148, R=100, n=vals.length;
+  const rings = [0.25,0.5,0.75,1];
+  const angles = vals.map((_,i)=>( (2*Math.PI*i/n) - Math.PI/2 ));
+
+  function pt(r,a){ return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+
+  let html = '';
+
+  // Rings
+  rings.forEach(ring=>{
+    const pts = angles.map(a=>pt(R*ring,a).join(',')).join(' ');
+    html += `<polygon points="${pts}" fill="none" stroke="rgba(0,100,200,0.2)" stroke-width="1"/>`;
+  });
+
+  // Axes
+  angles.forEach((a,i)=>{
+    const [x,y] = pt(R,a);
+    html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(0,100,200,0.18)" stroke-width="1"/>`;
+  });
+
+  // Data polygon
+  const dataR = vals.map(v=>R*(v/maxVal));
+  const polyPts = angles.map((a,i)=>pt(dataR[i],a).join(',')).join(' ');
+  html += `<polygon points="${polyPts}" fill="rgba(0,170,255,0.12)" stroke="#00aaff" stroke-width="2" stroke-linejoin="round"/>`;
+
+  // Data dots
+  angles.forEach((a,i)=>{
+    const [x,y] = pt(dataR[i],a);
+    html += `<circle cx="${x}" cy="${y}" r="5" fill="${colors[i]}" stroke="#020810" stroke-width="1.5"/>`;
+    // Glow dot
+    html += `<circle cx="${x}" cy="${y}" r="9" fill="${colors[i]}" opacity="0.18"/>`;
+  });
+
+  // Labels
+  const LABEL_R = R + 22;
+  angles.forEach((a,i)=>{
+    const [x,y] = pt(LABEL_R,a);
+    const anchor = Math.cos(a) > 0.1 ? 'start' : Math.cos(a) < -0.1 ? 'end' : 'middle';
+    const dy = Math.sin(a) > 0.1 ? 4 : Math.sin(a) < -0.1 ? -4 : 0;
+    const parts = labels[i].split(' ');
+    const icon = parts[0];
+    const lbl = parts[1]||'';
+    html += `<text x="${x}" y="${y+dy}" text-anchor="${anchor}" font-family="Rajdhani,sans-serif" font-size="10" font-weight="700" fill="${colors[i]}" letter-spacing="1">${icon} ${lbl}</text>`;
+    // Value
+    if(vals[i]>0){
+      const [vx,vy] = pt(dataR[i],a);
+      html += `<text x="${vx}" y="${vy-9}" text-anchor="middle" font-family="Orbitron,monospace" font-size="9" fill="#e8f4ff">${vals[i]}</text>`;
+    }
+  });
+
+  // Center label
+  html += `<text x="${cx}" y="${cy+4}" text-anchor="middle" font-family="Orbitron,monospace" font-size="10" fill="rgba(0,170,255,0.5)" letter-spacing="2">XP</text>`;
+
+  svg.innerHTML = html;
+}
+
+function renderCatBars(cats, labels, colors, vals, maxVal){
+  const el = document.getElementById('catBars'); if(!el) return;
+  const icons = ['💪','⚔️','📚','📖','🌟','🎨','🧘'];
+  const names = ['SALUD','GUERRERO','ESTUDIO','LECTURA','HÁBITOS','CREATIVIDAD','MENTAL'];
+  el.innerHTML = cats.map((c,i)=>{
+    const pct = maxVal>0 ? Math.round((vals[i]/maxVal)*100) : 0;
+    return `<div class="sbar-row">
+      <div class="sbar-ico">${icons[i]}</div>
+      <div class="sbar-lbl" style="color:${colors[i]};font-size:9px;letter-spacing:1px;">${names[i]}</div>
+      <div class="sbar-track">
+        <div class="sbar-fill" style="width:${pct}%;background:${colors[i]};"></div>
+      </div>
+      <div class="sbar-val">${vals[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderSummary(){
+  const el = document.getElementById('summaryGrid'); if(!el) return;
+  const period = currentPeriod==='week'?'SEMANA':'MES';
+  const totals = getPeriodTotals();
+  const catData = getCatDataForPeriod();
+  const topIcons = {salud:'💪',guerrero:'⚔️',estudio:'📚',lectura:'📖',habitos:'🌟',creatividad:'🎨',mental:'🧘'};
+  const topCat = Object.entries(catData).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1])[0];
+  const topLabel = topCat ? (topIcons[topCat[0]]||'⚡')+' '+(topCat[0].toUpperCase()) : 'N/A';
+
+  el.innerHTML = `
+    <div class="smbox"><div class="smval" style="color:var(--gold)">${totals.xp}</div><div class="smkey">XP ESTA ${period}</div></div>
+    <div class="smbox"><div class="smval" style="color:var(--green)">${totals.missions}</div><div class="smkey">MISIONES ${period}</div></div>
+    <div class="smbox"><div class="smval" style="color:var(--blue)">${S.streak}</div><div class="smkey">RACHA DÍAS</div></div>
+    <div class="smbox"><div class="smval" style="font-size:13px;letter-spacing:0;">${topLabel}</div><div class="smkey">CAT. DOMINANTE</div></div>
+  `;
+}
+
+function evalAchievement(a){
+  const cc = S.catCounts||{};
+  switch(a.type){
+    case 'totalComp': return S.totalComp >= a.target;
+    case 'streak':    return S.streak >= a.target;
+    case 'level':     return S.lvl >= a.target;
+    case 'totalXP':   return S.totalXP >= a.target;
+    case 'catMax':    return Object.values(cc).some(v=>v>=a.target);
+    case 'redeem':    return S.items.some(it=>it.red);
+    case 'custom':    return false; // custom achievements are manual
+    default:          return false;
+  }
+}
+
+function getAchievProgress(a){
+  const cc = S.catCounts||{};
+  switch(a.type){
+    case 'totalComp': return {cur:S.totalComp,   max:a.target};
+    case 'streak':    return {cur:S.streak,       max:a.target};
+    case 'level':     return {cur:S.lvl,          max:a.target};
+    case 'totalXP':   return {cur:S.totalXP,      max:a.target};
+    case 'catMax':    return {cur:Math.max(0,...Object.values(cc),0), max:a.target};
+    case 'redeem':    return {cur:S.items.filter(it=>it.red).length, max:a.target};
+    default:          return {cur:0, max:a.target};
+  }
+}
+
+function renderAchievements(){
+  const el = document.getElementById('achievList'); if(!el) return;
+  if(!S.achievements||!S.achievements.length){
+    el.innerHTML='<div style="text-align:center;color:var(--muted);padding:16px;font-size:11px;">Sin logros configurados. Añade en CONFIGURAR.</div>';
+    return;
+  }
+  el.innerHTML = S.achievements.map(a=>{
+    const done = evalAchievement(a);
+    const prog = getAchievProgress(a);
+    const pct = a.type==='custom' ? (done?100:0) : Math.min(100,Math.round((prog.cur/prog.max)*100));
+    return `<div class="achiev-row">
+      <div class="achiev-ico">${a.ico||'⭐'}</div>
+      <div class="achiev-txt">
+        <div class="achiev-name" style="color:${done?'var(--bright)':'var(--muted)'}">${escH(a.name)}</div>
+        <div class="achiev-desc">${escH(a.desc)}</div>
+        ${a.type!=='custom'?`<div style="margin-top:4px;height:3px;background:rgba(0,100,200,0.12);border:1px solid rgba(0,100,200,0.15);"><div style="height:100%;width:${pct}%;background:${done?'var(--gold)':'var(--blue)'};transition:width .6s;"></div></div><div style="font-size:9px;color:var(--muted);text-align:right;margin-top:2px;">${prog.cur} / ${prog.max}</div>`:'' }
+      </div>
+      <div class="achiev-badge ${done?'done':'pend'}">${done?'✓ LOGRADO':'PENDIENTE'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── EDITOR DE LOGROS EN CONFIGURACIÓN ───
+function renderAchievEditor(){
+  const el = document.getElementById('achievEditor'); if(!el) return;
+  if(!S.achievements) S.achievements=defaultAchievements();
+  el.innerHTML = S.achievements.map((a,i)=>`
+    <div class="achiev-edit-row" style="background:rgba(0,15,35,0.9);border:1px solid rgba(0,100,200,0.18);padding:10px;margin-bottom:6px;display:grid;grid-template-columns:40px 1fr 1fr 110px 36px;gap:6px;align-items:center;">
+      <input value="${escH(a.ico||'')}" style="background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.25);color:var(--bright);padding:4px;font-size:18px;text-align:center;width:100%;outline:none;" oninput="updateAchiev(${i},'ico',this.value)" maxlength="4">
+      <input value="${escH(a.name)}" style="background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.25);color:var(--bright);padding:6px 8px;font-size:12px;width:100%;font-family:'Rajdhani',sans-serif;outline:none;" oninput="updateAchiev(${i},'name',this.value)" placeholder="Nombre del logro">
+      <input value="${escH(a.desc)}" style="background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.25);color:var(--bright);padding:6px 8px;font-size:11px;width:100%;font-family:'Rajdhani',sans-serif;outline:none;" oninput="updateAchiev(${i},'desc',this.value)" placeholder="Descripción">
+      <select style="background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.25);color:var(--bright);padding:5px 6px;font-size:11px;width:100%;outline:none;font-family:'Rajdhani',sans-serif;" onchange="updateAchievType(${i},this.value)">
+        <option value="totalComp" ${a.type==='totalComp'?'selected':''}>Total misiones</option>
+        <option value="streak"    ${a.type==='streak'?'selected':''}>Racha días</option>
+        <option value="level"     ${a.type==='level'?'selected':''}>Nivel</option>
+        <option value="totalXP"   ${a.type==='totalXP'?'selected':''}>XP total</option>
+        <option value="catMax"    ${a.type==='catMax'?'selected':''}>Cat. dominante</option>
+        <option value="redeem"    ${a.type==='redeem'?'selected':''}>Canjes</option>
+        <option value="custom"    ${a.type==='custom'?'selected':''}>Manual</option>
+      </select>
+      <button onclick="delAchiev(${i})" style="background:none;border:1px solid rgba(255,70,102,.3);color:rgba(255,70,102,.6);cursor:pointer;font-size:12px;padding:4px;font-family:'Rajdhani',sans-serif;width:100%;">✕</button>
+    </div>
+    ${a.type!=='custom'&&a.type!=='redeem'?`<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;margin-top:-4px;padding:0 4px;">
+      <span style="font-size:9px;color:var(--muted);letter-spacing:1px;">META:</span>
+      <input type="number" value="${a.target||1}" min="1" style="background:rgba(0,10,30,0.9);border:1px solid rgba(0,100,200,0.2);color:var(--gold);padding:3px 8px;font-family:'Orbitron',monospace;font-size:12px;width:80px;outline:none;" oninput="updateAchiev(${i},'target',parseInt(this.value)||1)">
+    </div>`:''}
+  `).join('');
+}
+
+function updateAchiev(i,field,val){
+  if(!S.achievements[i]) return;
+  S.achievements[i][field]=val;
+  save();
+}
+
+function updateAchievType(i,val){
+  if(!S.achievements[i]) return;
+  S.achievements[i].type=val;
+  if(val==='redeem'||val==='custom') S.achievements[i].target=1;
+  save(); renderAchievEditor();
+}
+
+function delAchiev(i){
+  S.achievements.splice(i,1);
+  save(); renderAchievEditor();
+}
+
+function addAchiev(){
+  if(!S.achievements) S.achievements=[];
+  S.achievements.push({
+    id:'a'+Date.now(), ico:'⭐',
+    name:'Nuevo Logro', desc:'Descripción del logro',
+    type:'totalComp', target:10
+  });
+  save(); renderAchievEditor();
+  notif('▸ LOGRO AÑADIDO');
+}
+
+// ═══════════════════════════════════════════════════════
+// ESTADO DE ÁNIMO (MOOD)
+// ═══════════════════════════════════════════════════════
+// mood 0=pésimo 1=mal 2=regular 3=bien 4=excelente
+// XP otorgado por registrar el ánimo (independiente del valor)
+const MOOD_XP = [20, 20, 20, 20, 20]; // igual para todas — lo que importa es reconocerlo
+const MOOD_SEL_CLASSES = ['sel-0','sel-1','sel-2','sel-3','sel-4'];
+const MOOD_LABELS = ['PÉSIMO','MAL','REGULAR','BIEN','EXCELENTE'];
+
+function setMood(val){
+  const today = getTodayISODate();
+  if(!S.dailyLog) S.dailyLog=[];
+  let entry = S.dailyLog.find(e=>e.date===today);
+  if(!entry){ entry={date:today,cats:{},xp:0,missions:0}; S.dailyLog.push(entry); }
+
+  const prevMood = entry.mood;
+  const hadMood = (prevMood !== undefined && prevMood !== null);
+
+  // Revert previous mood XP if already set today
+  if(hadMood){
+    const prevXp = MOOD_XP[prevMood]||0;
+    gainXP(-prevXp);
+    S.totalComp = Math.max(0, S.totalComp-1);
+    if(S.catCounts&&S.catCounts['mental']) S.catCounts['mental']=Math.max(0,(S.catCounts['mental']||1)-1);
+    entry.cats['mental']=Math.max(0,(entry.cats['mental']||1)-1);
+    entry.xp=Math.max(0,(entry.xp||0)-prevXp);
+  }
+
+  // Save new mood
+  entry.mood = val;
+  const xp = MOOD_XP[val];
+  gainXP(xp);
+  if(!entry.cats) entry.cats={};
+  entry.cats['mental']=(entry.cats['mental']||0)+1;
+  entry.xp=(entry.xp||0)+xp;
+  if(!hadMood){
+    S.totalComp++;
+    if(!S.catCounts) S.catCounts={};
+    S.catCounts['mental']=(S.catCounts['mental']||0)+1;
+  }
+
+  // Limit log to 35 days
+  S.dailyLog = S.dailyLog.filter(e=>{
+    return (new Date()-new Date(e.date))/(1000*60*60*24)<=35;
+  });
+
+  save();
+  renderMoodWidget();
+  render();
+  notif('▸ ESTADO MENTAL: ' + MOOD_LABELS[val] + ' +' + xp + ' XP MENTAL');
+}
+
+function getTodayMood(){
+  if(!S.dailyLog) return null;
+  const today = getTodayISODate();
+  const entry = S.dailyLog.find(e=>e.date===today);
+  return (entry && entry.mood !== undefined) ? entry.mood : null;
+}
+
+function renderMoodWidget(){
+  const todayMood = getTodayMood();
+  // Reset all buttons
+  for(let i=0;i<5;i++){
+    const btn = document.getElementById('mood-'+i);
+    if(!btn) continue;
+    btn.className = 'mood-btn';
+    if(todayMood===i) btn.classList.add('selected', 'sel-'+i);
+  }
+  // Show saved indicator
+  const saved = document.getElementById('moodSaved');
+  const badge = document.getElementById('moodXpBadge');
+  if(saved){
+    saved.classList.toggle('show', todayMood!==null);
+    if(todayMood!==null) saved.textContent = '▸ HOY TE SENTISTE: ' + MOOD_LABELS[todayMood] + ' — REGISTRADO';
+  }
+  if(badge && todayMood!==null){
+    badge.textContent = '+'+MOOD_XP[todayMood]+' XP';
+    badge.classList.add('show');
+  } else if(badge){
+    badge.classList.remove('show');
+  }
+}
+
+// Hook renderMoodWidget into render
+const _origRender = render;
+function render(){
+  _origRender();
+  renderMoodWidget();
+}
+
+// ═══════════════════════════════════════════════════════
+// INICIO
+// ═══════════════════════════════════════════════════════
+const savedUser = localStorage.getItem('sl_current_user');
+if(savedUser){
+  currentUser=savedUser;
+  S=loadState(savedUser);
+  XPR=S.xprConfig||{D:15,C:30,B:50,A:80,S:120};
+  document.getElementById('userBar').style.display='flex';
+  document.getElementById('userBarName').textContent=savedUser.toUpperCase();
+  checkReset(); render();
+  // restore font
+  const savedFont=parseInt(localStorage.getItem(getUserKey(savedUser)+'_font'));
+  if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
+} else {
+  document.getElementById('loginOver').classList.add('show');
+}
+
+tick();
+setInterval(tick,1000);
+</script>
+</body>
+</html>
