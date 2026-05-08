@@ -47,31 +47,27 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .login-inp:focus{border-color:var(--blue);}
 .login-btn{width:100%;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;padding:11px;cursor:pointer;transition:all .2s;margin-top:4px;}
 .login-btn:hover{background:rgba(0,170,255,0.09);}
-/* ── PLAYER CARD QUICK CONTROLS ───────────────────────────────── */
-.pcard-config-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--blue);cursor:pointer;background:rgba(0,170,255,0.05);border:1px solid rgba(0,170,255,.3);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
-.pcard-config-btn:hover{background:rgba(0,170,255,.12);border-color:rgba(0,170,255,.65);box-shadow:0 0 8px rgba(0,170,255,.2);}
-.pcard-config-lbl{letter-spacing:2px;opacity:.85;}
-.pcard-actions{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:4px;}
-.pcard-mini-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--gold);cursor:pointer;background:rgba(240,192,64,0.05);border:1px solid rgba(240,192,64,.3);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
-.pcard-mini-btn:hover{background:rgba(240,192,64,.1);border-color:rgba(240,192,64,.6);}
-.pcard-mini-lbl{letter-spacing:2px;opacity:.85;}
-.pcard-font-ctrl{display:flex;align-items:center;gap:3px;border:1px solid rgba(0,170,255,.2);background:rgba(0,10,30,0.4);padding:2px 5px;}
-.pcard-font-btn{background:none;border:none;color:var(--blue);font-family:'Orbitron',monospace;cursor:pointer;padding:1px 4px;line-height:1;transition:color .15s;}
-.pcard-font-btn:hover{color:var(--bright);}
-.pcard-font-val{font-family:'Orbitron',monospace;color:var(--bright);min-width:28px;text-align:center;letter-spacing:1px;}
-.pcard-name-form{display:flex;gap:4px;align-items:center;margin-top:5px;width:100%;}
-.pcard-name-inp{flex:1;background:rgba(0,20,50,0.9);border:1px solid rgba(0,170,255,.4);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:13px;padding:4px 8px;outline:none;min-width:0;}
-.pcard-name-inp:focus{border-color:var(--blue);}
-.pcard-name-ok{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.4);color:var(--green);font-family:'Orbitron',monospace;font-size:10px;padding:4px 8px;cursor:pointer;transition:all .2s;}
-.pcard-name-ok:hover{background:rgba(74,222,128,.15);}
-.pcard-name-cancel{background:none;border:1px solid rgba(100,120,150,.3);color:var(--muted);font-family:'Orbitron',monospace;font-size:10px;padding:4px 8px;cursor:pointer;transition:all .2s;}
-.pcard-name-cancel:hover{background:rgba(255,255,255,.04);}
-.pcard-perfil-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:#22d3ee;cursor:pointer;background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,.3);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
-.pcard-perfil-btn:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.65);box-shadow:0 0 8px rgba(34,211,238,.2);}
-.pcard-perfil-lbl{letter-spacing:2px;opacity:.85;}
-.pcard-logout-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--danger);cursor:pointer;background:rgba(255,70,102,0.04);border:1px solid rgba(255,70,102,.25);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
-.pcard-logout-btn:hover{background:rgba(255,70,102,.1);border-color:rgba(255,70,102,.6);}
-.pcard-logout-lbl{letter-spacing:2px;opacity:.85;}
+/* ── PLAYER CARD — ICONOS DE ACCIÓN (solo emoji + tooltip) ───────── */
+/* Dos botones mínimos junto al nivel: ⚙️ y 📊                        */
+.pcard-icon-actions{display:flex;flex-direction:column;gap:4px;flex-shrink:0;align-items:flex-end;}
+.pcard-icon-btn{background:rgba(0,170,255,0.06);border:1px solid rgba(0,170,255,0.25);color:var(--bright);font-size:18px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;border-radius:2px;padding:0;line-height:1;}
+.pcard-icon-btn:hover{background:rgba(0,170,255,0.15);border-color:rgba(0,170,255,0.6);box-shadow:0 0 8px rgba(0,170,255,0.2);}
+
+/* ── CONFIGURAR — BARRA DE SISTEMA (fuente + salir) ─────────────── */
+.cfg-sys-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(0,10,28,0.6);border:1px solid rgba(0,100,200,0.2);border-left:3px solid rgba(0,170,255,0.4);padding:10px 14px;margin-bottom:14px;}
+.cfg-sys-group{display:flex;align-items:center;gap:10px;}
+.cfg-sys-lbl{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);}
+.cfg-font-ctrl{display:flex;align-items:center;gap:4px;border:1px solid rgba(0,170,255,0.2);background:rgba(0,10,30,0.5);padding:3px 7px;}
+.cfg-font-btn{background:none;border:none;color:var(--blue);font-family:'Orbitron',monospace;font-size:13px;cursor:pointer;padding:1px 5px;line-height:1;transition:color .15s;}
+.cfg-font-btn:hover{color:var(--bright);}
+.cfg-font-val{font-family:'Orbitron',monospace;color:var(--bright);min-width:32px;text-align:center;letter-spacing:1px;font-size:11px;}
+.cfg-logout-btn{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--danger);cursor:pointer;background:rgba(255,70,102,0.04);border:1px solid rgba(255,70,102,.3);padding:7px 14px;transition:all .2s;white-space:nowrap;}
+.cfg-logout-btn:hover{background:rgba(255,70,102,.1);border-color:rgba(255,70,102,.6);}
+
+/* ── DEAD CODE CLEANUP — clases antiguas de pcard-actions ──────── */
+/* .pcard-actions, .pcard-config-btn, .pcard-perfil-btn,            */
+/* .pcard-mini-btn, .pcard-font-ctrl, .pcard-logout-btn, etc.       */
+/* eliminadas — no se usan en el HTML                                */
 /* HEADER */
 .hdr{text-align:center;padding:22px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;}
 .hdr-sub{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:6px;color:var(--blue);opacity:.7;margin-bottom:4px;}
@@ -80,8 +76,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 /* PLAYER CARD */
 .pcard{background:var(--panel);border:1px solid var(--border);border-radius:2px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
 .pcard::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--blue);box-shadow:0 0 10px rgba(0,170,255,0.6);}
-.phdr{display:flex;align-items:center;gap:14px;}
-.avatar{width:62px;height:62px;background:linear-gradient(135deg,#001833,#003366);border:2px solid var(--blue);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 0 14px rgba(0,170,255,0.28);flex-shrink:0;position:relative;overflow:hidden;cursor:default;}
+.phdr{display:flex;align-items:stretch;gap:14px;}
+.avatar{width:58px;height:90px;background:linear-gradient(135deg,#001833,#003366);border:2px solid var(--blue);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 0 14px rgba(0,170,255,0.28);flex-shrink:0;position:relative;overflow:hidden;cursor:default;}
 .avatar-morph-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;opacity:0;border-radius:2px;}
 .avatar-morph-ring{position:absolute;inset:-4px;border-radius:4px;pointer-events:none;opacity:0;}
 .avatar-morphing .avatar-morph-ring{animation:morph-ring-pulse 0.9s ease-out forwards;}
@@ -91,13 +87,27 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   100%{opacity:0;  box-shadow:0 0 6px  var(--morph-color,#00aaff);}
 }
 .profile-avatar-big{position:relative;overflow:hidden;}
-.pinfo{flex:1;}
-.pname{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--bright);letter-spacing:2px;transition:color 0.6s ease, text-shadow 0.6s ease;}
-.pclass{font-size:11px;color:var(--blue);letter-spacing:3px;margin:3px 0;}
-.prank{display:inline-block;padding:3px 12px;background:rgba(192,132,252,0.12);border:1px solid rgba(192,132,252,0.45);color:#c084fc;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;margin-top:4px;}
-.plvl{text-align:right;}
-.plvlnum{font-family:'Orbitron',monospace;font-size:30px;font-weight:900;color:var(--bright);}
-.plvllbl{font-size:9px;color:var(--muted);letter-spacing:2px;}
+
+/* ── PINFO — columna derecha del avatar ──────────────────────────── */
+.pinfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+
+/* Fila 1: nombre + nivel juntos (bloque izq) + iconos (derecha) */
+.pinfo-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.pinfo-name-lvl{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.pname{font-family:'Orbitron',monospace;font-size:clamp(13px,4vw,18px);font-weight:700;color:var(--bright);letter-spacing:2px;transition:color 0.6s ease,text-shadow 0.6s ease;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pmeta-lvl{display:inline-flex;align-items:baseline;gap:3px;background:rgba(0,170,255,0.08);border:1px solid rgba(0,170,255,0.3);padding:2px 7px;align-self:flex-start;}
+.pmeta-lvlnum{font-family:'Orbitron',monospace;font-size:clamp(11px,3vw,14px);font-weight:900;color:var(--bright);line-height:1;}
+.pmeta-lvllbl{font-family:'Orbitron',monospace;font-size:7px;color:var(--muted);letter-spacing:2px;}
+
+/* Fila 2: clase */
+.pclass{font-size:clamp(9px,2.5vw,11px);color:var(--blue);letter-spacing:2px;line-height:1.3;min-width:0;}
+
+/* Fila 3: rango badge */
+.prank{display:inline-flex;align-items:center;padding:3px 10px;background:rgba(192,132,252,0.12);border:1px solid rgba(192,132,252,0.45);color:#c084fc;font-family:'Orbitron',monospace;font-size:clamp(9px,2.5vw,11px);font-weight:700;letter-spacing:2px;align-self:flex-start;}
+
+/* Retrocompatibilidad JS */
+.plvl{display:none;}
+.plvlnum,.plvllbl{display:none;}
 /* CLASS BANNER */
 .class-banner{margin-top:10px;padding:8px 12px;background:rgba(0,170,255,0.06);border:1px solid rgba(0,170,255,0.2);border-left:3px solid var(--blue);display:none;}
 .class-banner.show{display:block;}
@@ -172,6 +182,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .act-btn.save{color:rgba(74,222,128,.8);border-color:rgba(74,222,128,.3);}
 .act-btn.save:hover{color:var(--green);border-color:rgba(74,222,128,.6);}
 .act-btn.cancel{color:var(--muted);border-color:rgba(96,130,180,.25);}
+.act-btn.swap{color:rgba(191,95,255,.8);border-color:rgba(191,95,255,.35);font-size:12px;padding:2px 6px;}
+.act-btn.swap:hover{color:var(--neon-purple);border-color:var(--neon-purple-border);background:var(--neon-purple-dim);box-shadow:0 0 8px var(--neon-purple-glow);}
 .fixed-badge{font-size:8px;letter-spacing:2px;color:var(--gold);background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);padding:1px 5px;font-family:'Orbitron',monospace;}
 .progtxt{font-size:11px;color:var(--muted);text-align:right;margin-top:4px;}
 /* INLINE EDIT */
@@ -334,6 +346,103 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:#020810;}
 ::-webkit-scrollbar-thumb{background:rgba(0,170,255,0.3);border-radius:2px;}
+
+/* ══════════════════════════════════════════════════════
+   MODAL DE PLANTILLAS DE MISIONES
+   ══════════════════════════════════════════════════════ */
+.tpl-overlay{display:none;position:fixed;inset:0;background:rgba(0,5,15,0.96);z-index:8000;overflow-y:auto;padding:20px 16px 40px;}
+.tpl-overlay.show{display:block;}
+.tpl-wrap{max-width:680px;margin:0 auto;}
+.tpl-header{text-align:center;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:18px;}
+.tpl-eyebrow{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:5px;color:var(--blue);opacity:.7;margin-bottom:4px;}
+.tpl-title{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--bright);letter-spacing:3px;text-shadow:0 0 20px rgba(0,170,255,0.4);}
+.tpl-sub{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7;}
+.tpl-intro{background:rgba(0,170,255,0.04);border:1px solid rgba(0,170,255,0.2);border-left:3px solid var(--blue);padding:13px 16px;margin-bottom:18px;font-size:12px;color:#a8d4f0;line-height:1.8;}
+.tpl-intro strong{color:var(--bright);}
+/* Categorías dentro del modal */
+.tpl-cat-hdr{display:flex;align-items:center;gap:8px;margin:16px 0 10px;}
+.tpl-cat-line{flex:1;height:1px;background:var(--border);}
+.tpl-cat-title{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--blue);letter-spacing:3px;white-space:nowrap;}
+/* Cards de preview */
+.tpl-card{background:var(--panel);border:1px solid rgba(0,100,200,0.22);border-left:3px solid var(--blue);padding:11px 14px;margin-bottom:7px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:all .15s;user-select:none;}
+.tpl-card:hover{border-color:rgba(0,170,255,0.45);background:rgba(0,25,55,.98);}
+.tpl-card.selected{border-left-color:var(--neon-purple);background:var(--neon-purple-dim);border-color:var(--neon-purple-border);}
+.tpl-card.rank-s{border-left-color:var(--s);}
+.tpl-card.rank-s.selected{border-left-color:var(--neon-purple);}
+.tpl-card.rank-a{border-left-color:var(--a);}
+.tpl-card.rank-a.selected{border-left-color:var(--neon-purple);}
+.tpl-card.rank-b{border-left-color:var(--b);}
+.tpl-card.rank-b.selected{border-left-color:var(--neon-purple);}
+.tpl-card.rank-c{border-left-color:var(--c);}
+.tpl-card.rank-c.selected{border-left-color:var(--neon-purple);}
+.tpl-card.rank-d{border-left-color:var(--d);}
+.tpl-card.rank-d.selected{border-left-color:var(--neon-purple);}
+.tpl-card.fixed-tpl{border-left-color:var(--gold);}
+.tpl-card.fixed-tpl.selected{border-left-color:var(--neon-purple);}
+.tpl-chk{width:18px;height:18px;border:2px solid rgba(0,170,255,0.4);flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:all .15s;border-radius:1px;}
+.tpl-card.selected .tpl-chk{background:var(--neon-purple);border-color:var(--neon-purple);color:#fff;box-shadow:0 0 8px var(--neon-purple-glow);}
+.tpl-content{flex:1;min-width:0;}
+.tpl-name{font-size:14px;font-weight:600;color:var(--bright);line-height:1.3;}
+.tpl-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.tpl-foot{display:flex;align-items:center;gap:7px;margin-top:8px;flex-wrap:wrap;}
+.tpl-xp{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--gold);background:rgba(240,192,64,0.09);border:1px solid rgba(240,192,64,0.28);padding:1px 7px;}
+.tpl-rnk{font-size:9px;font-weight:700;padding:1px 7px;border:1px solid;letter-spacing:1px;}
+.tpl-fixed-badge{font-size:8px;letter-spacing:2px;color:var(--gold);background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);padding:1px 5px;font-family:'Orbitron',monospace;}
+/* Barra de acción del modal */
+.tpl-action-bar{position:sticky;bottom:0;background:rgba(2,8,16,0.97);border-top:1px solid var(--border);padding:14px 0 0;margin-top:20px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.tpl-sel-all{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);border:1px solid rgba(0,100,200,0.25);background:none;padding:9px 14px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tpl-sel-all:hover{color:var(--bright);border-color:rgba(0,100,200,0.5);}
+.tpl-import-btn{flex:1;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:3px;color:var(--blue);border:1px solid var(--blue);background:transparent;padding:11px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tpl-import-btn:hover{background:rgba(0,170,255,0.08);box-shadow:0 0 12px rgba(0,170,255,0.15);}
+.tpl-import-btn:disabled{opacity:.3;cursor:default;}
+.tpl-skip-btn{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);border:1px solid rgba(0,100,200,0.2);background:none;padding:9px 14px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tpl-skip-btn:hover{color:var(--bright);}
+.tpl-counter{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;white-space:nowrap;}
+/* Botón en Configurar */
+.tpl-open-cfg-btn{width:100%;background:transparent;border:1px solid rgba(0,170,255,0.3);color:var(--blue);font-family:'Orbitron',monospace;font-size:calc(9px * var(--fs-scale));letter-spacing:3px;padding:11px;cursor:pointer;transition:all .2s;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.tpl-open-cfg-btn:hover{background:rgba(0,170,255,0.07);border-color:var(--blue);}
+.tpl-open-tut-btn{width:100%;background:transparent;border:1px solid rgba(191,95,255,0.35);color:var(--neon-purple);font-family:'Orbitron',monospace;font-size:calc(9px * var(--fs-scale));letter-spacing:3px;padding:11px;cursor:pointer;transition:all .2s;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.tpl-open-tut-btn:hover{background:rgba(191,95,255,0.07);border-color:var(--neon-purple);}
+/* ── TABS INTERNAS DEL MODAL ── */
+.tpl-modal-tabs{display:flex;border-bottom:1px solid rgba(0,100,200,0.22);margin-bottom:18px;}
+.tpl-modal-tab{flex:1;text-align:center;padding:10px 4px;font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
+.tpl-modal-tab.active{color:var(--neon-purple);border-bottom-color:var(--neon-purple);text-shadow:0 0 10px var(--neon-purple-glow);}
+.tpl-modal-tab:hover:not(.active){color:#8bb8d0;}
+.tpl-modal-panel{display:none;}
+.tpl-modal-panel.active{display:block;}
+/* ── TUTORIAL PANEL STYLES ── */
+.tut-box{background:rgba(0,170,255,0.04);border:1px solid rgba(0,170,255,0.2);border-left:3px solid var(--blue);padding:14px 16px;margin-bottom:16px;}
+.tut-box-lbl{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;color:var(--blue);margin-bottom:6px;}
+.tut-box-text{font-size:12px;color:#a8d4f0;line-height:1.8;}
+.tut-box-text strong{color:var(--bright);}
+.tut-cat-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;margin-bottom:16px;}
+.tut-cat-chip{display:flex;align-items:center;gap:8px;background:rgba(0,15,35,0.8);border:1px solid rgba(0,100,200,0.2);padding:7px 10px;}
+.tut-cat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.tut-cat-name{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:1px;color:var(--bright);}
+.tut-cat-emoji{font-size:14px;flex-shrink:0;}
+.tut-xp-guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:7px;margin-bottom:16px;}
+.tut-xpg-box{background:rgba(0,15,35,0.9);border:1px solid rgba(0,100,200,0.18);padding:10px;text-align:center;}
+.tut-xpg-val{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--gold);}
+.tut-xpg-rar{font-family:'Orbitron',monospace;font-size:7px;letter-spacing:2px;margin-top:2px;}
+.tut-xpg-desc{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.tut-step-note{background:rgba(191,95,255,0.04);border:1px solid rgba(191,95,255,0.2);border-left:3px solid var(--neon-purple);padding:10px 14px;margin:8px 0 14px;font-size:11px;color:#d4a8f0;line-height:1.7;}
+.tut-step-note strong{color:var(--neon-purple);font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;}
+.tut-mcard{background:var(--panel);border:1px solid rgba(0,100,200,0.22);border-left:3px solid var(--blue);padding:11px 14px;margin-bottom:7px;position:relative;overflow:hidden;}
+.tut-mcard.rank-s{border-left-color:var(--s);}
+.tut-mcard.rank-a{border-left-color:var(--a);}
+.tut-mcard.rank-b{border-left-color:var(--b);}
+.tut-mcard.rank-c{border-left-color:var(--c);}
+.tut-mcard.rank-d{border-left-color:var(--d);}
+.tut-mcard.fixed{border-left-color:var(--gold);}
+.tut-mname{font-size:13px;font-weight:600;color:var(--bright);line-height:1.3;}
+.tut-mdesc{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.tut-mfoot{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:wrap;}
+.tut-howto-grid{display:grid;grid-template-columns:auto 1fr;gap:7px 14px;background:rgba(0,10,25,0.6);border:1px solid rgba(0,100,200,0.15);padding:12px;margin-bottom:16px;}
+.tut-howto-icon{font-size:18px;display:flex;align-items:center;}
+.tut-howto-text{font-size:11px;color:#a8d4f0;line-height:1.7;display:flex;align-items:center;}
+.tut-howto-text strong{color:var(--bright);}
+.tut-rar-legend{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.tut-rar-legend span{color:var(--bright);}
 /* ═══════════════ MÓDULO DINERO ═══════════════ */
 .fin-summary{display:grid;grid-template-columns:repeat(3,minmax(72px,1fr));gap:8px;margin-bottom:14px;}
 .fin-box{background:rgba(0,15,35,0.97);border:1px solid rgba(0,100,200,0.22);padding:12px 10px;text-align:center;position:relative;overflow:hidden;}
@@ -396,15 +505,11 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 /* TABS bar — etiquetas de navegación */
 .tab{font-size:calc(9px * var(--fs-scale));}
 
-/* PLAYER CARD — botones de acción rápida */
-.pcard-config-btn, .pcard-config-lbl { font-size: calc(7px * var(--fs-scale)); }
-.pcard-perfil-btn, .pcard-perfil-lbl { font-size: calc(7px * var(--fs-scale)); }
-.pcard-mini-btn,   .pcard-mini-lbl   { font-size: calc(7px * var(--fs-scale)); }
-.pcard-logout-btn, .pcard-logout-lbl { font-size: calc(7px * var(--fs-scale)); }
-.pcard-font-btn  { font-size: calc(10px * var(--fs-scale)); }
-.pcard-font-val  { font-size: calc(9px  * var(--fs-scale)); }
-.pcard-name-inp  { font-size: calc(13px * var(--fs-scale)); }
-.pcard-name-ok, .pcard-name-cancel { font-size: calc(10px * var(--fs-scale)); }
+/* PLAYER CARD — solo iconos, escalan con emoji nativo */
+/* cfg-sys-bar — fuente y logout en config */
+.cfg-font-btn  { font-size: calc(13px * var(--fs-scale)); }
+.cfg-font-val  { font-size: calc(11px * var(--fs-scale)); }
+.cfg-logout-btn{ font-size: calc(9px  * var(--fs-scale)); }
 
 /* TOOLTIPS — texto de ayuda expandible */
 .tip-base   { font-size: calc(10px * var(--fs-scale)); }
@@ -842,12 +947,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
 /* Player card */
 .pcard { padding: 12px 11px; }
-.avatar { width: 50px; height: 50px; font-size: 24px; }
-.pname { font-size: 14px; }
-.pclass { font-size: 9px; letter-spacing: 2px; }
-.prank { font-size: 9px; padding: 2px 8px; }
-.plvlnum { font-size: 24px; }
-.plvllbl { font-size: 8px; }
+.avatar { width: 46px; height: 74px; font-size: 22px; }
+.pmeta-lvlnum { font-size: 13px; }
 
 /* Stats 3 col */
 .stats3 { grid-template-columns: repeat(3,1fr); gap: 5px; margin-top: 10px; }
@@ -993,10 +1094,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .achiev-desc { font-size: 9px; }
 
 /* Player card quick controls — móvil */
-.pcard-actions { gap: 4px; }
-.pcard-config-btn, .pcard-mini-btn { padding: 3px 7px; }
-.pcard-font-ctrl { padding: 2px 4px; }
-/* pcard-font-btn/val sizes handled by fs-scale */
+.pcard-icon-btn { width: 30px; height: 30px; font-size: 16px; }
 /* Clase banner */
 .class-banner { padding: 7px 10px; }
 .class-banner-name { font-size: 13px; }
@@ -1022,9 +1120,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .wrap { padding: 12px 14px 24px; }
   .hdr-title { font-size: 20px; letter-spacing: 3px; }
   .hdr-sub { font-size: 9px; }
-  .avatar { width: 56px; height: 56px; font-size: 28px; }
-  .pname { font-size: 16px; }
-  .plvlnum { font-size: 26px; }
+  .avatar { width: 52px; height: 82px; font-size: 26px; }
+  .pmeta-lvlnum { font-size: 15px; }
   .tab { padding: 9px 13px; letter-spacing: 1.5px; }
   .tabs { flex-wrap: wrap; overflow-x: visible; }
   .resetbar { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
@@ -1047,12 +1144,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .hdr-title { font-size: 24px; letter-spacing: 4px; }
   .hdr-sub { font-size: 10px; letter-spacing: 6px; }
   .hdr-time { font-size: 10px; }
-  .avatar { width: 62px; height: 62px; font-size: 30px; }
-  .pname { font-size: 18px; }
-  .pclass { font-size: 11px; letter-spacing: 3px; }
-  .prank { font-size: 11px; padding: 3px 12px; }
-  .plvlnum { font-size: 30px; }
-  .plvllbl { font-size: 9px; }
+  .avatar { width: 58px; height: 90px; font-size: 30px; }
+  .pmeta-lvlnum { font-size: 16px; }
   .sval { font-size: 20px; }
   .skey { font-size: 9px; }
   .stats3 { gap: 8px; margin-top: 12px; }
@@ -1139,8 +1232,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .hdr { padding: 8px 0 6px; }
   .hdr-title { font-size: 14px; }
   .pcard { padding: 8px 10px; }
-  .avatar { width: 40px; height: 40px; font-size: 20px; }
-  .plvlnum { font-size: 20px; }
+  .avatar { width: 34px; height: 54px; font-size: 18px; }
+  .pmeta-lvlnum { font-size: 12px; }
   .stats3 { margin-top: 7px; gap: 5px; }
   .sval { font-size: 14px; }
   .xpsec { margin-top: 8px; }
@@ -1353,66 +1446,29 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <div class="pcard">
     <div class="phdr">
       <div class="avatar" id="avatarEl">⚔️<canvas class="avatar-morph-canvas" id="avatarMorphCanvas"></canvas><div class="avatar-morph-ring" id="avatarMorphRing"></div></div>
+
       <div class="pinfo">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
-          <div>
+        <!-- Fila 1: nombre + nivel pegados + iconos -->
+        <div class="pinfo-top">
+          <div class="pinfo-name-lvl">
             <div class="pname" id="pname">CAZADOR</div>
-            <div class="pclass" id="pclass">▸ CAZADOR INDEPENDIENTE</div>
-            <div class="prank" id="prank">RANGO E</div>
+            <div class="pmeta-lvl">
+              <span class="pmeta-lvlnum" id="plvl">LV.1</span>
+              <span class="pmeta-lvllbl">NVL</span>
+            </div>
+            <div class="pmeta-balance" id="pcardBalance" style="display:none;font-family:'Orbitron',monospace;font-size:clamp(9px,2.5vw,11px);font-weight:700;letter-spacing:1px;margin-top:2px;"></div>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-            <div class="plvl">
-              <div class="plvlnum" id="plvl">LV.1</div>
-              <div class="plvllbl">NIVEL</div>
-            </div>
-            <!-- ── CONTROLES RÁPIDOS DE LA PLAYER CARD ──────────────────────
-                 1. ⚙️ AJUSTES   → abre tab de configuración completa
-                 2. 📊 PERFIL    → abre tab de estadísticas y radar
-                 3. ✏ NOMBRE    → edita el nombre inline aquí mismo
-                 4. T− / T+     → reduce o aumenta el tamaño de fuente
-                 5. ↩ SALIR     → cierra sesión / cambia usuario
-            ─────────────────────────────────────────────────────────── -->
-            <div class="pcard-actions">
-
-              <!-- Botón: abre configuración completa -->
-              <button class="pcard-config-btn" onclick="switchTab('config')" title="Abrir panel de configuración">
-                ⚙️ <span class="pcard-config-lbl">AJUSTES</span>
-              </button>
-
-              <!-- Botón: abre tab de perfil — estadísticas, radar y logros -->
-              <button class="pcard-perfil-btn" onclick="switchTab('perfil')" title="Ver estadísticas y progreso">
-                📊 <span class="pcard-perfil-lbl">PERFIL</span>
-              </button>
-
-              <!-- Cambio de nombre inline -->
-              <button class="pcard-mini-btn" onclick="pcardToggleName()" id="pcardNameBtn" title="Cambiar nombre del cazador">
-                ✏ <span class="pcard-mini-lbl">NOMBRE</span>
-              </button>
-
-              <!-- Control tamaño de texto -->
-              <div class="pcard-font-ctrl" title="Tamaño de texto">
-                <button class="pcard-font-btn" onclick="changeFontSize(-1)">T−</button>
-                <span class="pcard-font-val" id="fontVal">15px</span>
-                <button class="pcard-font-btn" onclick="changeFontSize(1)">T+</button>
-              </div>
-
-              <!-- Cambiar usuario / cerrar sesión -->
-              <button class="pcard-logout-btn" onclick="doLogout()" title="Cerrar sesión y cambiar usuario">
-                ↩ <span class="pcard-logout-lbl">SALIR</span>
-              </button>
-
-            </div>
-
-            <!-- Formulario inline de nombre (oculto por defecto) -->
-            <div class="pcard-name-form" id="pcardNameForm" style="display:none;">
-              <input class="pcard-name-inp" id="pcardNameInp"
-                     placeholder="Nuevo nombre..."
-                     onkeydown="if(event.key==='Enter')pcardSaveName();if(event.key==='Escape')pcardToggleName();">
-              <button class="pcard-name-ok" onclick="pcardSaveName()">✓</button>
-              <button class="pcard-name-cancel" onclick="pcardToggleName()">✕</button>
-            </div>
+          <div class="pcard-icon-actions">
+            <button class="pcard-icon-btn" onclick="switchTab('config')" title="⚙️ Ajustes — Configurar misiones, tienda y rangos">⚙️</button>
+            <button class="pcard-icon-btn" onclick="switchTab('perfil')" title="📊 Perfil — Estadísticas, radar y logros">📊</button>
           </div>
         </div>
+
+        <!-- Fila 2: clase -->
+        <div class="pclass" id="pclass">▸ CAZADOR INDEPENDIENTE</div>
+
+        <!-- Fila 3: rango -->
+        <div class="prank" id="prank">RANGO E</div>
       </div>
     </div>
     <div class="class-banner" id="classBanner">
@@ -1428,7 +1484,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
       <div class="xptrack"><div class="xpfill" id="xpbar" style="width:0%"></div></div>
     </div>
     <div class="stats3">
-      <div class="sbox"><div class="sval" id="stTotal">0</div><div class="skey">TOTAL XP</div></div>
+      <div class="sbox"><div class="sval" id="stTotal">0</div><div class="skey">XP NIVEL</div></div>
       <div class="sbox"><div class="sval" id="stStreak">0</div><div class="skey">RACHA DÍAS</div></div>
       <div class="sbox"><div class="sval" id="stComp">0</div><div class="skey">MISIONES ✓</div></div>
     </div>
@@ -1473,7 +1529,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     <div class="tip-block">
       <span class="tip-base">4 misiones mínimas de hoy, una por categoría.</span>
       <button class="tip-toggle" onclick="tipToggle(this)">ⓘ ¿CÓMO FUNCIONA?</button>
-      <div class="tip-detail">El sistema elige automáticamente 1 misión de cada categoría principal (Salud, Guerrero, Estudio, Hábitos). Si tienes muchas misiones creadas, las rota para que no se repitan. Completa las 4 para reclamar la recompensa diaria y mantener tu racha.</div>
+      <div class="tip-detail">El sistema elige automáticamente 1 misión de cada categoría principal (Salud, Guerrero, Estudio, Hábitos). Si tienes muchas misiones creadas, las rota para que no se repitan. Completa las 4 para reclamar la recompensa diaria y mantener tu racha. Usa el botón 🔀 en cualquier misión para cambiarla por una aleatoria de todo el banco — así las misiones recién creadas también pueden aparecer.</div>
     </div>
     <div id="mlist"></div>
     <div class="progtxt" id="progtxt">0 / 4 misiones mínimas completadas</div>
@@ -1549,9 +1605,17 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <div class="tabcontent" id="tab-shop">
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">TIENDA</span><span class="txt-full">TIENDA — CANJEA TUS DESEOS</span></span><div class="sline"></div></div>
     <div class="tip-block">
-      <span class="tip-base">Canjea tus deseos con el XP que has ganado.</span>
+      <span class="tip-base">Canjea tus deseos con XP de Tienda — tu nivel nunca baja al comprar.</span>
       <button class="tip-toggle" onclick="tipToggle(this)">ⓘ ¿CÓMO FUNCIONA?</button>
-      <div class="tip-detail">Cada objeto tiene un costo en XP. La barra de progreso muestra cuánto XP acumulaste (hoy, esta semana o este mes) comparado con el precio. Cuando superas el costo total, puedes comprarlo. Si tienes un Colchón de Seguridad configurado, también se valida tu balance real antes de permitir la compra.</div>
+      <div class="tip-detail">Cada misión que completas gana <strong style="color:var(--gold)">XP de Tienda</strong> además del XP de nivel normal. El XP de Tienda es tu moneda de compra — al canjear un objeto se descuenta de aquí, <strong style="color:var(--blue)">no de tu nivel ni de tu barra de XP</strong>. Así nunca puedes bajar de nivel por comprar. Si tienes un Colchón de Seguridad configurado, también se valida tu balance real antes de permitir la compra.</div>
+    </div>
+    <!-- XP de Tienda disponible -->
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(240,192,64,0.07);border:1px solid rgba(240,192,64,0.28);border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:12px;">
+      <div>
+        <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:3px;">◈ XP DE TIENDA DISPONIBLE</div>
+        <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--gold);" id="shopXPDisplay">0</div>
+      </div>
+      <div style="text-align:right;font-size:10px;color:var(--muted);line-height:1.7;max-width:160px;">XP de nivel: <span style="color:var(--bright);font-family:'Orbitron',monospace;" id="shopTotalXPDisplay">0</span><br><span style="font-size:9px;color:rgba(0,170,255,0.6);">El nivel no cambia al comprar</span></div>
     </div>
     <!-- Selector de periodo global para la tienda -->
     <div style="display:flex;gap:0;margin-bottom:14px;border:1px solid rgba(0,170,255,0.25);">
@@ -1569,7 +1633,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     <div class="tip-block">
       <span class="tip-base">Objetos que ya canjeaste en la Tienda.</span>
       <button class="tip-toggle" onclick="tipToggle(this)">ⓘ MÁS INFO</button>
-      <div class="tip-detail">Una vez que compras un objeto con XP, aparece aquí como obtenido. El XP ya fue descontado de tu total. Puedes ver la fecha en que lo creaste y cuándo lo ganaste. Los objetos del inventario no se pueden devolver.</div>
+      <div class="tip-detail">Una vez que compras un objeto con XP, aparece aquí como obtenido. El XP ya fue descontado de tu total. Puedes ver la fecha en que lo creaste y cuándo lo ganaste. Usa el botón <strong style="color:var(--danger)">🗑 ELIMINAR OBJETO</strong> para borrar un objeto del inventario — esta acción es permanente y no devuelve XP ni dinero.</div>
     </div>
     <div class="invgrid" id="invgrid"></div>
     <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;" id="invEmpty">Aún no has canjeado ningún objeto.</div>
@@ -1615,6 +1679,22 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <!-- TAB: CONFIGURAR -->
   <div class="tabcontent" id="tab-config">
 
+    <!-- ── CONTROLES DE SISTEMA ────────────────────────────────────────────
+         Tamaño de texto y cerrar sesión. Movidos aquí desde la player card
+         para no romper la responsividad de la tarjeta principal.
+    ──────────────────────────────────────────────────────────────────── -->
+    <div class="cfg-sys-bar">
+      <div class="cfg-sys-group">
+        <span class="cfg-sys-lbl">🔤 TAMAÑO DE TEXTO</span>
+        <div class="cfg-font-ctrl">
+          <button class="cfg-font-btn" onclick="changeFontSize(-1)" title="Reducir tamaño de texto">T−</button>
+          <span class="cfg-font-val" id="fontVal">15px</span>
+          <button class="cfg-font-btn" onclick="changeFontSize(1)" title="Aumentar tamaño de texto">T+</button>
+        </div>
+      </div>
+      <button class="cfg-logout-btn" onclick="doLogout()" title="Cerrar sesión y cambiar de usuario">↩ SALIR</button>
+    </div>
+
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ PERFIL DE CAZADOR</span><div class="sline"></div></div>
     <button class="fabtn" onclick="toggleNameForm()" id="nameToggleBtn"><span class="txt-short">✏ NOMBRE</span><span class="txt-full">✏ CAMBIAR NOMBRE</span></button>
     <div class="aform" id="nameFormBox" style="display:none;margin-top:8px;">
@@ -1647,6 +1727,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">AÑADIR MISIÓN</span><span class="txt-full">AÑADIR MISIÓN AL BANCO</span></span><div class="sline"></div></div>
     <div class="aform">
+      <button class="tpl-open-cfg-btn" onclick="openTplModal('import')">📋 CARGAR MISIONES DESDE PLANTILLA</button>
+      <button class="tpl-open-tut-btn" onclick="openTplModal('tutorial')">📖 VER TUTORIAL DE MISIONES</button>
       <div class="tip-block">
         <span class="tip-base">Las misiones se rotan automáticamente cada día.</span>
         <button class="tip-toggle" onclick="tipToggle(this)">ⓘ ¿CÓMO FUNCIONA LA ROTACIÓN?</button>
@@ -1868,188 +1950,503 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
 </div><!-- end .wrap -->
 
+<!-- ════════════════════════════════════════════════════════════
+     MODAL: PLANTILLA DE MISIONES
+     Se abre automáticamente en primer login si el banco está vacío.
+     También accesible desde Configurar en cualquier momento.
+     ════════════════════════════════════════════════════════════ -->
+<div class="tpl-overlay" id="tplOverlay">
+  <div class="tpl-wrap">
+    <div class="tpl-header">
+      <div class="tpl-eyebrow">◈ SISTEMA DE CAZADOR</div>
+      <div class="tpl-title" id="tplModalTitle">MISIONES — INICIO</div>
+      <div class="tpl-sub" id="tplModalSub">Aprende cómo funcionan las misiones o importa las plantillas base.</div>
+    </div>
+
+    <!-- ── TABS INTERNAS ── -->
+    <div class="tpl-modal-tabs">
+      <button class="tpl-modal-tab active" id="tplTab-tutorial" onclick="switchTplTab('tutorial')">📖 TUTORIAL</button>
+      <button class="tpl-modal-tab" id="tplTab-import" onclick="switchTplTab('import')">📋 IMPORTAR</button>
+    </div>
+
+    <!-- ══════════════════════════════
+         PANEL: TUTORIAL
+    ══════════════════════════════ -->
+    <div class="tpl-modal-panel active" id="tplPanel-tutorial">
+
+      <div class="tut-box">
+        <div class="tut-box-lbl">◈ ¿QUÉ ES ESTO?</div>
+        <div class="tut-box-text">
+          Este sistema convierte tus hábitos diarios en <strong>misiones con XP</strong>.<br>
+          Cada misión tiene: un <strong>nombre</strong>, una <strong>descripción</strong>, una <strong>rareza</strong> (D→S) que define cuánto XP ganas, y una <strong>categoría</strong>.<br>
+          Las misiones <strong>fijas ★</strong> aparecen todos los días. Las del <strong>banco</strong> rotan automáticamente — 1 por categoría.
+        </div>
+      </div>
+
+      <div class="shdr"><div class="sline"></div><span class="stitle">◈ CATEGORÍAS DISPONIBLES</span><div class="sline"></div></div>
+      <div class="tut-cat-legend">
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">💪</div><div class="tut-cat-dot" style="background:#4ade80"></div><div class="tut-cat-name">SALUD</div></div>
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">⚔️</div><div class="tut-cat-dot" style="background:#ff6b35"></div><div class="tut-cat-name">GUERRERO</div></div>
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">📚</div><div class="tut-cat-dot" style="background:#22d3ee"></div><div class="tut-cat-name">ESTUDIO</div></div>
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">📖</div><div class="tut-cat-dot" style="background:#fb923c"></div><div class="tut-cat-name">LECTURA</div></div>
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">🌟</div><div class="tut-cat-dot" style="background:#94a3b8"></div><div class="tut-cat-name">HÁBITOS</div></div>
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">🎨</div><div class="tut-cat-dot" style="background:#f0c040"></div><div class="tut-cat-name">CREATIVIDAD</div></div>
+        <div class="tut-cat-chip"><div class="tut-cat-emoji">🧘</div><div class="tut-cat-dot" style="background:#60a5fa"></div><div class="tut-cat-name">MENTAL</div></div>
+      </div>
+
+      <div class="shdr"><div class="sline"></div><span class="stitle">◈ SISTEMA DE RAREZA Y XP</span><div class="sline"></div></div>
+      <div class="tut-rar-legend">Rareza: <span>Común D</span> → <span>Raro C</span> → <span>Épico B</span> → <span>Legendario A</span> → <span>S-Rank S</span></div>
+      <div class="tut-xp-guide">
+        <div class="tut-xpg-box"><div class="tut-xpg-val">15</div><div class="tut-xpg-rar rd">COMÚN — D</div><div class="tut-xpg-desc">Hábitos básicos. Fácil de completar.</div></div>
+        <div class="tut-xpg-box"><div class="tut-xpg-val">30</div><div class="tut-xpg-rar rc">RARO — C</div><div class="tut-xpg-desc">Rutinas que exigen constancia.</div></div>
+        <div class="tut-xpg-box"><div class="tut-xpg-val">50</div><div class="tut-xpg-rar rb">ÉPICO — B</div><div class="tut-xpg-desc">Metas de concentración real.</div></div>
+        <div class="tut-xpg-box"><div class="tut-xpg-val">80</div><div class="tut-xpg-rar ra">LEGENDARIO A</div><div class="tut-xpg-desc">Logros difíciles de sostener.</div></div>
+        <div class="tut-xpg-box"><div class="tut-xpg-val">120</div><div class="tut-xpg-rar rs">S-RANK — S</div><div class="tut-xpg-desc">Solo para los más disciplinados.</div></div>
+      </div>
+      <div class="tut-step-note"><strong>◈ NOTA</strong><br>Puedes ajustar el XP de cada rango desde <strong>Configurar → Configurar Rangos</strong>.</div>
+
+      <div class="shdr"><div class="sline"></div><span class="stitle">💪 EJEMPLO — SALUD</span><div class="sline"></div></div>
+      <div class="tut-mcard rank-c">
+        <div class="tut-mname">💧 Tomar 2 litros de agua</div>
+        <div class="tut-mdesc">Hidratación básica durante el día. Marca al alcanzar los 2L.</div>
+        <div class="tut-mfoot"><span class="mxp">+30 XP</span><span class="mrnk rc">RARO C</span><span style="font-size:9px;color:var(--muted);letter-spacing:2px;padding:2px 6px;border:1px solid rgba(0,100,200,0.15);">💪 SALUD</span></div>
+      </div>
+      <div class="tut-mcard rank-b">
+        <div class="tut-mname">🥗 Comer saludable todo el día</div>
+        <div class="tut-mdesc">Sin comida ultra-procesada. Frutas o vegetales en al menos 2 comidas.</div>
+        <div class="tut-mfoot"><span class="mxp">+50 XP</span><span class="mrnk rb">ÉPICO B</span><span style="font-size:9px;color:var(--muted);letter-spacing:2px;padding:2px 6px;border:1px solid rgba(0,100,200,0.15);">💪 SALUD</span></div>
+      </div>
+
+      <div class="shdr"><div class="sline"></div><span class="stitle">🌟 EJEMPLO — MISIONES FIJAS ★</span><div class="sline"></div></div>
+      <div class="tut-step-note"><strong>◈ ¿QUÉ SON LAS MISIONES FIJAS?</strong><br>Se marcan con <strong>★ FIJO</strong> al crearlas. Aparecen <em>todos los días</em> sin importar la rotación. Úsalas para hábitos que nunca deben faltar.</div>
+      <div class="tut-mcard fixed">
+        <div class="tut-mname">🌅 Rutina matutina completa</div>
+        <div class="tut-mdesc">Levantarte a tu hora + higiene + no revisar el celular por 30 min. El tono del día empieza aquí.</div>
+        <div class="tut-mfoot"><span class="mxp">+30 XP</span><span class="mrnk rc">RARO C</span><span class="fixed-badge">★ FIJO</span></div>
+      </div>
+      <div class="tut-mcard fixed">
+        <div class="tut-mname">🧘 Meditación o respiración consciente</div>
+        <div class="tut-mdesc">10 minutos mínimo. Box breathing, Wim Hof, o silencio total.</div>
+        <div class="tut-mfoot"><span class="mxp">+30 XP</span><span class="mrnk rc">RARO C</span><span class="fixed-badge">★ FIJO</span></div>
+      </div>
+
+      <div class="shdr"><div class="sline"></div><span class="stitle">◈ CÓMO AÑADIR MISIONES</span><div class="sline"></div></div>
+      <div class="tut-howto-grid">
+        <div class="tut-howto-icon">1️⃣</div>
+        <div class="tut-howto-text">Abre la pestaña <strong>IMPORTAR</strong> (arriba) para añadir misiones de ejemplo con un clic.</div>
+        <div class="tut-howto-icon">2️⃣</div>
+        <div class="tut-howto-text">También puedes ir a <strong>Configurar → Añadir Misión</strong> para crear las tuyas desde cero.</div>
+        <div class="tut-howto-icon">3️⃣</div>
+        <div class="tut-howto-text">Al crear una misión, marca <strong>"Misión Fija"</strong> si quieres que aparezca todos los días sin excepción.</div>
+        <div class="tut-howto-icon">4️⃣</div>
+        <div class="tut-howto-text">El sistema elige automáticamente <strong>una misión por categoría</strong> cada día al hacer el reset.</div>
+        <div class="tut-howto-icon">5️⃣</div>
+        <div class="tut-howto-text">Toca el botón <strong>🔀</strong> sobre cualquier misión del día para cambiarla por otra del banco.</div>
+      </div>
+
+      <div style="position:sticky;bottom:0;background:rgba(2,8,16,0.97);border-top:1px solid var(--border);padding:14px 0 0;margin-top:12px;display:flex;gap:8px;">
+        <button class="tpl-import-btn" style="flex:1" onclick="switchTplTab('import')">▸ IR A IMPORTAR MISIONES</button>
+        <button class="tpl-skip-btn" onclick="closeTplModal()">✕ CERRAR</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         PANEL: IMPORTAR
+    ══════════════════════════════ -->
+    <div class="tpl-modal-panel" id="tplPanel-import">
+
+    <div class="tpl-intro">
+      Selecciona las misiones que quieras añadir a tu banco. Puedes editarlas después desde <strong>Configurar</strong>. Siempre podrás añadir más manualmente.
+    </div>
+
+    <!-- SALUD -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">💪 SALUD — CLASE SANADOR</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card rank-c" data-tpl-id="s1" data-cat="salud" data-rank="C" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">💧 Tomar 2 litros de agua</div>
+        <div class="tpl-desc">Hidratación básica durante el día. Marca al alcanzar los 2L.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-d" data-tpl-id="s2" data-cat="salud" data-rank="D" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🛌 Dormir 7-8 horas</div>
+        <div class="tpl-desc">Horario de sueño consistente. Sin pantallas 30 min antes.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+15 XP</span><span class="tpl-rnk rd">COMÚN D</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-b" data-tpl-id="s3" data-cat="salud" data-rank="B" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🥗 Comer saludable todo el día</div>
+        <div class="tpl-desc">Sin comida ultra-procesada. Frutas o vegetales en al menos 2 comidas.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+50 XP</span><span class="tpl-rnk rb">ÉPICO B</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-c" data-tpl-id="s4" data-cat="salud" data-rank="C" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🚶 Caminar 30 minutos</div>
+        <div class="tpl-desc">Paso activo. Puede dividirse en bloques de 10 min durante el día.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span></div>
+      </div>
+    </div>
+
+    <!-- GUERRERO -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">⚔️ GUERRERO — CLASE GUERRERO</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card rank-b" data-tpl-id="g1" data-cat="guerrero" data-rank="B" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🏋️ Sesión de entrenamiento</div>
+        <div class="tpl-desc">Al menos 30 minutos de ejercicio de fuerza o cardio intenso.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+50 XP</span><span class="tpl-rnk rb">ÉPICO B</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-s" data-tpl-id="g2" data-cat="guerrero" data-rank="S" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🔥 100 push-ups en el día</div>
+        <div class="tpl-desc">Distribuidos como quieras. Cada set cuenta. Máxima disciplina del Guerrero.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+120 XP</span><span class="tpl-rnk rs">S-RANK S</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-c" data-tpl-id="g3" data-cat="guerrero" data-rank="C" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🧘 Estiramiento post-entreno</div>
+        <div class="tpl-desc">10 minutos de stretching después del ejercicio. Previene lesiones.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span></div>
+      </div>
+    </div>
+
+    <!-- ESTUDIO -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">📚 ESTUDIO — CLASE MAGO</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card rank-b" data-tpl-id="e1" data-cat="estudio" data-rank="B" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">📖 Estudiar 1 hora sin distracciones</div>
+        <div class="tpl-desc">Deep work o Pomodoro. Sin celular, sin redes sociales.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+50 XP</span><span class="tpl-rnk rb">ÉPICO B</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-a" data-tpl-id="e2" data-cat="estudio" data-rank="A" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">💡 Aprender algo completamente nuevo</div>
+        <div class="tpl-desc">Un concepto, técnica o habilidad que nunca habías explorado. Documenta qué aprendiste.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+80 XP</span><span class="tpl-rnk ra">LEGENDARIO A</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-c" data-tpl-id="e3" data-cat="estudio" data-rank="C" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🎧 Escuchar 1 podcast educativo</div>
+        <div class="tpl-desc">Al menos 20 minutos de contenido valioso mientras haces otras tareas.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span></div>
+      </div>
+    </div>
+
+    <!-- HÁBITOS -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">🌟 HÁBITOS — CLASE ASESINO (FIJAS ★)</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card fixed-tpl" data-tpl-id="h1" data-cat="habitos" data-rank="C" data-fixed="1" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🌅 Rutina matutina completa</div>
+        <div class="tpl-desc">Levantarte a tu hora objetivo + higiene + no revisar el celular por 30 min.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span><span class="tpl-fixed-badge">★ FIJA</span></div>
+      </div>
+    </div>
+    <div class="tpl-card fixed-tpl" data-tpl-id="h2" data-cat="habitos" data-rank="D" data-fixed="1" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">✍️ Escribir en el diario</div>
+        <div class="tpl-desc">Al menos 5 minutos. ¿Qué pasó hoy? ¿Qué agradeces? ¿Qué mejorarías?</div>
+        <div class="tpl-foot"><span class="tpl-xp">+15 XP</span><span class="tpl-rnk rd">COMÚN D</span><span class="tpl-fixed-badge">★ FIJA</span></div>
+      </div>
+    </div>
+
+    <!-- MENTAL -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">🧘 MENTAL — CLASE MONJE (FIJA ★)</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card fixed-tpl" data-tpl-id="m1" data-cat="mental" data-rank="C" data-fixed="1" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🧘 Meditación o respiración consciente</div>
+        <div class="tpl-desc">10 minutos mínimo. Box breathing, Wim Hof, o silencio total. Antes de dormir es ideal.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span><span class="tpl-fixed-badge">★ FIJA</span></div>
+      </div>
+    </div>
+
+    <!-- LECTURA -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">📖 LECTURA — CLASE ARCHIMAGO</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card rank-c" data-tpl-id="l1" data-cat="lectura" data-rank="C" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">📚 Leer 20 páginas</div>
+        <div class="tpl-desc">Cualquier libro. Ficción, no-ficción, técnico. Lo importante es el hábito.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-b" data-tpl-id="l2" data-cat="lectura" data-rank="B" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">📕 Terminar un capítulo completo</div>
+        <div class="tpl-desc">Sin interrupciones. Concentración total en el texto. Anota una idea clave al terminar.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+50 XP</span><span class="tpl-rnk rb">ÉPICO B</span></div>
+      </div>
+    </div>
+
+    <!-- CREATIVIDAD -->
+    <div class="tpl-cat-hdr"><div class="tpl-cat-line"></div><span class="tpl-cat-title">🎨 CREATIVIDAD — CLASE BARDO</span><div class="tpl-cat-line"></div></div>
+    <div class="tpl-card rank-c" data-tpl-id="cr1" data-cat="creatividad" data-rank="C" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🎨 Crear algo nuevo hoy</div>
+        <div class="tpl-desc">Dibujar, escribir, diseñar, tocar, grabar. Cualquier expresión creativa cuenta.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+30 XP</span><span class="tpl-rnk rc">RARO C</span></div>
+      </div>
+    </div>
+    <div class="tpl-card rank-b" data-tpl-id="cr2" data-cat="creatividad" data-rank="B" data-fixed="0" onclick="tplToggle(this)">
+      <div class="tpl-chk">✓</div>
+      <div class="tpl-content">
+        <div class="tpl-name">🖊️ Escribir 500 palabras</div>
+        <div class="tpl-desc">Diario, ensayo, historia, ideas. Lo que sea. Solo escribe sin editar.</div>
+        <div class="tpl-foot"><span class="tpl-xp">+50 XP</span><span class="tpl-rnk rb">ÉPICO B</span></div>
+      </div>
+    </div>
+
+    <!-- ACTION BAR -->
+    <div class="tpl-action-bar">
+      <span class="tpl-counter" id="tplCounter">0 seleccionadas</span>
+      <button class="tpl-sel-all" onclick="tplSelectAll()">☑ TODAS</button>
+      <button class="tpl-sel-all" onclick="tplDeselectAll()">☐ NINGUNA</button>
+      <button class="tpl-import-btn" id="tplImportBtn" onclick="importTemplates()" disabled>▸ IMPORTAR AL BANCO</button>
+      <button class="tpl-skip-btn" onclick="closeTplModal()">✕ OMITIR</button>
+    </div>
+
+    </div><!-- end tplPanel-import -->
+  </div><!-- end tpl-wrap -->
+</div>
+
 <script>
 // ╔══════════════════════════════════════════════════════════════════════════╗
 // ║              ÍNDICE MAESTRO — SISTEMA DE CAZADOR                        ║
 // ║         Leer este índice PRIMERO para saber qué sección tocar           ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §01 — Constants section      · Línea ~1954                             ║
+// ║  §01 — Constants section      · Línea ~2421                             ║
 // ║         CLASES, CAT_LABELS, DAILY_CATS, RARLBL, PRANK, XPR             ║
 // ║         ► Toca aquí si: nombres de clases, emojis, colores de clase,   ║
 // ║           categorías, rangos de nivel, multiplicadores de XP por rango  ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §02 — Multi-user storage     · Línea ~1986                             ║
+// ║  §02 — Multi-user storage     · Línea ~2517                             ║
 // ║         getUserKey(), loadState(), defaultAchievements(),               ║
 // ║         defaultState(), save()                                           ║
 // ║         ► Toca aquí si: guardar/cargar datos de usuario, estructura     ║
 // ║           del estado inicial, campos del objeto S, localStorage keys    ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §03 — Login / Logout         · Línea ~2098                             ║
+// ║  §03 — Login / Logout         · Línea ~2628                             ║
 // ║         doLogin(), doLogout()                                            ║
 // ║         ► Toca aquí si: pantalla de login, cambio de usuario, bienve-  ║
-// ║           nida, restaurar preferencias de UI al entrar/salir            ║
+// ║           nida, preferencias de UI al entrar/salir, focus de inputs    ║
+// ║         · doLogout() va directo a #loginOver sin confirm() nativo.      ║
+// ║           Limpia ambos campos y hace focus en el campo de usuario.      ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §04 — Daily rotation         · Línea ~2200                             ║
+// ║  §04 — Daily rotation         · Línea ~2715                             ║
 // ║         getTodayKey(), assignDailyMissions(), getDailyMissions()        ║
 // ║         ► Toca aquí si: cuántas misiones diarias se asignan, cómo se   ║
 // ║           elige la rotación, orden de prioridad (fixed → cat → resto)  ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §05 — Reset                  · Línea ~2330                             ║
+// ║  §05 — Reset                  · Línea ~2857                             ║
 // ║         checkReset(), changeResetHour(), updateResetUI()                ║
 // ║         ► Toca aquí si: lógica de reset diario, hora de reset,         ║
 // ║           racha (streak), barra de penalización, todayXP = 0           ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §06 — XP / Level system      · Línea ~2406                             ║
+// ║  §06 — XP / Level system      · Línea ~2940                             ║
 // ║         gainXP(), doFlash(), getRank()                                  ║
 // ║         ► Toca aquí si: ganar/perder XP, subir de nivel, flash de      ║
 // ║           nivel, cálculo de rango actual según lvl                      ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §07 — Class detection        · Línea ~2461                             ║
+// ║  §07 — Class detection        · Línea ~2975                             ║
 // ║         getWeeklyCatCounts(), detectClass(), updateClassUI()            ║
 // ║         ► Toca aquí si: clase activa del jugador, categoría dominante, ║
 // ║           banner de clase, color del avatar, nombre de clase            ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §08 — Morph animation        · Línea ~2497                             ║
+// ║  §08 — Morph animation        · Línea ~3011                             ║
 // ║         renderEmojiToCanvas(), morphAvatarEmoji(),                      ║
-// ║         morphProfileAvatar()                                            ║
+// ║         morphProfileAvatar(), updateClassUI()                           ║
 // ║         ► Toca aquí si: animación de transición del avatar al cambiar  ║
 // ║           de clase, velocidad del morph, canvas pixel-blend            ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §09 — Notifications          · Línea ~2740                             ║
+// ║  §09 — Notifications          · Línea ~3248                             ║
 // ║         notif(msg)                                                       ║
 // ║         ► Toca aquí si: toast de notificación, duración, posición,     ║
 // ║           animación de entrada/salida del mensaje                       ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §10 — Main render            · Línea ~2748                             ║
-// ║         render(), switchTab()                                            ║
+// ║  §10 — Main render            · Línea ~3257                             ║
+// ║         render(), switchTab(), tick(), escH(), localISO()               ║
 // ║         ► Toca aquí si: qué se re-dibuja al actualizar estado, orden   ║
-// ║           de render de tabs, lógica de tabs activos                     ║
+// ║           de render de tabs, lógica de tab activo, reloj del sistema   ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §11 — Daily missions render  · Línea ~2783                             ║
+// ║  §11 — Daily missions render  · Línea ~3313                             ║
 // ║         renderDailyMissions(), renderMissionCard()                      ║
 // ║         ► Toca aquí si: cómo se muestran las 4 misiones del día,       ║
 // ║           botón de claim, barra de progreso mínimo, tarjeta de misión  ║
-// ║           ► La X de cada misión ahora ABRE el editor (no elimina).     ║
-// ║             El botón 🗑 ELIMINAR aparece dentro del editor inline.      ║
+// ║           ► El botón 🔀 llama swapDailyMission(): rota esa misión por   ║
+// ║             otra aleatoria del banco completo (sin filtro de categoría).║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §12 — All quests             · Línea ~2869                             ║
-// ║         renderAllQuests()                                               ║
-// ║         ► Toca aquí si: listado completo de misiones, filtro por       ║
-// ║           categoría, búsqueda de misiones, vista de banco completo      ║
+// ║  §12 — All quests             · Línea ~3403                             ║
+// ║         renderAllQuests(), getTodayISODate(), logDailyMission()         ║
+// ║         ► Toca aquí si: listado completo de misiones del banco, filtro  ║
+// ║           por categoría, búsqueda de misiones, vista expandible        ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §13 — Mission actions        · Línea ~2889                             ║
+// ║  §13 — Mission actions        · Línea ~3478                             ║
 // ║         toggle(), startEditMission(), saveEditMission(), delMission(),  ║
-// ║         cancelEditMission(), claimDaily()                               ║
+// ║         cancelEditMission(), claimDaily(), swapDailyMission()           ║
 // ║         ► Toca aquí si: marcar misión como hecha, desmarcar, XP que    ║
-// ║           se otorga al completar, editar/eliminar misión                ║
+// ║           se otorga al completar, editar/eliminar misión, rotar misión  ║
+// ║           del día por otra del banco completo                            ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §14 — Shop period            · Línea ~2981                             ║
-// ║         setShopPeriod(), getXPForPeriod()                               ║
+// ║  §14 — Shop period            · Línea ~3611                             ║
+// ║         setShopPeriod(), getXPForPeriod(), getPeriodLabel()             ║
 // ║         ► Toca aquí si: selector día/semana/mes de la tienda, XP       ║
 // ║           acumulado por período que habilita compras                    ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §15 — Shop and inventory     · Línea ~3015                             ║
-// ║         renderShop(), redeemItem(), renderInventory(), closeModal()     ║
+// ║  §15 — Shop and inventory     · Línea ~3647                             ║
+// ║         renderShop(), renderInventory(), renderItemCard(),              ║
+// ║         getTotalBalance(), openRedeem(), confirmRedeem(),               ║
+// ║         openEditItem(), confirmEditItem(), delItem(),                   ║
+// ║         deleteInventoryItem(), closeModal()                             ║
 // ║         ► Toca aquí si: grid de objetos, canje/compra, inventario,     ║
-// ║           modal de confirmación de canje, objetos canjeados             ║
+// ║           modal de confirmación, editar/borrar objeto del inventario   ║
+// ║           ► Al comprar con precio COP se crea gasto automático en      ║
+// ║             módulo Dinero (categoría: compras, bandera autoShop:true).  ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §16 — Configuration          · Línea ~3200                             ║
-// ║         addMission(), addItem(), deleteItem(), saveRanks(),             ║
-// ║         renderAchievEditor(), saveAchiev()                              ║
+// ║  §16 — Configuration          · Línea ~3896                             ║
+// ║         addMission(), addItem(), toggleNameForm(), saveName(),          ║
+// ║         saveRanks(), saveMinBalance(), updateMinBalStatus(),            ║
+// ║         renderAchievEditor(), updateAchiev(), updateAchievType(),       ║
+// ║         delAchiev(), addAchiev(), resetAll()                            ║
 // ║         ► Toca aquí si: CRUD de misiones, CRUD de objetos de tienda,   ║
-// ║           configurar XP por rango, hora de reset, editor de logros     ║
+// ║           configurar XP por rango, colchón de seguridad, editor de     ║
+// ║           logros, reiniciar todo el sistema                             ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §17 — Font size control      · Línea ~3600                             ║
-// ║         changeFontSize(), setFont(), pcardToggleName(), pcardSaveName() ║
+// ║  §17 — Font size / tab control · Línea ~4027                            ║
+// ║         changeFontSize(), setFont(), switchTab(),                       ║
+// ║         toggleAllQuests()                                               ║
 // ║         ► Toca aquí si: botones T−/T+ de tamaño de texto, rango de    ║
-// ║           tamaños, persistencia de fuente por usuario, edición de      ║
-// ║           nombre inline desde la player card                            ║
+// ║           tamaños permitidos, lógica de activar tabs, desplegar banco  ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §18 — Finance module         · Línea ~3650                             ║
-// ║         addTransaction(), deleteTransaction(), renderFinance(),         ║
-// ║         formatCOP(), setFinType(), selectFinCat(), setFinPeriod()      ║
-// ║         ► Toca aquí si: registrar gastos/ingresos, gráfica de dinero,  ║
+// ║  §18 — Finance module         · Línea ~4480                             ║
+// ║         formatCOP(), setFinPeriod(), setFinType(), selectFinCat(),      ║
+// ║         getFinCutoff(), getFinTransactions(), addTransaction(),         ║
+// ║         delTransaction(), renderFinChartBars(), renderFinCatChart(),    ║
+// ║         renderFinTab(), renderFinTxList()                               ║
+// ║         ► Toca aquí si: registrar gastos/ingresos, gráficas de dinero, ║
 // ║           categorías de finanzas, balance mínimo, formato de moneda    ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §19 — Profile / Perfil tab   · Línea ~3900                             ║
-// ║         renderPerfil(), renderRadar(), renderAchievements(),            ║
-// ║         renderMoodHistory(), setPeriod()                                ║
+// ║  §19 — Profile / Perfil tab   · Línea ~4114                             ║
+// ║         setPeriod(), getCatDataForPeriod(), getPeriodTotals(),          ║
+// ║         renderPerfil(), renderMoodHistory(), drawRadar(),               ║
+// ║         renderCatBars(), renderSummary(), evalAchievement(),            ║
+// ║         getAchievProgress(), renderAchievements(), renderAchievEditor() ║
 // ║         ► Toca aquí si: radar SVG, barras de categoría, logros,        ║
 // ║           historial de ánimo, resumen del período                       ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §20 — Mood widget            · Línea ~4050                             ║
-// ║         setMood(), renderMoodWidget()                                   ║
+// ║  §20 — Mood widget            · Línea ~4711                             ║
+// ║         setMood(), getTodayMood(), renderMoodWidget()                   ║
 // ║         ► Toca aquí si: botones de ánimo diario, XP de salud mental,   ║
-// ║           estado guardado, historial de ánimo en perfil                 ║
+// ║           estado guardado por fecha, historial de ánimo en perfil      ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §21 — Emoji picker           · Línea ~4200                             ║
-// ║         epInit(), epToggle(), epSearch(), epClose()                     ║
+// ║  §21 — Emoji picker           · Línea ~4927                             ║
+// ║         epBind(), epInit(), epRenderGrid(), epSetCat(),                 ║
+// ║         epSearch(), epSelect(), epToggle(), epClose()                   ║
 // ║         ► Toca aquí si: panel de selección de emoji, búsqueda,         ║
 // ║           categorías de emojis, apertura/cierre del picker             ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §22 — Device detection       · Línea ~4400                             ║
-// ║         initDeviceDetection(), getDeviceType(), updateDevice()          ║
-// ║         ► Toca aquí si: banner de dispositivo, breakpoints,            ║
-// ║           ajuste de fuente automático en pantallas < 360px             ║
+// ║  §22 — Template modal         · Línea ~5034                             ║
+// ║         tplToggle(), tplSelectAll(), tplDeselectAll(),                  ║
+// ║         tplUpdateCounter(), openTplModal(tab), switchTplTab(tab),       ║
+// ║         closeTplModal(), importTemplates()                              ║
+// ║         · Modal de dos tabs: 📖 TUTORIAL e 📋 IMPORTAR.                 ║
+// ║         · openTplModal('tutorial') → abre en la tab de tutorial.       ║
+// ║         · openTplModal('import')   → abre en la tab de importar.       ║
+// ║         · Se abre automáticamente en el primer login (banco vacío),    ║
+// ║           mostrando el tutorial. Desde Configurar hay dos botones       ║
+// ║           separados para acceder a cada tab directamente.               ║
+// ║         ► Toca aquí si: lógica de selección de cards, importar         ║
+// ║           misiones al banco, navegación entre tabs del modal            ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §H1 — CSS: Variables y fuente   · En <style>, línea ~11               ║
+// ║  §23 — Tooltip / Device       · Línea ~5118                             ║
+// ║         tipToggle(), initDeviceDetection()                              ║
+// ║         ► Toca aquí si: tooltips expandibles (ⓘ), banner de           ║
+// ║           dispositivo, breakpoints, ajuste de fuente < 360px           ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §H1 — CSS: Variables y fuente   · <style> línea ~11                   ║
 // ║         :root, --neon-purple, --fs-scale, --blue, --gold…              ║
 // ║         ► Toca aquí si: paleta de colores, color neón de selección,    ║
 // ║           escala de fuente global, variables de diseño                  ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §H2 — CSS: Player card         · En <style>                            ║
-// ║         .pcard, .pcard-actions, .pcard-config-btn…                     ║
-// ║         ► Toca aquí si: tarjeta de jugador, botones de control,        ║
-// ║           formulario de nombre inline, logout                           ║
+// ║  §H2 — CSS: Player card / config bar · <style> línea ~50               ║
+// ║         .pcard, .pcard-icon-btn, .cfg-sys-bar, .cfg-logout-btn…        ║
+// ║         ► Toca aquí si: tarjeta de jugador, botones ⚙️/📊,             ║
+// ║           barra de sistema en Configurar (fuente + ↩ SALIR)            ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §H3 — CSS: Selección neón      · En <style>, bloque "SELECCIÓN NEÓN"  ║
-// ║         .ptbtn.active, .mchk.yes, .mood-btn.active,                    ║
+// ║  §H3 — CSS: Template modal       · <style> línea ~350                  ║
+// ║         .tpl-overlay, .tpl-modal-tabs, .tpl-modal-tab,                 ║
+// ║         .tpl-modal-panel, .tut-*, .tpl-open-tut-btn…                  ║
+// ║         ► Toca aquí si: estilo del modal de misiones, tabs internas,   ║
+// ║           contenido del tutorial, botones de apertura en Configurar    ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §H4 — CSS: Selección neón       · <style> bloque "SELECCIÓN NEÓN"     ║
+// ║         .ptbtn.active, .mchk.yes, .mood-btn.selected,                  ║
 // ║         .fin-cat-btn.sel, inputs:focus, .mcard.editing…               ║
 // ║         ► Toca aquí si: color de selección al hacer clic,              ║
 // ║           cambiar el tono morado, añadir más estados seleccionados     ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
-// ║  §H4 — CSS: Responsive design   · En <style>                            ║
+// ║  §H5 — CSS: Responsive design    · <style> línea ~860                  ║
 // ║         @media móvil / tablet / desktop / landscape / reduced-motion   ║
 // ║         ► Toca aquí si: layout en distintos tamaños de pantalla,       ║
-// ║           breakpoints, scroll horizontal de tabs en móvil              ║
+// ║           breakpoints, scroll de tabs en móvil, landscape compact      ║
 // ╠══════════════════════════════════════════════════════════════════════════╣
 // ║  HISTORIAL DE CAMBIOS                                                   ║
 // ║  ─────────────────────────────────────────────────────────────────────  ║
-// ║  [YYYY-MM-DD] [sección] descripción                                     ║
-// ║  ─────────────────────────────────────────────────────────────────────  ║
-// ║  [2026-05-07] [ÍNDICE]  Índice maestro y comentarios de sección         ║
-// ║                          añadidos en todo el código JS                  ║
-// ║  [2026-05-07] [§H2,§H3] Botón ⚙️ AJUSTES incorporado en player card    ║
-// ║                          (esquina junto al nivel). Tab CONFIGURAR ya    ║
-// ║                          no está en la barra de navegación — se accede  ║
-// ║                          exclusivamente desde el botón de la tarjeta.   ║
-// ║                          CSS nuevo: .pcard-config-btn / .pcard-config-lbl║
-// ║  [2026-05-07] [§H2,§17] Controles de tamaño de texto (T− / 15px / T+)  ║
-// ║              [§17]      y cambio de nombre inline (✏ NOMBRE) movidos a  ║
-// ║                          la player card. Fontbar superior eliminada.     ║
-// ║                          JS nuevo: pcardToggleName(), pcardSaveName()   ║
-// ║  [2026-05-07] [§H2]     Barra superior eliminada. ↩ SALIR integrado    ║
-// ║                          en pcard-actions. saveIndicator → toast.       ║
-// ║  [2026-05-07] [§H2]     Tab PERFIL → botón 📊 PERFIL en pcard-actions. ║
-// ║  [2026-05-07] [§04]     assignDailyMissions reescrita: 1 misión por     ║
-// ║                          DAILY_CAT, sin repetir la del día anterior.    ║
-// ║  [2026-05-07] [§18]     formatCOP: valores exactos. Gráfica HOY usa    ║
-// ║                          emojis. fin-box-val: clamp() para números.     ║
-// ║  [2026-05-07] [§H1]     Botones pcard y tabs escalan con --fs-scale.   ║
-// ║  [2026-05-07] [§11,§13] La X (✕) en "MISIONES FIJAS HOY" ahora llama  ║
-// ║                          swapDailyMission(): reemplaza esa misión por   ║
-// ║                          otra aleatoria de la misma categoría sin       ║
-// ║                          borrarla del banco. La misión completada no    ║
-// ║                          puede cambiarse. En el banco de misiones la    ║
-// ║                          X sigue abriendo el editor inline.             ║
-// ║  [2026-05-07] [§H1,§H3] Color neón morado (--neon-purple: #bf5fff)     ║
-// ║                          aplicado a todos los estados seleccionados:    ║
-// ║                          tabs activos, checkbox completado, mood,       ║
-// ║                          categorías finanzas, inputs con foco,          ║
-// ║                          misión en edición, períodos activos.           ║
-// ║  [2026-05-07] [ÍNDICE]  Índice actualizado: números de línea           ║
-// ║                          corregidos, §18-§22 añadidos, §H1-§H4        ║
-// ║                          para secciones CSS documentadas.              ║
+// ║  [2026-05-07] [ÍNDICE]    Índice maestro y comentarios de sección       ║
+// ║                            añadidos en todo el código JS.               ║
+// ║  [2026-05-07] [§H2,§H4]  Botón ⚙️ y 📊 en player card. Tab CONFIGURAR ║
+// ║                            ya no está en la barra de navegación.        ║
+// ║  [2026-05-07] [§17]       Controles T−/T+ y nombre inline movidos a    ║
+// ║                            Configurar. Fontbar superior eliminada.      ║
+// ║  [2026-05-07] [§04]       assignDailyMissions: 1 misión por DAILY_CAT, ║
+// ║                            sin repetir misión del día anterior.         ║
+// ║  [2026-05-07] [§18]       formatCOP exacto. Gráfica HOY con emojis.   ║
+// ║                            fin-box-val con clamp() para números largos. ║
+// ║  [2026-05-07] [§11,§13]  Botón 🔀 en misiones fijas llama              ║
+// ║                            swapDailyMission(): rota sin borrar del     ║
+// ║                            banco. Misión completada no se puede rotar. ║
+// ║  [2026-05-07] [§H4]       Color neón morado (#bf5fff) unificado en     ║
+// ║                            todos los estados seleccionados del sistema. ║
+// ║  [2026-05-08] [§22,§H3]  Modal de plantillas rediseñado con dos tabs   ║
+// ║                            internas: 📖 TUTORIAL y 📋 IMPORTAR.         ║
+// ║                            · Tutorial muestra categorías, rareza/XP,   ║
+// ║                              ejemplos de misiones normales y fijas,     ║
+// ║                              y guía paso a paso para añadirlas.        ║
+// ║                            · Primer login abre en tab Tutorial.        ║
+// ║                            · Configurar tiene dos botones separados:   ║
+// ║                              uno para Importar y otro para Tutorial.   ║
+// ║                            · openTplModal(tab) acepta 'tutorial' o    ║
+// ║                              'import'. switchTplTab(tab) controla la   ║
+// ║                              navegación entre paneles.                 ║
+// ║  [2026-05-08] [§22]       Textos de "Cómo añadir misiones" revisados:  ║
+// ║                            eliminado el "1" numérico en paso 4,        ║
+// ║                            redacción más natural en todos los pasos.   ║
+// ║  [2026-05-08] [§03]       doLogout() simplificado: elimina confirm()   ║
+// ║                            nativo del browser. Ahora va directo a la   ║
+// ║                            pantalla de login, limpia ambos campos y    ║
+// ║                            hace focus automático en el campo usuario.  ║
+// ║  [2026-05-08] [ÍNDICE]    Índice completamente actualizado: líneas     ║
+// ║                            verificadas, §22 y §23 añadidos, §H3-§H5   ║
+// ║                            documentados, historial al día.             ║
 // ╚══════════════════════════════════════════════════════════════════════════╝
 
 // ╔══════════════════════════════════════════════════════════════════════════╗
@@ -2168,6 +2565,11 @@ function loadState(user){
       if(!merged.transactions) merged.transactions=[];
       if(!merged.nTid) merged.nTid=1;
       if(!merged.finPeriod) merged.finPeriod='day';
+      // Migración: si no existe shopXP, inicializar con totalXP actual
+      // para que usuarios existentes no pierdan su capacidad de compra
+      if(merged.shopXP === undefined || merged.shopXP === null){
+        merged.shopXP = merged.totalXP || 0;
+      }
       if(merged.xprConfig) XPR=merged.xprConfig;
       return merged;
     }
@@ -2199,11 +2601,11 @@ function defaultState(){
     shopPeriod:'day',
     profilePeriod:'week',
     activeTab:'missions',
-    // Finance module
     transactions: [],
     nTid: 1,
     finPeriod: 'day',
-    minBalance: 0   // tope mínimo — no se puede comprar si balance total <= este valor
+    minBalance: 0,
+    shopXP: 0
   };
 }
 
@@ -2290,18 +2692,24 @@ function doLogin(){
   // Restaurar tab activo
   if(S.activeTab && S.activeTab !== 'missions') switchTab(S.activeTab);
   notif('▸ BIENVENIDO, ' + u.toUpperCase() + ' ◂');
+  // Detección de primer uso: abrir plantilla si el banco está vacío
+  if(!S.missions || S.missions.length === 0){
+    setTimeout(openTplModal, 400);
+  }
 }
 
 function doLogout(){
-  if(!confirm('¿Cambiar de usuario? Tu progreso está guardado.')) return;
   currentUser = null;
   S = null;
   localStorage.removeItem('sl_current_user');
-  document.getElementById('loginOver').classList.add('show');
-  // userBar removed — controls now in player card
-  // Clear login input for fresh entry
+  const loginOver = document.getElementById('loginOver');
+  if(loginOver) loginOver.classList.add('show');
+  // Clear inputs for fresh entry
   const inp = document.getElementById('loginUser');
+  const pass = document.getElementById('loginPass');
   if(inp) inp.value = '';
+  if(pass) pass.value = '';
+  setTimeout(()=>{ if(inp) inp.focus(); }, 100);
 }
 
 // ╔══════════════════════════════════════════════════════════════════════════╗
@@ -2568,7 +2976,10 @@ function gainXP(amt){
   S.totalXP = Math.max(0, S.totalXP + amt);
   S.todayXP = Math.max(0, S.todayXP + amt);
   S.curXP  += amt;
-  // Level up loop
+  // shopXP espeja totalXP: crece con misiones, baja si se desmarca una misión,
+  // pero NUNCA baja de 0 y NO se toca al comprar en tienda.
+  S.shopXP = Math.max(0, (S.shopXP || 0) + amt);
+  // Level up loop — usa totalXP/curXP, no shopXP
   while(S.curXP >= S.nextXP && S.nextXP > 0){
     S.curXP -= S.nextXP; S.lvl++;
     S.nextXP = Math.floor(S.nextXP * 1.42);
@@ -2587,10 +2998,12 @@ function getRank(){
   return r.r;
 }
 
-// ═══════════════════════════════════════════════════════
-// CLASS DETECTION — categoría con más misiones completadas
-// en los últimos 7 días (desde dailyLog.cats)
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §07 — CLASS DETECTION                                                  ║
+// ║  Propósito: Determina la clase activa del jugador según la categoría    ║
+// ║  con más misiones completadas en los últimos 7 días.                    ║
+// ║  Funciones: getWeeklyCatCounts(), detectClass(), updateClassUI()        ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 
 function getWeeklyCatCounts(){
   if(!S.dailyLog || !S.dailyLog.length) return {};
@@ -2624,10 +3037,14 @@ function detectClass(){
 
 let _lastAvatarCat = null; // Para detectar cambio de categoría dominante
 
-// ═══════════════════════════════════════════════════════
-// MORPH TRANSITION — renderiza emoji en canvas off-screen,
-// luego hace cross-dissolve píxel a píxel entre old y new
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §08 — MORPH ANIMATION                                                  ║
+// ║  Propósito: Animación de cross-dissolve entre emojis de avatar al       ║
+// ║  cambiar de clase dominante. Renderiza emoji en canvas off-screen y     ║
+// ║  hace blend píxel a píxel entre el emoji anterior y el nuevo.           ║
+// ║  Funciones: renderEmojiToCanvas(), morphAvatarEmoji(),                  ║
+// ║             morphProfileAvatar(), updateClassUI()                        ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function renderEmojiToCanvas(emoji, size, fontSize){
   const c = document.createElement('canvas');
   c.width = size; c.height = size;
@@ -2862,24 +3279,43 @@ function updateClassUI(){
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// NOTIFICATION
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §09 — NOTIFICATIONS                                                    ║
+// ║  Propósito: Toast de notificación que aparece en la parte superior de   ║
+// ║  la pantalla con un mensaje temporal.                                   ║
+// ║  Funciones: notif(msg)                                                  ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function notif(msg){
   const n=document.getElementById('notif');
   n.textContent=msg; n.classList.add('show');
   clearTimeout(n._t); n._t=setTimeout(()=>n.classList.remove('show'),2800);
 }
 
-// ═══════════════════════════════════════════════════════
-// RENDER PRINCIPAL
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §10 — MAIN RENDER                                                      ║
+// ║  Propósito: Orquesta el re-dibujado completo del estado de la UI.       ║
+// ║  Actualiza player card, XP, stats, tabs activos y todos los módulos.    ║
+// ║  Funciones: render(), switchTab(), tick(), toggleAllQuests(),           ║
+// ║             escH(), localISO()                                           ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function render(){
   if(!S) return;
   // ── Player card ──
   document.getElementById('pname').textContent = currentUser ? currentUser.toUpperCase() : (S.name || 'CAZADOR');
   document.getElementById('plvl').textContent='LV.'+S.lvl;
   document.getElementById('prank').textContent=getRank();
+  // ── Balance en player card ──
+  const pcardBal = document.getElementById('pcardBalance');
+  if(pcardBal){
+    const bal = getTotalBalance();
+    if(S.transactions && S.transactions.length > 0){
+      pcardBal.style.display = 'block';
+      pcardBal.textContent = (bal >= 0 ? '▲ ' : '▼ ') + formatCOP(Math.abs(bal));
+      pcardBal.style.color = bal >= 0 ? 'var(--green)' : 'var(--danger)';
+    } else {
+      pcardBal.style.display = 'none';
+    }
+  }
   const pct=Math.min(100,Math.round((S.curXP/S.nextXP)*100));
   document.getElementById('xpbar').style.width=pct+'%';
   document.getElementById('xpdisp').textContent=S.curXP+' / '+S.nextXP+' XP';
@@ -2887,6 +3323,11 @@ function render(){
   document.getElementById('stStreak').textContent=S.streak;
   document.getElementById('stComp').textContent=S.totalComp;
   document.getElementById('todayxp').textContent='+'+S.todayXP;
+  // ── ShopXP display en pestaña tienda ──
+  const shopXPEl = document.getElementById('shopXPDisplay');
+  if(shopXPEl) shopXPEl.textContent = S.shopXP || 0;
+  const shopTotalEl = document.getElementById('shopTotalXPDisplay');
+  if(shopTotalEl) shopTotalEl.textContent = S.totalXP;
   // ── Config inputs ──
   ['D','C','B','A','S'].forEach(r=>{
     const el=document.getElementById('xp-'+r);
@@ -2910,9 +3351,12 @@ function render(){
   renderMoodWidget();
 }
 
-// ═══════════════════════════════════════════════════════
-// MISIONES DIARIAS (las 4 mínimas)
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §11 — DAILY MISSIONS RENDER                                            ║
+// ║  Propósito: Renderiza las 4 misiones diarias y sus tarjetas.            ║
+// ║  El botón 🔀 llama swapDailyMission() para rotar sin borrar del banco.  ║
+// ║  Funciones: renderDailyMissions(), renderMissionCard()                  ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function renderDailyMissions(){
   const el=document.getElementById('mlist');
   const daily=getDailyMissions();
@@ -2950,8 +3394,8 @@ function renderMissionCard(m, fromDaily){
         <div class="mactions">
           <button class="act-btn edit" onclick="startEditMission('${m.id}',event)">✏</button>
           ${fromDaily
-            ? `<button class="act-btn del" onclick="swapDailyMission('${m.id}',event)" title="Cambiar por otra misión aleatoria">✕</button>`
-            : `<button class="act-btn del" onclick="startEditMission('${m.id}',event)" title="Cambiar misión">✕</button>`
+            ? `<button class="act-btn swap" onclick="swapDailyMission('${m.id}',event)" title="🔀 Cambiar por otra misión del banco (aleatoria)">🔀</button>`
+            : `<button class="act-btn del" onclick="delMission('${m.id}',event)" title="Eliminar misión">✕</button>`
           }
         </div>
       </div>
@@ -3000,9 +3444,12 @@ function renderMissionCard(m, fromDaily){
 </div>`;
 }
 
-// ═══════════════════════════════════════════════════════
-// TODAS LAS MISIONES (banco completo con búsqueda)
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §12 — ALL QUESTS                                                       ║
+// ║  Propósito: Lista completa del banco de misiones con búsqueda y filtro  ║
+// ║  por categoría. Se muestra expandible bajo las misiones del día.        ║
+// ║  Funciones: renderAllQuests(), getTodayISODate(), logDailyMission()     ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function renderAllQuests(){
   const el=document.getElementById('allQuestList');
   if(!el) return;
@@ -3138,11 +3585,20 @@ function claimDaily(){
   notif('◈ RECOMPENSA DIARIA: +'+bonus+' XP BONUS ◈');
 }
 
-// ═══════════════════════════════════════════════════════
-// SWAP DAILY MISSION — Cambia una misión del día por otra
-// aleatoria de la misma categoría (sin eliminarla del banco).
-// Llamada desde el botón ✕ en las tarjetas de misiones fijas.
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// §13b — SWAP DAILY MISSION
+// ─────────────────────────────────────────────────────────────────
+// Reemplaza una misión del día de hoy por otra aleatoria del banco
+// completo. No filtra por categoría — cualquier misión disponible
+// (incluidas las recién creadas) puede ser elegida.
+//
+// Reglas:
+//   · La misión actual NO debe estar completada.
+//   · Prioridad 1: misiones no asignadas hoy y no completadas hoy.
+//   · Prioridad 2: misiones no asignadas hoy (completadas antes, no hoy).
+//   · Prioridad 3: cualquier misión del banco no asignada actualmente.
+//   · Prioridad 4: sin candidatos → aviso al usuario.
+// ═══════════════════════════════════════════════════════════════════
 function swapDailyMission(id, e){
   e.stopPropagation();
   if(!S.dailyAssigned || !S.dailyAssigned.ids) return;
@@ -3150,58 +3606,61 @@ function swapDailyMission(id, e){
   const current = S.missions.find(m => m.id === id);
   if(!current) return;
 
-  // Si la misión ya fue completada hoy, no permitir el cambio
+  // No permitir cambiar una misión ya completada hoy
   if(current.done){
     notif('⚠ NO PUEDES CAMBIAR UNA MISIÓN YA COMPLETADA');
     return;
   }
 
-  // IDs ya asignados hoy (para no repetir)
+  // IDs ya asignados hoy (incluyendo la actual que se va a reemplazar)
   const assignedIds = new Set(S.dailyAssigned.ids);
-
-  // Candidatos: misma categoría, no asignada hoy, no completada hoy, no es la misma
   const todayISO = getTodayISODate();
+
+  // Prioridad 1: no asignada hoy y no completada hoy (incluye misiones recién creadas)
   let candidates = S.missions.filter(m =>
     m.id !== id &&
-    m.cat === current.cat &&
     !assignedIds.has(m.id) &&
     m.lastDoneDate !== todayISO
   );
 
-  // Si no hay de la misma categoría, buscar de cualquier categoría no asignada
+  // Prioridad 2: no asignada hoy aunque haya sido completada antes (no hoy)
   if(!candidates.length){
     candidates = S.missions.filter(m =>
       m.id !== id &&
-      !assignedIds.has(m.id) &&
-      m.lastDoneDate !== todayISO
+      !assignedIds.has(m.id)
     );
   }
 
-  // Último recurso: cualquier misión no asignada (aunque esté completada hoy)
+  // Prioridad 3: cualquier misión del banco no asignada en este momento
+  // (usa todo el banco completo, sin restricción de categoría)
   if(!candidates.length){
-    candidates = S.missions.filter(m => m.id !== id && !assignedIds.has(m.id));
+    candidates = S.missions.filter(m => m.id !== id);
   }
 
   if(!candidates.length){
-    notif('⚠ NO HAY OTRAS MISIONES DISPONIBLES PARA ROTAR');
+    notif('⚠ NO HAY OTRAS MISIONES EN EL BANCO');
     return;
   }
 
-  // Elegir aleatoriamente entre los candidatos
-  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  // Elección aleatoria (shuffle para mayor aleatoriedad)
+  const shuffled = candidates.slice().sort(() => Math.random() - 0.5);
+  const pick = shuffled[0];
 
-  // Reemplazar en el array de IDs asignados
+  // Sustituir en el slot del día
   const idx = S.dailyAssigned.ids.indexOf(id);
   if(idx !== -1) S.dailyAssigned.ids[idx] = pick.id;
 
   save();
   render();
-  notif('🔀 MISIÓN CAMBIADA → ' + pick.name);
+  notif('🔀 NUEVA MISIÓN → ' + pick.name);
 }
 
-// ═══════════════════════════════════════════════════════
-// TIENDA — PROGRESO POR PERÍODO
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §14 — SHOP PERIOD                                                      ║
+// ║  Propósito: Gestiona el selector de período de la tienda (día/semana/   ║
+// ║  mes) y calcula el XP acumulado para habilitar compras.                 ║
+// ║  Funciones: setShopPeriod(), getXPForPeriod(), getPeriodLabel()         ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function setShopPeriod(p){
   shopPeriod = p;
   S.shopPeriod = p;
@@ -3235,9 +3694,16 @@ function getPeriodLabel(period){
   return {day:'HOY', week:'SEMANA', month:'MES'}[period];
 }
 
-// ═══════════════════════════════════════════════════════
-// TIENDA
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §15 — SHOP AND INVENTORY                                               ║
+// ║  Propósito: Grid de objetos de tienda e inventario, lógica de compra,  ║
+// ║  modal de confirmación, edición y borrado de ítems.                     ║
+// ║  Al comprar con precio COP se registra gasto automático en Dinero.      ║
+// ║  Funciones: renderShop(), renderInventory(), renderItemCard(),          ║
+// ║             getTotalBalance(), openRedeem(), confirmRedeem(),           ║
+// ║             openEditItem(), confirmEditItem(), delItem(),               ║
+// ║             deleteInventoryItem(), closeModal()                         ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function renderShop(){
   const el=document.getElementById('shopGrid'); if(!el) return;
   const shop=S.items.filter(it=>!it.red);
@@ -3257,8 +3723,9 @@ function renderInventory(){
 }
 
 function renderItemCard(it, isShop){
-  const locked = S.totalXP < it.cost && !it.red;
-  const pct = Math.min(100, Math.round((S.totalXP / it.cost) * 100));
+  const shopXP = S.shopXP || 0;
+  const locked = shopXP < it.cost && !it.red;
+  const pct = Math.min(100, Math.round((shopXP / it.cost) * 100));
   const rc = {common:'rcom', rare:'rrare', epic:'rep', legendary:'rleg'}[it.rar];
 
   // Period progress (solo en tienda, no en inventario de canjeados)
@@ -3267,8 +3734,8 @@ function renderItemCard(it, isShop){
     const periodXP   = getXPForPeriod(shopPeriod);
     const periodPct  = Math.min(100, Math.round((periodXP / it.cost) * 100));
     const xpPerDay   = periodXP / (shopPeriod==='day'?1:shopPeriod==='week'?7:30);
-    const remaining  = Math.max(0, it.cost - S.totalXP);
-    const daysLeft   = (periodXP >= it.cost || xpPerDay <= 0) ? 0 : Math.ceil(remaining / xpPerDay);
+    const remaining  = Math.max(0, it.cost - shopXP);
+    const daysLeft   = (shopXP >= it.cost || xpPerDay <= 0) ? 0 : Math.ceil(remaining / xpPerDay);
     const lbl        = getPeriodLabel(shopPeriod);
     const col        = periodPct >= 100 ? 'var(--gold)' : periodPct >= 50 ? 'var(--blue)' : 'rgba(0,100,200,0.6)';
     const pace       = shopPeriod==='day'
@@ -3301,10 +3768,10 @@ function renderItemCard(it, isShop){
   <div class="iico">${it.ico}</div>
   <div class="iname">${escH(it.name)}</div>
   ${it.price ? `<div class="iprice">${escH(it.price)}</div>` : ''}
-  <div class="icost"><span class="icostval">${it.cost}</span><span class="icostlbl"> XP total</span></div>
+  <div class="icost"><span class="icostval">${it.cost}</span><span class="icostlbl"> XP tienda</span></div>
   ${isShop && !it.red ? `
   <div class="ibar"><div class="ibarfill" style="width:${pct}%;background:${pct>=100?'var(--gold)':'var(--blue)'}"></div></div>
-  <div class="ipct" style="font-size:9px;color:var(--muted);text-align:right;margin-top:2px;">ACUMULADO: ${pct}%</div>` : ''}
+  <div class="ipct" style="font-size:9px;color:var(--muted);text-align:right;margin-top:2px;">TIENDA: ${shopXP} / ${it.cost} XP</div>` : ''}
   ${periodBlock}
   ${it.red ? `<div class="idate">📦 Creado: ${it.createdDate||'—'}<br>🏆 Ganado: ${it.redDate||'—'}</div>` : ''}
   ${it.red ? '<div class="iunlbdg">✓ OBTENIDO</div>' : (locked && isShop ? '<div class="ilock">🔒</div>' : (!it.red && isShop && balBlocked ? '<div class="ilock" style="color:var(--danger);font-size:10px;letter-spacing:1px;font-family:\'Orbitron\',monospace;">💰 BLOQ.</div>' : '<div class="ilock" style="color:var(--gold)">★</div>'))}
@@ -3313,6 +3780,7 @@ function renderItemCard(it, isShop){
     ${isShop && !it.red ? `<button class="act-btn edit" style="flex:1;text-align:center;" onclick="openEditItem('${it.id}')">✏</button>` : ''}
     ${isShop && !locked && !it.red ? `<button class="act-btn save" style="flex:1;text-align:center;${balBlocked?'opacity:.35;cursor:not-allowed;':''}\" onclick="${balBlocked?'notif(\'⚠ BALANCE EN EL TOPE MÍNIMO\')':'openRedeem(\''+it.id+'\')'}">★ COMPRAR</button>` : ''}
     ${isShop ? `<button class="act-btn del" onclick="delItem('${it.id}')">✕</button>` : ''}
+    ${!isShop && it.red ? `<button class="act-btn del" style="margin-top:6px;width:100%;text-align:center;font-size:10px;letter-spacing:1px;padding:5px 8px;" onclick="deleteInventoryItem('${it.id}')" title="Eliminar del inventario permanentemente (sin recuperar XP ni dinero)">🗑 ELIMINAR OBJETO</button>` : ''}
   </div>
 </div>`;
 }
@@ -3325,7 +3793,9 @@ function getTotalBalance(){
 
 function openRedeem(id){
   const it=S.items.find(x=>x.id===id);
-  if(!it||it.red||S.totalXP<it.cost) return;
+  if(!it||it.red) return;
+  const shopXP = S.shopXP || 0;
+  if(shopXP < it.cost) return;
 
   const totalBal   = getTotalBalance();
   const minBal     = S.minBalance||0;
@@ -3351,8 +3821,9 @@ function openRedeem(id){
     `<div style="font-size:32px;margin-bottom:8px;">${it.ico}</div>`
     +`<div style="font-size:16px;font-weight:600;color:var(--bright);margin-bottom:8px;">${escH(it.name)}</div>`
     +(it.price?`<div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Precio real: ${escH(it.price)}</div>`:'')
-    +`<div>Costo: <span style="color:var(--gold);font-family:'Orbitron',monospace;">${it.cost} XP</span></div>`
-    +`<div style="margin-top:8px;color:#ff8899;font-size:12px;">XP restante: ${S.totalXP-it.cost}</div>`
+    +`<div>Costo: <span style="color:var(--gold);font-family:'Orbitron',monospace;">${it.cost} XP tienda</span></div>`
+    +`<div style="margin-top:6px;font-size:12px;color:var(--muted);">XP tienda disponible: <span style="color:var(--gold);font-family:'Orbitron',monospace;">${shopXP}</span></div>`
+    +`<div style="font-size:11px;color:var(--blue);margin-top:4px;letter-spacing:1px;">▸ Tu nivel (LV.${S.lvl}) y barra de XP no cambiarán.</div>`
     +balanceInfo
     +(blocked ? `<div style="margin-top:10px;padding:8px 10px;background:rgba(255,30,60,0.07);border:1px solid rgba(255,30,60,0.35);border-left:3px solid var(--danger);color:#ff8899;font-size:11px;letter-spacing:1px;">⚠ Tu balance total (${formatCOP(totalBal)}) está en el tope mínimo o por debajo. No puedes comprar hasta superar el colchón de ${formatCOP(minBal)}.</div>` : '')
     +(blockedAfter && !blocked ? `<div style="margin-top:10px;padding:8px 10px;background:rgba(255,30,60,0.07);border:1px solid rgba(255,30,60,0.35);border-left:3px solid var(--danger);color:#ff8899;font-size:11px;letter-spacing:1px;">⚠ Esta compra dejaría tu balance por debajo del colchón de ${formatCOP(minBal)}. Necesitas más dinero disponible.</div>` : '');
@@ -3367,7 +3838,13 @@ function openRedeem(id){
 function confirmRedeem(){
   if(!pendingId) return;
   const it=S.items.find(x=>x.id===pendingId);
-  if(!it||it.red||S.totalXP<it.cost){ closeModal(); return; }
+  if(!it||it.red){ closeModal(); return; }
+
+  // Verificar shopXP disponible (moneda de tienda — no afecta nivel)
+  if((S.shopXP||0) < it.cost){
+    notif('⚠ XP DE TIENDA INSUFICIENTE');
+    closeModal(); return;
+  }
 
   // Re-check minBalance guard
   const totalBal  = getTotalBalance();
@@ -3376,20 +3853,34 @@ function confirmRedeem(){
   if(minBal > 0 && totalBal <= minBal){ notif('⚠ BALANCE EN EL TOPE MÍNIMO — COMPRA BLOQUEADA'); closeModal(); return; }
   if(minBal > 0 && itemPrice > 0 && (totalBal - itemPrice) < minBal){ notif('⚠ ESTA COMPRA VIOLARÍA EL COLCHÓN DE SEGURIDAD'); closeModal(); return; }
 
-  S.totalXP -= it.cost;
+  // Descontar de shopXP ÚNICAMENTE — totalXP, lvl, curXP y nextXP no se tocan
+  S.shopXP = Math.max(0, (S.shopXP||0) - it.cost);
   it.red = true;
   it.redDate = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'});
-  // Rebuild level/curXP/nextXP from scratch based on new totalXP
-  let lvl=1, threshold=100, remaining=S.totalXP;
-  while(remaining >= threshold){
-    remaining -= threshold;
-    lvl++;
-    threshold = Math.floor(threshold * 1.42);
+
+  // ── Registrar gasto automático en módulo Dinero ──────────────────
+  // Solo si el objeto tiene precio real en COP (it.realPrice > 0).
+  // Se crea una transacción tipo 'expense' con categoría 'compras'
+  // y se marca con la bandera autoShop:true para identificarla.
+  if(itemPrice > 0){
+    if(!S.transactions) S.transactions = [];
+    if(!S.nTid) S.nTid = 1;
+    const now = new Date();
+    S.transactions.push({
+      id:       't' + S.nTid++,
+      desc:     it.ico + ' ' + it.name,
+      amt:      itemPrice,
+      type:     'expense',
+      cat:      'compras',
+      ico:      it.ico || '🛍️',
+      ts:       Date.now(),
+      date:     localISO(now),
+      autoShop: true   // bandera para saber que fue generada por tienda
+    });
+    if(S.transactions.length > 500) S.transactions = S.transactions.slice(-500);
   }
-  S.lvl    = lvl;
-  S.nextXP = threshold;
-  S.curXP  = remaining;
-  save(); render(); notif('◈ '+it.ico+' '+it.name+' — OBTENIDO ◈');
+
+  save(); render(); notif('◈ ' + it.ico + ' ' + it.name + ' — OBTENIDO ◈' + (itemPrice > 0 ? ' · ' + formatCOP(itemPrice) + ' registrados en Dinero' : ''));
   closeModal();
 }
 
@@ -3441,11 +3932,34 @@ function delItem(id){
   }
 }
 
+// ─────────────────────────────────────────────────────────────────
+// deleteInventoryItem — Elimina un objeto del inventario (ya canjeado).
+// ⚠ No devuelve XP ni dinero. El objeto desaparece del array S.items.
+// Para que vuelva a aparecer en tienda hay que recrearlo en Configurar.
+// ─────────────────────────────────────────────────────────────────
+function deleteInventoryItem(id){
+  const it = S.items.find(x => x.id === id);
+  if(!it || !it.red) return;
+  const priceInfo = it.realPrice > 0 ? '\nPrecio pagado: ' + formatCOP(it.realPrice) : '';
+  if(!confirm('¿Eliminar "' + it.name + '" del inventario?\n\n⚠ Esta acción es permanente.\nNo se recupera el XP (' + it.cost + ' XP) ni el dinero invertido.' + priceInfo)) return;
+  S.items = S.items.filter(x => x.id !== id);
+  save();
+  renderInventory();
+  notif('🗑 ' + it.name + ' — ELIMINADO DEL INVENTARIO');
+}
+
 function closeModal(){ document.getElementById('modal').classList.remove('show'); pendingId=null; }
 
-// ═══════════════════════════════════════════════════════
-// CONFIGURAR
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §16 — CONFIGURATION                                                    ║
+// ║  Propósito: CRUD de misiones y objetos de tienda, configuración de XP   ║
+// ║  por rango, nombre de usuario, colchón de seguridad, editor de logros,  ║
+// ║  y reset completo del sistema.                                           ║
+// ║  Funciones: addMission(), addItem(), toggleNameForm(), saveName(),       ║
+// ║             saveRanks(), saveMinBalance(), updateMinBalStatus(),         ║
+// ║             renderAchievEditor(), updateAchiev(), updateAchievType(),    ║
+// ║             delAchiev(), addAchiev(), resetAll()                         ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function addMission(){
   const n=document.getElementById('mNameInp').value.trim();
   if(!n){notif('▸ INGRESA UN NOMBRE PARA LA MISIÓN');return;}
@@ -3570,9 +4084,12 @@ function resetAll(){
   }
 }
 
-// ═══════════════════════════════════════════════════════
-// FONT SIZE — +/- control
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §17 — FONT SIZE / TAB CONTROL                                          ║
+// ║  Propósito: Control de tamaño de texto (T−/T+), activación de tabs y   ║
+// ║  despliegue del banco de misiones. --fs-scale escala toda la tipografía.║
+// ║  Funciones: changeFontSize(), setFont(), switchTab(), toggleAllQuests() ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 let currentFontSize = 15;
 const FONT_MIN = 11, FONT_MAX = 22;
 const FONT_BASE = 15; // base px for scale calculation
@@ -3595,42 +4112,6 @@ function setFont(size){
   const el = document.getElementById('fontVal');
   if(el) el.textContent = size+'px';
   if(currentUser) localStorage.setItem(getUserKey(currentUser)+'_font', size);
-}
-
-// ═══════════════════════════════════════════════════════
-// §17b  CONTROLES INLINE DE LA PLAYER CARD
-// ─────────────────────────────────────────────────────────
-// pcardToggleName() → muestra/oculta el campo de nombre inline en la tarjeta
-// pcardSaveName()   → guarda el nombre sin abrir el tab de configuración
-//
-// El formulario vive en #pcardNameForm (dentro de la player card).
-// Al guardar llama a save() + render() igual que saveName() en config.
-// ═══════════════════════════════════════════════════════
-function pcardToggleName(){
-  const form = document.getElementById('pcardNameForm');
-  const btn  = document.getElementById('pcardNameBtn');
-  if(!form) return;
-  const open = form.style.display === 'none' || form.style.display === '';
-  form.style.display = open ? 'flex' : 'none';
-  if(open){
-    const inp = document.getElementById('pcardNameInp');
-    if(inp){ inp.value = S.name || ''; inp.focus(); inp.select(); }
-    if(btn) btn.style.borderColor = 'rgba(240,192,64,.7)';
-  } else {
-    if(btn) btn.style.borderColor = '';
-  }
-}
-
-function pcardSaveName(){
-  const inp = document.getElementById('pcardNameInp');
-  if(!inp) return;
-  const v = inp.value.trim().toUpperCase();
-  if(!v){ notif('⚠ Escribe un nombre'); return; }
-  S.name = v;
-  save();
-  render();
-  pcardToggleName();
-  notif('✓ NOMBRE ACTUALIZADO — ' + v);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4042,9 +4523,15 @@ function addAchiev(){
   notif('▸ LOGRO AÑADIDO');
 }
 
-// ═══════════════════════════════════════════════════════
-// MÓDULO DINERO / FINANZAS
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §18 — FINANCE MODULE                                                   ║
+// ║  Propósito: Registra y visualiza gastos e ingresos. Calcula el balance  ║
+// ║  total y lo muestra en la player card. Respeta el colchón de seguridad. ║
+// ║  Funciones: formatCOP(), setFinPeriod(), setFinType(), selectFinCat(),  ║
+// ║             getFinCutoff(), getFinTransactions(), addTransaction(),      ║
+// ║             delTransaction(), renderFinChartBars(), renderFinCatChart(), ║
+// ║             renderFinTab(), renderFinTxList()                            ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 let finPeriod = 'day';
 let finType   = 'expense';
 let finCat    = 'comida';
@@ -4608,6 +5095,98 @@ document.addEventListener('click', function(e){
     epClose();
   }
 }, true);
+
+// ═══════════════════════════════════════════════════════
+// PLANTILLA DE MISIONES — MODAL
+// ═══════════════════════════════════════════════════════
+// tplToggle(card)      — selecciona/deselecciona una tarjeta
+// tplSelectAll()       — selecciona todas
+// tplDeselectAll()     — deselecciona todas
+// tplUpdateCounter()   — actualiza el contador y estado del botón
+// openTplModal()       — abre el modal (resetea selección)
+// closeTplModal()      — cierra sin importar
+// importTemplates()    — añade al banco S.missions las seleccionadas
+
+function tplToggle(card){
+  card.classList.toggle('selected');
+  tplUpdateCounter();
+}
+
+function tplSelectAll(){
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.add('selected'));
+  tplUpdateCounter();
+}
+
+function tplDeselectAll(){
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('selected'));
+  tplUpdateCounter();
+}
+
+function tplUpdateCounter(){
+  const n = document.querySelectorAll('.tpl-card.selected').length;
+  const counter = document.getElementById('tplCounter');
+  const btn = document.getElementById('tplImportBtn');
+  if(counter) counter.textContent = n + (n===1?' seleccionada':' seleccionadas');
+  if(btn) btn.disabled = n === 0;
+}
+
+function openTplModal(tab){
+  // Al abrir: seleccionar todas las cards por defecto
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.add('selected'));
+  tplUpdateCounter();
+  const overlay = document.getElementById('tplOverlay');
+  if(overlay){ overlay.classList.add('show'); overlay.scrollTop=0; }
+  // Ir a la tab indicada (por defecto: tutorial para nuevos, import desde config)
+  switchTplTab(tab || 'tutorial');
+}
+
+function switchTplTab(tab){
+  // Actualizar botones
+  document.querySelectorAll('.tpl-modal-tab').forEach(btn=>{
+    btn.classList.toggle('active', btn.id === 'tplTab-'+tab);
+  });
+  // Actualizar paneles
+  document.querySelectorAll('.tpl-modal-panel').forEach(panel=>{
+    panel.classList.toggle('active', panel.id === 'tplPanel-'+tab);
+  });
+}
+
+function closeTplModal(){
+  const overlay = document.getElementById('tplOverlay');
+  if(overlay) overlay.classList.remove('show');
+}
+
+function importTemplates(){
+  const selected = document.querySelectorAll('.tpl-card.selected');
+  if(!selected.length){ notif('⚠ SELECCIONA AL MENOS UNA MISIÓN'); return; }
+  let added = 0;
+  selected.forEach(card=>{
+    const name = card.querySelector('.tpl-name').textContent.trim();
+    const desc = card.querySelector('.tpl-desc').textContent.trim();
+    const cat  = card.dataset.cat;
+    const rank = card.dataset.rank;
+    const fixed= card.dataset.fixed === '1';
+    // Evitar duplicados por nombre exacto
+    const exists = S.missions.some(m=>m.name===name);
+    if(!exists){
+      S.missions.push({
+        id: S.nMid++,
+        name, desc, cat, rank,
+        xp: XPR[rank] || 30,
+        fixed,
+        done: false,
+        lastDoneDate: null
+      });
+      added++;
+    }
+  });
+  S.dailyAssigned = null;
+  assignDailyMissions();
+  save();
+  render();
+  closeTplModal();
+  notif('◈ ' + added + ' MISIONES AÑADIDAS AL BANCO ◈');
+}
 
 // ═══════════════════════════════════════════════════════
 // TOOLTIP TOGGLE
