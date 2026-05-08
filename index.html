@@ -15,6 +15,11 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   --bright:#e8f4ff;--muted:#6090b0;
   --s:#ff6b35;--a:#c084fc;--b:#60a5fa;--c:#4ade80;--d:#94a3b8;
   --danger:#ff4466;--green:#4ade80;
+  /* Color neón morado para elementos seleccionados */
+  --neon-purple:#bf5fff;
+  --neon-purple-dim:rgba(191,95,255,0.18);
+  --neon-purple-border:rgba(191,95,255,0.55);
+  --neon-purple-glow:rgba(191,95,255,0.35);
   --base-font:15px;
   /* Font scale: 1.0 = base (15px). Adjusted by +/- control */
   --fs-scale:1;
@@ -32,13 +37,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .scanlines{position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,20,50,0.025) 2px,rgba(0,20,50,0.025) 4px);pointer-events:none;z-index:1000;}
 .gridbg{position:fixed;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,100,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,100,200,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
 .wrap{max-width:760px;margin:0 auto;padding:16px;position:relative;}
-/* FONT SIZE CONTROL */
-.fontbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:8px;}
-.fontbar-lbl{font-size:10px;color:var(--muted);letter-spacing:2px;}
-.fontbtn{background:none;border:1px solid rgba(0,170,255,0.3);color:var(--blue);font-family:'Orbitron',monospace;font-size:13px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
-.fontbtn:hover{background:rgba(0,170,255,0.1);}
-.font-val{font-family:'Orbitron',monospace;font-size:12px;color:var(--bright);min-width:36px;text-align:center;letter-spacing:1px;}
-/* USER LOGIN */
+/* ── PLAYER CARD QUICK CONTROLS ───────────────────────────────── */
 .loginover{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,5,15,0.97);z-index:9500;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
 .loginover.show{display:flex;}
 .login-box{background:#020c1e;border:1px solid var(--blue);box-shadow:0 0 40px rgba(0,170,255,0.15);padding:30px;width:90%;max-width:380px;}
@@ -48,11 +47,31 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .login-inp:focus{border-color:var(--blue);}
 .login-btn{width:100%;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;padding:11px;cursor:pointer;transition:all .2s;margin-top:4px;}
 .login-btn:hover{background:rgba(0,170,255,0.09);}
-.login-user-bar{display:flex;align-items:center;gap:8px;background:rgba(0,10,25,0.7);border:1px solid rgba(0,100,200,0.2);padding:8px 14px;margin-bottom:10px;font-size:11px;}
-.login-user-bar span{color:var(--muted);flex:1;}
-.login-user-bar strong{color:var(--blue);font-family:'Orbitron',monospace;font-size:10px;letter-spacing:1px;}
-.logout-btn{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--danger);cursor:pointer;background:none;border:1px solid rgba(255,70,102,.25);padding:3px 8px;transition:all .2s;}
-.logout-btn:hover{background:rgba(255,70,102,.05);}
+/* ── PLAYER CARD QUICK CONTROLS ───────────────────────────────── */
+.pcard-config-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--blue);cursor:pointer;background:rgba(0,170,255,0.05);border:1px solid rgba(0,170,255,.3);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.pcard-config-btn:hover{background:rgba(0,170,255,.12);border-color:rgba(0,170,255,.65);box-shadow:0 0 8px rgba(0,170,255,.2);}
+.pcard-config-lbl{letter-spacing:2px;opacity:.85;}
+.pcard-actions{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:4px;}
+.pcard-mini-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--gold);cursor:pointer;background:rgba(240,192,64,0.05);border:1px solid rgba(240,192,64,.3);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.pcard-mini-btn:hover{background:rgba(240,192,64,.1);border-color:rgba(240,192,64,.6);}
+.pcard-mini-lbl{letter-spacing:2px;opacity:.85;}
+.pcard-font-ctrl{display:flex;align-items:center;gap:3px;border:1px solid rgba(0,170,255,.2);background:rgba(0,10,30,0.4);padding:2px 5px;}
+.pcard-font-btn{background:none;border:none;color:var(--blue);font-family:'Orbitron',monospace;cursor:pointer;padding:1px 4px;line-height:1;transition:color .15s;}
+.pcard-font-btn:hover{color:var(--bright);}
+.pcard-font-val{font-family:'Orbitron',monospace;color:var(--bright);min-width:28px;text-align:center;letter-spacing:1px;}
+.pcard-name-form{display:flex;gap:4px;align-items:center;margin-top:5px;width:100%;}
+.pcard-name-inp{flex:1;background:rgba(0,20,50,0.9);border:1px solid rgba(0,170,255,.4);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:13px;padding:4px 8px;outline:none;min-width:0;}
+.pcard-name-inp:focus{border-color:var(--blue);}
+.pcard-name-ok{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.4);color:var(--green);font-family:'Orbitron',monospace;font-size:10px;padding:4px 8px;cursor:pointer;transition:all .2s;}
+.pcard-name-ok:hover{background:rgba(74,222,128,.15);}
+.pcard-name-cancel{background:none;border:1px solid rgba(100,120,150,.3);color:var(--muted);font-family:'Orbitron',monospace;font-size:10px;padding:4px 8px;cursor:pointer;transition:all .2s;}
+.pcard-name-cancel:hover{background:rgba(255,255,255,.04);}
+.pcard-perfil-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:#22d3ee;cursor:pointer;background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,.3);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.pcard-perfil-btn:hover{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.65);box-shadow:0 0 8px rgba(34,211,238,.2);}
+.pcard-perfil-lbl{letter-spacing:2px;opacity:.85;}
+.pcard-logout-btn{font-family:'Orbitron',monospace;letter-spacing:2px;color:var(--danger);cursor:pointer;background:rgba(255,70,102,0.04);border:1px solid rgba(255,70,102,.25);padding:4px 9px;transition:all .2s;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.pcard-logout-btn:hover{background:rgba(255,70,102,.1);border-color:rgba(255,70,102,.6);}
+.pcard-logout-lbl{letter-spacing:2px;opacity:.85;}
 /* HEADER */
 .hdr{text-align:center;padding:22px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px;}
 .hdr-sub{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:6px;color:var(--blue);opacity:.7;margin-bottom:4px;}
@@ -99,9 +118,9 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .sval{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--bright);}
 .skey{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px;}
 /* TABS */
-.tabs{display:flex;border-bottom:1px solid rgba(0,100,200,0.22);margin-bottom:12px;flex-wrap:wrap;}
-.tab{padding:9px 14px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tabs{display:flex;border-bottom:1px solid rgba(0,100,200,0.22);margin-bottom:12px;width:100%;}
+.tab{flex:1;text-align:center;padding:9px 4px;font-family:'Orbitron',monospace;font-size:calc(9px * var(--fs-scale));letter-spacing:2px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tab.active{color:var(--neon-purple);border-bottom-color:var(--neon-purple);text-shadow:0 0 10px var(--neon-purple-glow);}
 .tab:hover:not(.active){color:#8bb8d0;}
 .tabcontent{display:none;}
 .tabcontent.active{display:block;}
@@ -131,7 +150,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .mcard.fixed-mission{border-left-color:var(--gold);}
 .mtop{display:flex;align-items:flex-start;gap:10px;}
 .mchk{width:20px;height:20px;border:2px solid var(--blue);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .18s;cursor:pointer;font-size:12px;font-weight:700;user-select:none;}
-.mchk.yes{background:var(--green);border-color:var(--green);color:#001a00;}
+.mchk.yes{background:var(--neon-purple);border-color:var(--neon-purple);color:#fff;box-shadow:0 0 10px var(--neon-purple-glow);}
 .mcontent{flex:1;}
 .mname{font-size:15px;font-weight:600;color:var(--bright);line-height:1.3;}
 .mdesc{font-size:11px;color:var(--muted);margin-top:2px;}
@@ -199,7 +218,6 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 /* ITEM PERIOD PROGRESS */
 .item-period-toggle{display:flex;gap:0;margin-top:10px;border:1px solid rgba(0,100,200,0.2);}
 .iptbtn{flex:1;padding:4px 2px;font-family:'Orbitron',monospace;font-size:7px;letter-spacing:1px;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .2s;text-align:center;}
-.iptbtn.active{color:var(--gold);background:rgba(240,192,64,0.08);}
 .iptbtn:hover:not(.active){color:#8bb8d0;}
 .item-progress-detail{margin-top:6px;background:rgba(0,10,28,0.7);border:1px solid rgba(0,100,200,0.15);padding:7px 8px;}
 .ipd-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
@@ -267,7 +285,6 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .profile-lvllbl{font-size:9px;color:var(--muted);letter-spacing:2px;}
 .period-toggle{display:flex;gap:0;margin-bottom:14px;border:1px solid rgba(0,170,255,0.25);}
 .ptbtn{flex:1;padding:8px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .2s;}
-.ptbtn.active{color:var(--blue);background:rgba(0,170,255,0.08);}
 .ptbtn:hover:not(.active){color:#8bb8d0;}
 .radar-wrap{background:rgba(0,10,25,0.8);border:1px solid rgba(0,100,200,0.2);padding:16px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;}
 .radar-title{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;color:var(--blue);margin-bottom:12px;align-self:flex-start;}
@@ -324,7 +341,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .fin-box.income::before{background:var(--green);}
 .fin-box.expense::before{background:var(--danger);}
 .fin-box.balance::before{background:var(--gold);}
-.fin-box-val{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--bright);word-break:break-all;overflow-wrap:break-word;line-height:1.2;}
+.fin-box-val{font-family:'Orbitron',monospace;font-size:clamp(9px,2.5vw,14px);font-weight:700;color:var(--bright);word-break:break-all;overflow-wrap:anywhere;line-height:1.2;white-space:normal;}
 .fin-box-lbl{font-size:8px;color:var(--muted);letter-spacing:2px;margin-top:3px;text-transform:uppercase;}
 .fin-period-bar{display:flex;gap:0;margin-bottom:12px;border:1px solid rgba(0,100,200,0.22);}
 .fin-ptbtn{flex:1;padding:7px 4px;font-family:'Orbitron',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);cursor:pointer;border:none;background:transparent;transition:all .2s;text-align:center;}
@@ -376,8 +393,24 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
    keep their fixed sizes for stability.
    ═══════════════════════════════════════════════════════ */
 
-/* TABS bar */
+/* TABS bar — etiquetas de navegación */
 .tab{font-size:calc(9px * var(--fs-scale));}
+
+/* PLAYER CARD — botones de acción rápida */
+.pcard-config-btn, .pcard-config-lbl { font-size: calc(7px * var(--fs-scale)); }
+.pcard-perfil-btn, .pcard-perfil-lbl { font-size: calc(7px * var(--fs-scale)); }
+.pcard-mini-btn,   .pcard-mini-lbl   { font-size: calc(7px * var(--fs-scale)); }
+.pcard-logout-btn, .pcard-logout-lbl { font-size: calc(7px * var(--fs-scale)); }
+.pcard-font-btn  { font-size: calc(10px * var(--fs-scale)); }
+.pcard-font-val  { font-size: calc(9px  * var(--fs-scale)); }
+.pcard-name-inp  { font-size: calc(13px * var(--fs-scale)); }
+.pcard-name-ok, .pcard-name-cancel { font-size: calc(10px * var(--fs-scale)); }
+
+/* TOOLTIPS — texto de ayuda expandible */
+.tip-base   { font-size: calc(10px * var(--fs-scale)); }
+.tip-toggle { font-size: calc(7px  * var(--fs-scale)); }
+.tip-detail { font-size: calc(9px  * var(--fs-scale)); }
+.tip-block  { font-size: calc(10px * var(--fs-scale)); }
 
 /* TAB content general */
 .tabcontent .stitle{font-size:calc(10px * var(--fs-scale));}
@@ -606,6 +639,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   font-size: calc(11px * var(--fs-scale));
   color: var(--muted);
 }
+/* .tip-base font-size now controlled by fs-scale */
 .tip-base {
   color: var(--muted);
   font-size: calc(11px * var(--fs-scale));
@@ -806,11 +840,6 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .hdr-sub { font-size: 8px; letter-spacing: 4px; }
 .hdr-time { font-size: 9px; }
 
-/* Font bar más compacto */
-.fontbar { margin-bottom: 5px; }
-.fontbtn { width: 28px; height: 28px; font-size: 14px; }
-.font-val { font-size: 11px; }
-
 /* Player card */
 .pcard { padding: 12px 11px; }
 .avatar { width: 50px; height: 50px; font-size: 24px; }
@@ -963,10 +992,11 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .achiev-name { font-size: 11px; }
 .achiev-desc { font-size: 9px; }
 
-/* User bar */
-.login-user-bar { flex-wrap: wrap; gap: 6px; padding: 7px 11px; font-size: 10px; }
-.logout-btn { font-size: 7px; padding: 3px 7px; }
-
+/* Player card quick controls — móvil */
+.pcard-actions { gap: 4px; }
+.pcard-config-btn, .pcard-mini-btn { padding: 3px 7px; }
+.pcard-font-ctrl { padding: 2px 4px; }
+/* pcard-font-btn/val sizes handled by fs-scale */
 /* Clase banner */
 .class-banner { padding: 7px 10px; }
 .class-banner-name { font-size: 13px; }
@@ -985,10 +1015,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .ie-inp { font-size: 12px; }
 
 /* Tooltip */
-.tip-base { font-size: 10px; }
-.tip-toggle { font-size: 7px; }
-.tip-detail { font-size: 9px; padding: 8px 10px; }
-.tip-block { font-size: 10px; }
+/* tip sizes handled by fs-scale */
 
 /* ── TABLET (480px–767px) ───────────────────────────── */
 @media (min-width: 480px) {
@@ -998,7 +1025,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .avatar { width: 56px; height: 56px; font-size: 28px; }
   .pname { font-size: 16px; }
   .plvlnum { font-size: 26px; }
-  .tab { padding: 9px 13px; font-size: 8.5px; letter-spacing: 1.5px; }
+  .tab { padding: 9px 13px; letter-spacing: 1.5px; }
   .tabs { flex-wrap: wrap; overflow-x: visible; }
   .resetbar { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
   .invgrid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -1032,7 +1059,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .sbox { padding: 9px 10px; }
   /* Tabs en fila completa */
   .tabs { flex-wrap: wrap; overflow-x: visible; }
-  .tab { padding: 9px 14px; font-size: 9px; letter-spacing: 2px; flex-shrink: unset; }
+  .tab { padding: 9px 14px; letter-spacing: 2px; flex-shrink: unset; }
   .tabs::-webkit-scrollbar { display: block; width: 0; height: 0; }
   /* Reset bar en fila */
   .resetbar { flex-direction: row; flex-wrap: nowrap; align-items: center; padding: 10px 14px; }
@@ -1079,9 +1106,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .stitle { font-size: 10px; letter-spacing: 3px; }
   .login-box { padding: 30px; }
   .login-title { font-size: 14px; }
-  .tip-base { font-size: 11px; }
-  .tip-toggle { font-size: 8px; }
-  .tip-detail { font-size: 10px; }
+  /* tip sizes handled by fs-scale */
 }
 
 /* ── LARGE DESKTOP (1024px+) ───────────────────────── */
@@ -1098,7 +1123,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   .tab { min-height: 40px; }
   .mchk { width: 26px; height: 26px; }
   .act-btn { min-height: 30px; padding: 4px 9px; }
-  .fontbtn, .rhbtn { width: 32px; height: 32px; }
+  .rhbtn { width: 32px; height: 32px; }
   .mood-btn { min-height: 60px; }
   .claimbtn { min-height: 48px; }
   .login-btn { min-height: 46px; }
@@ -1128,6 +1153,153 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   ADAPTIVE UI — TEXTO CORTO/LARGO POR BREAKPOINT
+   .txt-full  = visible solo en tablet+ (≥480px)
+   .txt-short = visible solo en móvil  (<480px)
+   .hide-mobile = oculto en móvil
+   .hide-desktop = oculto en tablet+
+   ══════════════════════════════════════════════════════ */
+.txt-short { display: inline; }
+.txt-full  { display: none; }
+.hide-mobile  { display: initial; }
+.hide-desktop { display: none; }
+
+@media (min-width: 480px) {
+  .txt-short { display: none; }
+  .txt-full  { display: inline; }
+  .hide-mobile  { display: initial; }
+  .hide-desktop { display: none; }
+}
+
+/* Ajuste de texto en tabs para no desbordar */
+@media (max-width: 360px) {
+  .tab { padding: 9px 8px; letter-spacing: 0.5px; }
+  .claimbtn { font-size: 8px; letter-spacing: 1px; }
+  .login-sub { font-size: 11px; }
+  .hdr-title { font-size: 13px; }
+  .stitle { font-size: 8px; letter-spacing: 1px; }
+  .rlbl { font-size: 7px; }
+  .rcd { font-size: 14px; }
+  .modal { width: 97%; padding: 14px 10px; }
+  .invgrid { grid-template-columns: repeat(2,1fr); gap: 5px; }
+  .icard { padding: 8px; }
+  .iname { font-size: 11px; }
+  .stats3 { gap: 4px; }
+  .sval { font-size: 14px; }
+  .skey { font-size: 7px; }
+  .rank-cfg-grid { grid-template-columns: repeat(3,1fr); }
+  .fin-cat-grid { grid-template-columns: repeat(4,1fr); }
+  .fin-cat-btn { font-size: 8px; padding: 5px 2px; }
+  .profile-hero { flex-direction: column; align-items: flex-start; }
+  .summary-grid { grid-template-columns: repeat(2,1fr); }
+  .achiev-edit-row { grid-template-columns: 30px 1fr 80px 28px; }
+  .achiev-col-desc { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════
+   SELECCIÓN NEÓN MORADO — Todos los elementos activos/seleccionados
+   Al seleccionar cualquier elemento interactivo se resalta
+   con el color neón morado (--neon-purple) para unificar el feedback visual.
+   ══════════════════════════════════════════════════════ */
+
+/* Botones de período (ptbtn) activos */
+.ptbtn.active {
+  color: var(--neon-purple) !important;
+  background: var(--neon-purple-dim) !important;
+  border-color: var(--neon-purple-border) !important;
+  text-shadow: 0 0 8px var(--neon-purple-glow);
+}
+
+/* Botones de período de la tienda (sp-*) activos */
+.period-toggle .ptbtn.active,
+#sp-day.active, #sp-week.active, #sp-month.active {
+  color: var(--neon-purple) !important;
+  background: var(--neon-purple-dim) !important;
+  border-color: var(--neon-purple-border) !important;
+  text-shadow: 0 0 8px var(--neon-purple-glow);
+}
+
+/* Botones de período del item (iptbtn) activos */
+.iptbtn.active {
+  color: var(--neon-purple) !important;
+  background: var(--neon-purple-dim) !important;
+}
+
+/* Mood button seleccionado — JS asigna .selected y .sel-N */
+.mood-btn.selected {
+  border-color: var(--neon-purple-border) !important;
+  background: var(--neon-purple-dim) !important;
+  box-shadow: 0 0 14px var(--neon-purple-glow) !important;
+}
+
+/* Categorías de finanzas seleccionadas */
+.fin-cat-btn.sel {
+  border-color: var(--neon-purple-border) !important;
+  background: var(--neon-purple-dim) !important;
+  color: var(--neon-purple) !important;
+  box-shadow: 0 0 8px var(--neon-purple-glow);
+}
+
+/* Tipo de transacción seleccionado — JS asigna .active-income / .active-expense */
+.fin-type-btn.active-income,
+.fin-type-btn.active-expense {
+  color: var(--neon-purple) !important;
+  border-color: var(--neon-purple-border) !important;
+  background: var(--neon-purple-dim) !important;
+  text-shadow: 0 0 6px var(--neon-purple-glow);
+}
+
+/* Emoji picker — categoría activa */
+.ep-cat-btn.active {
+  border-color: var(--neon-purple-border) !important;
+  color: var(--neon-purple) !important;
+  background: var(--neon-purple-dim) !important;
+}
+
+/* Misión seleccionada para editar */
+.mcard.editing {
+  border-color: var(--neon-purple) !important;
+  border-left-color: var(--neon-purple) !important;
+  box-shadow: 0 0 16px var(--neon-purple-glow);
+}
+
+/* Inputs y selects con foco — neón morado */
+.finput:focus,
+.fselect:focus,
+.ie-inp:focus,
+.ie-sel:focus,
+.search-inp:focus,
+.login-inp:focus,
+.pcard-name-inp:focus,
+.ep-search:focus,
+.rank-inp:focus {
+  border-color: var(--neon-purple) !important;
+  box-shadow: 0 0 8px var(--neon-purple-glow);
+  outline: none;
+}
+
+/* Botón EP activo al seleccionar emoji */
+.ep-emoji-btn:active,
+.ep-emoji-btn:focus {
+  background: var(--neon-purple-dim) !important;
+  border-color: var(--neon-purple-border) !important;
+}
+
+/* Checkbox de misión — borde al hover antes de marcar */
+.mchk:hover:not(.yes) {
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 8px var(--neon-purple-glow);
+}
+
+  .ptbtn { font-size: 8px; padding: 7px 10px; letter-spacing: 1px; }
+  .resetbar { gap: 8px; }
+  .login-sub br { display: none; }
+  .searchbar { flex-direction: column; gap: 6px; }
+  .searchbar .ie-sel { width: 100%; }
+  /* tip-base fs-scale already in main block */
+}
 </style>
 </head>
 <body>
@@ -1146,7 +1318,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 <div class="loginover" id="loginOver">
   <div class="login-box">
     <div class="login-title">▸ SISTEMA DE CAZADOR ◂</div>
-    <div class="login-sub">Ingresa tu nombre de usuario para acceder.<br>Tus misiones, XP y objetos se guardan automáticamente en este navegador — <strong style="color:var(--blue)">no se pierden al recargar.</strong><br><span style="color:rgba(96,165,250,0.5);">Si eres nuevo, se creará tu perfil al instante.</span></div>
+    <div class="login-sub"><span class="txt-full">Ingresa tu nombre de usuario para acceder.<br>Tus misiones, XP y objetos se guardan automáticamente en este navegador — <strong style="color:var(--blue)">no se pierden al recargar.</strong><br><span style="color:rgba(96,165,250,0.5);">Si eres nuevo, se creará tu perfil al instante.</span></span><span class="txt-short">Ingresa tu usuario. Datos guardados localmente.<br><span style="color:rgba(96,165,250,0.5);">Nuevo aquí — tu perfil se crea al instante.</span></span></div>
     <input class="login-inp" id="loginUser" placeholder="Nombre de usuario..." maxlength="30" onkeydown="if(event.key==='Enter')doLogin()">
     <input class="login-inp" id="loginPass" type="password" placeholder="Contraseña (opcional)..." maxlength="30" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">◈ ENTRAR AL SISTEMA ◈</button>
@@ -1167,20 +1339,8 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 </div>
 
 <div class="wrap">
-  <!-- FONT SIZE BAR -->
-  <div class="fontbar">
-    <span class="fontbar-lbl">TEXTO</span>
-    <button class="fontbtn" onclick="changeFontSize(-1)">−</button>
-    <div class="font-val" id="fontVal">15px</div>
-    <button class="fontbtn" onclick="changeFontSize(1)">+</button>
-  </div>
-
-  <!-- USER BAR -->
-  <div class="login-user-bar" id="userBar" style="display:none">
-    <span>Cazador: <strong id="userBarName">—</strong></span>
-    <span id="saveIndicator" style="font-size:9px;color:var(--green);letter-spacing:1px;opacity:0;transition:opacity 0.5s;">💾 GUARDADO</span>
-    <button class="logout-btn" onclick="doLogout()">CAMBIAR USUARIO</button>
-  </div>
+  <!-- saveIndicator: elemento oculto requerido por save() — no renderiza nada visible -->
+  <span id="saveIndicator" style="position:fixed;bottom:12px;right:14px;font-size:10px;color:var(--green);letter-spacing:1px;opacity:0;transition:opacity 0.5s;z-index:9000;pointer-events:none;font-family:'Orbitron',monospace;">💾 GUARDADO</span>
 
   <!-- HEADER -->
   <div class="hdr">
@@ -1194,17 +1354,69 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     <div class="phdr">
       <div class="avatar" id="avatarEl">⚔️<canvas class="avatar-morph-canvas" id="avatarMorphCanvas"></canvas><div class="avatar-morph-ring" id="avatarMorphRing"></div></div>
       <div class="pinfo">
-        <div class="pname" id="pname">CAZADOR</div>
-        <div class="pclass" id="pclass">▸ CAZADOR INDEPENDIENTE</div>
-        <div class="prank" id="prank">RANGO E</div>
-      </div>
-      <div class="plvl">
-        <div class="plvlnum" id="plvl">LV.1</div>
-        <div class="plvllbl">NIVEL</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+          <div>
+            <div class="pname" id="pname">CAZADOR</div>
+            <div class="pclass" id="pclass">▸ CAZADOR INDEPENDIENTE</div>
+            <div class="prank" id="prank">RANGO E</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <div class="plvl">
+              <div class="plvlnum" id="plvl">LV.1</div>
+              <div class="plvllbl">NIVEL</div>
+            </div>
+            <!-- ── CONTROLES RÁPIDOS DE LA PLAYER CARD ──────────────────────
+                 1. ⚙️ AJUSTES   → abre tab de configuración completa
+                 2. 📊 PERFIL    → abre tab de estadísticas y radar
+                 3. ✏ NOMBRE    → edita el nombre inline aquí mismo
+                 4. T− / T+     → reduce o aumenta el tamaño de fuente
+                 5. ↩ SALIR     → cierra sesión / cambia usuario
+            ─────────────────────────────────────────────────────────── -->
+            <div class="pcard-actions">
+
+              <!-- Botón: abre configuración completa -->
+              <button class="pcard-config-btn" onclick="switchTab('config')" title="Abrir panel de configuración">
+                ⚙️ <span class="pcard-config-lbl">AJUSTES</span>
+              </button>
+
+              <!-- Botón: abre tab de perfil — estadísticas, radar y logros -->
+              <button class="pcard-perfil-btn" onclick="switchTab('perfil')" title="Ver estadísticas y progreso">
+                📊 <span class="pcard-perfil-lbl">PERFIL</span>
+              </button>
+
+              <!-- Cambio de nombre inline -->
+              <button class="pcard-mini-btn" onclick="pcardToggleName()" id="pcardNameBtn" title="Cambiar nombre del cazador">
+                ✏ <span class="pcard-mini-lbl">NOMBRE</span>
+              </button>
+
+              <!-- Control tamaño de texto -->
+              <div class="pcard-font-ctrl" title="Tamaño de texto">
+                <button class="pcard-font-btn" onclick="changeFontSize(-1)">T−</button>
+                <span class="pcard-font-val" id="fontVal">15px</span>
+                <button class="pcard-font-btn" onclick="changeFontSize(1)">T+</button>
+              </div>
+
+              <!-- Cambiar usuario / cerrar sesión -->
+              <button class="pcard-logout-btn" onclick="doLogout()" title="Cerrar sesión y cambiar usuario">
+                ↩ <span class="pcard-logout-lbl">SALIR</span>
+              </button>
+
+            </div>
+
+            <!-- Formulario inline de nombre (oculto por defecto) -->
+            <div class="pcard-name-form" id="pcardNameForm" style="display:none;">
+              <input class="pcard-name-inp" id="pcardNameInp"
+                     placeholder="Nuevo nombre..."
+                     onkeydown="if(event.key==='Enter')pcardSaveName();if(event.key==='Escape')pcardToggleName();">
+              <button class="pcard-name-ok" onclick="pcardSaveName()">✓</button>
+              <button class="pcard-name-cancel" onclick="pcardToggleName()">✕</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="class-banner" id="classBanner">
-      <div class="class-banner-title">▸ CLASE DOMINANTE — ESTA SEMANA</div>
+      <div class="class-banner-title"><span class="txt-short">▸ CLASE — ESTA SEMANA</span><span class="txt-full">▸ CLASE DOMINANTE — ESTA SEMANA</span></div>
       <div class="class-banner-name" id="classNameEl">—</div>
       <div class="class-banner-desc" id="classDescEl">—</div>
     </div>
@@ -1225,13 +1437,10 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <!-- TABS -->
   <div class="tabs-wrapper">
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('missions')">MISIONES</button>
-    <button class="tab" onclick="switchTab('allquests')">TODAS</button>
-    <button class="tab" onclick="switchTab('shop')">TIENDA</button>
-    <button class="tab" onclick="switchTab('inventory')">INVENTARIO</button>
-    <button class="tab" onclick="switchTab('perfil')">PERFIL</button>
-    <button class="tab" onclick="switchTab('dinero')">💰 DINERO</button>
-    <button class="tab" onclick="switchTab('config')">CONFIGURAR</button>
+    <button class="tab active" onclick="switchTab('missions')"><span class="txt-short">⚔️</span><span class="txt-full">MISIONES</span></button>
+    <button class="tab" onclick="switchTab('shop')"><span class="txt-short">🛒</span><span class="txt-full">TIENDA</span></button>
+    <button class="tab" onclick="switchTab('inventory')"><span class="txt-short">📦</span><span class="txt-full">INVENTARIO</span></button>
+    <button class="tab" onclick="switchTab('dinero')">💰<span class="txt-full"> DINERO</span></button>
   </div>
   </div>
 
@@ -1239,7 +1448,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <div class="tabcontent active" id="tab-missions">
     <div class="resetbar">
       <div>
-        <div class="rlbl">RESET DIARIO EN</div>
+        <div class="rlbl"><span class="txt-short">RESET EN</span><span class="txt-full">RESET DIARIO EN</span></div>
         <div class="rcd" id="rcd">23:59:59</div>
         <div style="font-size:calc(9px * var(--fs-scale));color:var(--muted);letter-spacing:1px;margin-top:2px;" id="resetHourLbl">RESET A LAS 00:00</div>
       </div>
@@ -1268,12 +1477,43 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     </div>
     <div id="mlist"></div>
     <div class="progtxt" id="progtxt">0 / 4 misiones mínimas completadas</div>
-    <button class="claimbtn" id="claimbtn" onclick="claimDaily()" disabled>◈ RECLAMAR RECOMPENSA DIARIA ◈</button>
+    <button class="claimbtn" id="claimbtn" onclick="claimDaily()" disabled><span class="txt-short">◈ RECLAMAR ◈</span><span class="txt-full">◈ RECLAMAR RECOMPENSA DIARIA ◈</span></button>
+
+    <!-- BANCO DE MISIONES — expandible con botón + -->
+    <div style="margin-top:16px;">
+      <div class="shdr" style="cursor:pointer;user-select:none;" onclick="toggleAllQuests()">
+        <div class="sline"></div>
+        <span class="stitle">◈ BANCO DE MISIONES</span>
+        <button id="allQuestsToggleBtn" style="background:none;border:1px solid rgba(0,170,255,0.4);color:var(--blue);font-family:'Orbitron',monospace;font-size:14px;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;margin-left:8px;">+</button>
+        <div class="sline"></div>
+      </div>
+      <div id="allQuestsPanel" style="display:none;">
+        <div class="tip-block">
+          <span class="tip-base">Todas tus misiones — márcalas aunque no estén en el mínimo diario.</span>
+          <button class="tip-toggle" onclick="tipToggle(this)">ⓘ MÁS INFO</button>
+          <div class="tip-detail">Las 4 misiones del día son las mínimas obligatorias, pero puedes completar cualquier otra misión de tu banco y también ganará XP. Úsalo para registrar todo lo que lograste hoy. Filtra por categoría o busca por nombre para encontrar rápido.</div>
+        </div>
+        <div class="searchbar">
+          <input class="search-inp" id="questSearch" placeholder="🔍 Buscar misión..." oninput="renderAllQuests()">
+          <select class="ie-sel" id="questCatFilter" onchange="renderAllQuests()" style="padding:8px 10px;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:calc(13px * var(--fs-scale));outline:none;">
+            <option value="">Todas las categorías</option>
+            <option value="salud">💪 Salud/Ejercicio</option>
+            <option value="guerrero">⚔️ Guerrero/Pesas</option>
+            <option value="estudio">📚 Estudio/Trabajo</option>
+            <option value="lectura">📖 Lectura/Mago</option>
+            <option value="habitos">🌟 Hábitos</option>
+            <option value="creatividad">🎨 Creatividad</option>
+            <option value="mental">🧘 Salud Mental</option>
+          </select>
+        </div>
+        <div id="allQuestList"></div>
+      </div>
+    </div>
 
     <!-- MOOD WIDGET -->
     <div class="shdr" style="margin-top:18px;"><div class="sline"></div><span class="stitle">◈ ESTADO MENTAL DEL DÍA</span><div class="sline"></div></div>
     <div class="mood-card" id="moodCard">
-      <div class="mood-title">▸ SISTEMA DE MONITOREO MENTAL</div>
+      <div class="mood-title"><span class="txt-short">▸ MONITOR MENTAL</span><span class="txt-full">▸ SISTEMA DE MONITOREO MENTAL</span></div>
       <div class="mood-subtitle">¿Cómo te sentiste hoy, Cazador?
         <button class="tip-toggle" style="margin-left:6px;" onclick="tipToggle(this)">ⓘ ¿PARA QUÉ SIRVE?</button>
         <div class="tip-detail">Registrar tu estado de ánimo suma XP en la categoría Salud Mental y alimenta el historial en tu perfil. Solo puedes registrarlo una vez por día, pero puedes cambiarlo si te equivocas. Ayuda a detectar patrones en tu bienestar a lo largo de semanas.</div>
@@ -1305,33 +1545,9 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     </div>
   </div>
 
-  <!-- TAB: TODAS LAS MISIONES -->
-  <div class="tabcontent" id="tab-allquests">
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ BANCO DE MISIONES</span><div class="sline"></div></div>
-    <div class="tip-block">
-      <span class="tip-base">Todas tus misiones — márcalas aunque no estén en el mínimo diario.</span>
-      <button class="tip-toggle" onclick="tipToggle(this)">ⓘ MÁS INFO</button>
-      <div class="tip-detail">Las 4 misiones del día son las mínimas obligatorias, pero puedes completar cualquier otra misión de tu banco y también ganará XP. Úsalo para registrar todo lo que lograste hoy. Filtra por categoría o busca por nombre para encontrar rápido.</div>
-    </div>
-    <div class="searchbar">
-      <input class="search-inp" id="questSearch" placeholder="🔍 Buscar misión..." oninput="renderAllQuests()">
-      <select class="ie-sel" id="questCatFilter" onchange="renderAllQuests()" style="padding:8px 10px;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.28);color:var(--bright);font-family:'Rajdhani',sans-serif;font-size:calc(13px * var(--fs-scale));outline:none;">
-        <option value="">Todas las categorías</option>
-        <option value="salud">💪 Salud/Ejercicio</option>
-        <option value="guerrero">⚔️ Guerrero/Pesas</option>
-        <option value="estudio">📚 Estudio/Trabajo</option>
-        <option value="lectura">📖 Lectura/Mago</option>
-        <option value="habitos">🌟 Hábitos</option>
-        <option value="creatividad">🎨 Creatividad</option>
-        <option value="mental">🧘 Salud Mental</option>
-      </select>
-    </div>
-    <div id="allQuestList"></div>
-  </div>
-
   <!-- TAB: TIENDA -->
   <div class="tabcontent" id="tab-shop">
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ TIENDA — CANJEA TUS DESEOS</span><div class="sline"></div></div>
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">TIENDA</span><span class="txt-full">TIENDA — CANJEA TUS DESEOS</span></span><div class="sline"></div></div>
     <div class="tip-block">
       <span class="tip-base">Canjea tus deseos con el XP que has ganado.</span>
       <button class="tip-toggle" onclick="tipToggle(this)">ⓘ ¿CÓMO FUNCIONA?</button>
@@ -1339,9 +1555,9 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
     </div>
     <!-- Selector de periodo global para la tienda -->
     <div style="display:flex;gap:0;margin-bottom:14px;border:1px solid rgba(0,170,255,0.25);">
-      <button class="ptbtn active" id="sp-day"   onclick="setShopPeriod('day')">▸ HOY</button>
-      <button class="ptbtn"        id="sp-week"  onclick="setShopPeriod('week')">▸ SEMANA</button>
-      <button class="ptbtn"        id="sp-month" onclick="setShopPeriod('month')">▸ MES</button>
+      <button class="ptbtn active" id="sp-day"   onclick="setShopPeriod('day')"><span class="txt-short">HOY</span><span class="txt-full">▸ HOY</span></button>
+      <button class="ptbtn"        id="sp-week"  onclick="setShopPeriod('week')"><span class="txt-short">SEMANA</span><span class="txt-full">▸ SEMANA</span></button>
+      <button class="ptbtn"        id="sp-month" onclick="setShopPeriod('month')"><span class="txt-short">MES</span><span class="txt-full">▸ MES</span></button>
     </div>
     <div class="invgrid" id="shopGrid"></div>
     <div style="font-size:calc(10px * var(--fs-scale));color:var(--muted);text-align:center;margin-top:16px;letter-spacing:1px;">Añade objetos en CONFIGURAR → TIENDA</div>
@@ -1349,7 +1565,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
   <!-- TAB: INVENTARIO (lo comprado) -->
   <div class="tabcontent" id="tab-inventory">
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ INVENTARIO — OBJETOS OBTENIDOS</span><div class="sline"></div></div>
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">INVENTARIO</span><span class="txt-full">INVENTARIO — OBJETOS OBTENIDOS</span></span><div class="sline"></div></div>
     <div class="tip-block">
       <span class="tip-base">Objetos que ya canjeaste en la Tienda.</span>
       <button class="tip-toggle" onclick="tipToggle(this)">ⓘ MÁS INFO</button>
@@ -1361,23 +1577,17 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 
   <!-- TAB: PERFIL -->
   <div class="tabcontent" id="tab-perfil">
-    <!-- Hero Card -->
-    <div class="profile-hero">
-      <div class="profile-avatar-big" id="profileAvatar">⚔️</div>
-      <div class="profile-info">
-        <div class="profile-name" id="profileName">CAZADOR</div>
-        <div class="profile-class" id="profileClass">▸ CAZADOR INDEPENDIENTE</div>
-        <div style="margin-top:6px;display:flex;align-items:baseline;gap:8px;">
-          <div class="profile-lvlbig" id="profileLvl">LV.1</div>
-          <div class="profile-lvllbl">NIVEL ACTUAL</div>
-        </div>
-      </div>
-    </div>
+
+    <!-- IDs ocultos requeridos por renderPerfil() — no se muestran -->
+    <span id="profileName" style="display:none"></span>
+    <span id="profileLvl"  style="display:none"></span>
+    <span id="profileClass" style="display:none"></span>
+    <span id="profileAvatar" style="display:none"></span>
 
     <!-- Selector semana / mes -->
     <div class="period-toggle">
-      <button class="ptbtn active" id="pt-week" onclick="setPeriod('week')">▸ ESTA SEMANA</button>
-      <button class="ptbtn" id="pt-month" onclick="setPeriod('month')">▸ ESTE MES</button>
+      <button class="ptbtn active" id="pt-week" onclick="setPeriod('week')"><span class="txt-short">SEMANA</span><span class="txt-full">▸ ESTA SEMANA</span></button>
+      <button class="ptbtn" id="pt-month" onclick="setPeriod('month')"><span class="txt-short">MES</span><span class="txt-full">▸ ESTE MES</span></button>
     </div>
 
     <!-- RADAR SVG -->
@@ -1406,7 +1616,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   <div class="tabcontent" id="tab-config">
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ PERFIL DE CAZADOR</span><div class="sline"></div></div>
-    <button class="fabtn" onclick="toggleNameForm()" id="nameToggleBtn">✏ CAMBIAR NOMBRE</button>
+    <button class="fabtn" onclick="toggleNameForm()" id="nameToggleBtn"><span class="txt-short">✏ NOMBRE</span><span class="txt-full">✏ CAMBIAR NOMBRE</span></button>
     <div class="aform" id="nameFormBox" style="display:none;margin-top:8px;">
       <div class="frow">
         <label class="flbl">Nombre visible en pantalla</label>
@@ -1418,7 +1628,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
       </div>
     </div>
 
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ CONFIGURAR RANGOS (XP)</span><div class="sline"></div></div>
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">RANGOS XP</span><span class="txt-full">CONFIGURAR RANGOS (XP)</span></span><div class="sline"></div></div>
     <div class="aform">
       <div class="tip-block">
         <span class="tip-base">Ajusta cuánto XP otorga cada rango de misión.</span>
@@ -1432,10 +1642,10 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
         <div class="rank-box"><div class="rank-box-lbl" style="color:var(--a)">A</div><input class="rank-inp" id="xp-A" type="number" min="1"></div>
         <div class="rank-box"><div class="rank-box-lbl" style="color:var(--s)">S</div><input class="rank-inp" id="xp-S" type="number" min="1"></div>
       </div>
-      <button class="fabtn" style="margin-top:10px" onclick="saveRanks()">GUARDAR RANGOS</button>
+      <button class="fabtn" style="margin-top:10px" onclick="saveRanks()"><span class="txt-short">✓ GUARDAR</span><span class="txt-full">GUARDAR RANGOS</span></button>
     </div>
 
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ AÑADIR MISIÓN AL BANCO</span><div class="sline"></div></div>
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">AÑADIR MISIÓN</span><span class="txt-full">AÑADIR MISIÓN AL BANCO</span></span><div class="sline"></div></div>
     <div class="aform">
       <div class="tip-block">
         <span class="tip-base">Las misiones se rotan automáticamente cada día.</span>
@@ -1538,7 +1748,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
         <input type="number" class="finput" id="minBalInp" placeholder="Ej: 100000" min="0" step="1000">
       </div>
       <div id="minBalStatus" style="font-size:calc(10px * var(--fs-scale));margin-top:6px;padding:7px 10px;background:rgba(0,10,25,0.7);border:1px solid rgba(0,100,200,0.18);display:none;"></div>
-      <button class="fabtn gold" style="margin-top:8px;" onclick="saveMinBalance()">GUARDAR TOPE MÍNIMO</button>
+      <button class="fabtn gold" style="margin-top:8px;" onclick="saveMinBalance()"><span class="txt-short">✓ GUARDAR TOPE</span><span class="txt-full">GUARDAR TOPE MÍNIMO</span></button>
     </div>
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ LOGROS PERSONALIZADOS</span><div class="sline"></div></div>
@@ -1659,6 +1869,216 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 </div><!-- end .wrap -->
 
 <script>
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║              ÍNDICE MAESTRO — SISTEMA DE CAZADOR                        ║
+// ║         Leer este índice PRIMERO para saber qué sección tocar           ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §01 — Constants section      · Línea ~1954                             ║
+// ║         CLASES, CAT_LABELS, DAILY_CATS, RARLBL, PRANK, XPR             ║
+// ║         ► Toca aquí si: nombres de clases, emojis, colores de clase,   ║
+// ║           categorías, rangos de nivel, multiplicadores de XP por rango  ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §02 — Multi-user storage     · Línea ~1986                             ║
+// ║         getUserKey(), loadState(), defaultAchievements(),               ║
+// ║         defaultState(), save()                                           ║
+// ║         ► Toca aquí si: guardar/cargar datos de usuario, estructura     ║
+// ║           del estado inicial, campos del objeto S, localStorage keys    ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §03 — Login / Logout         · Línea ~2098                             ║
+// ║         doLogin(), doLogout()                                            ║
+// ║         ► Toca aquí si: pantalla de login, cambio de usuario, bienve-  ║
+// ║           nida, restaurar preferencias de UI al entrar/salir            ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §04 — Daily rotation         · Línea ~2200                             ║
+// ║         getTodayKey(), assignDailyMissions(), getDailyMissions()        ║
+// ║         ► Toca aquí si: cuántas misiones diarias se asignan, cómo se   ║
+// ║           elige la rotación, orden de prioridad (fixed → cat → resto)  ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §05 — Reset                  · Línea ~2330                             ║
+// ║         checkReset(), changeResetHour(), updateResetUI()                ║
+// ║         ► Toca aquí si: lógica de reset diario, hora de reset,         ║
+// ║           racha (streak), barra de penalización, todayXP = 0           ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §06 — XP / Level system      · Línea ~2406                             ║
+// ║         gainXP(), doFlash(), getRank()                                  ║
+// ║         ► Toca aquí si: ganar/perder XP, subir de nivel, flash de      ║
+// ║           nivel, cálculo de rango actual según lvl                      ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §07 — Class detection        · Línea ~2461                             ║
+// ║         getWeeklyCatCounts(), detectClass(), updateClassUI()            ║
+// ║         ► Toca aquí si: clase activa del jugador, categoría dominante, ║
+// ║           banner de clase, color del avatar, nombre de clase            ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §08 — Morph animation        · Línea ~2497                             ║
+// ║         renderEmojiToCanvas(), morphAvatarEmoji(),                      ║
+// ║         morphProfileAvatar()                                            ║
+// ║         ► Toca aquí si: animación de transición del avatar al cambiar  ║
+// ║           de clase, velocidad del morph, canvas pixel-blend            ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §09 — Notifications          · Línea ~2740                             ║
+// ║         notif(msg)                                                       ║
+// ║         ► Toca aquí si: toast de notificación, duración, posición,     ║
+// ║           animación de entrada/salida del mensaje                       ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §10 — Main render            · Línea ~2748                             ║
+// ║         render(), switchTab()                                            ║
+// ║         ► Toca aquí si: qué se re-dibuja al actualizar estado, orden   ║
+// ║           de render de tabs, lógica de tabs activos                     ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §11 — Daily missions render  · Línea ~2783                             ║
+// ║         renderDailyMissions(), renderMissionCard()                      ║
+// ║         ► Toca aquí si: cómo se muestran las 4 misiones del día,       ║
+// ║           botón de claim, barra de progreso mínimo, tarjeta de misión  ║
+// ║           ► La X de cada misión ahora ABRE el editor (no elimina).     ║
+// ║             El botón 🗑 ELIMINAR aparece dentro del editor inline.      ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §12 — All quests             · Línea ~2869                             ║
+// ║         renderAllQuests()                                               ║
+// ║         ► Toca aquí si: listado completo de misiones, filtro por       ║
+// ║           categoría, búsqueda de misiones, vista de banco completo      ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §13 — Mission actions        · Línea ~2889                             ║
+// ║         toggle(), startEditMission(), saveEditMission(), delMission(),  ║
+// ║         cancelEditMission(), claimDaily()                               ║
+// ║         ► Toca aquí si: marcar misión como hecha, desmarcar, XP que    ║
+// ║           se otorga al completar, editar/eliminar misión                ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §14 — Shop period            · Línea ~2981                             ║
+// ║         setShopPeriod(), getXPForPeriod()                               ║
+// ║         ► Toca aquí si: selector día/semana/mes de la tienda, XP       ║
+// ║           acumulado por período que habilita compras                    ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §15 — Shop and inventory     · Línea ~3015                             ║
+// ║         renderShop(), redeemItem(), renderInventory(), closeModal()     ║
+// ║         ► Toca aquí si: grid de objetos, canje/compra, inventario,     ║
+// ║           modal de confirmación de canje, objetos canjeados             ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §16 — Configuration          · Línea ~3200                             ║
+// ║         addMission(), addItem(), deleteItem(), saveRanks(),             ║
+// ║         renderAchievEditor(), saveAchiev()                              ║
+// ║         ► Toca aquí si: CRUD de misiones, CRUD de objetos de tienda,   ║
+// ║           configurar XP por rango, hora de reset, editor de logros     ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §17 — Font size control      · Línea ~3600                             ║
+// ║         changeFontSize(), setFont(), pcardToggleName(), pcardSaveName() ║
+// ║         ► Toca aquí si: botones T−/T+ de tamaño de texto, rango de    ║
+// ║           tamaños, persistencia de fuente por usuario, edición de      ║
+// ║           nombre inline desde la player card                            ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §18 — Finance module         · Línea ~3650                             ║
+// ║         addTransaction(), deleteTransaction(), renderFinance(),         ║
+// ║         formatCOP(), setFinType(), selectFinCat(), setFinPeriod()      ║
+// ║         ► Toca aquí si: registrar gastos/ingresos, gráfica de dinero,  ║
+// ║           categorías de finanzas, balance mínimo, formato de moneda    ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §19 — Profile / Perfil tab   · Línea ~3900                             ║
+// ║         renderPerfil(), renderRadar(), renderAchievements(),            ║
+// ║         renderMoodHistory(), setPeriod()                                ║
+// ║         ► Toca aquí si: radar SVG, barras de categoría, logros,        ║
+// ║           historial de ánimo, resumen del período                       ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §20 — Mood widget            · Línea ~4050                             ║
+// ║         setMood(), renderMoodWidget()                                   ║
+// ║         ► Toca aquí si: botones de ánimo diario, XP de salud mental,   ║
+// ║           estado guardado, historial de ánimo en perfil                 ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §21 — Emoji picker           · Línea ~4200                             ║
+// ║         epInit(), epToggle(), epSearch(), epClose()                     ║
+// ║         ► Toca aquí si: panel de selección de emoji, búsqueda,         ║
+// ║           categorías de emojis, apertura/cierre del picker             ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §22 — Device detection       · Línea ~4400                             ║
+// ║         initDeviceDetection(), getDeviceType(), updateDevice()          ║
+// ║         ► Toca aquí si: banner de dispositivo, breakpoints,            ║
+// ║           ajuste de fuente automático en pantallas < 360px             ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §H1 — CSS: Variables y fuente   · En <style>, línea ~11               ║
+// ║         :root, --neon-purple, --fs-scale, --blue, --gold…              ║
+// ║         ► Toca aquí si: paleta de colores, color neón de selección,    ║
+// ║           escala de fuente global, variables de diseño                  ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §H2 — CSS: Player card         · En <style>                            ║
+// ║         .pcard, .pcard-actions, .pcard-config-btn…                     ║
+// ║         ► Toca aquí si: tarjeta de jugador, botones de control,        ║
+// ║           formulario de nombre inline, logout                           ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §H3 — CSS: Selección neón      · En <style>, bloque "SELECCIÓN NEÓN"  ║
+// ║         .ptbtn.active, .mchk.yes, .mood-btn.active,                    ║
+// ║         .fin-cat-btn.sel, inputs:focus, .mcard.editing…               ║
+// ║         ► Toca aquí si: color de selección al hacer clic,              ║
+// ║           cambiar el tono morado, añadir más estados seleccionados     ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  §H4 — CSS: Responsive design   · En <style>                            ║
+// ║         @media móvil / tablet / desktop / landscape / reduced-motion   ║
+// ║         ► Toca aquí si: layout en distintos tamaños de pantalla,       ║
+// ║           breakpoints, scroll horizontal de tabs en móvil              ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  HISTORIAL DE CAMBIOS                                                   ║
+// ║  ─────────────────────────────────────────────────────────────────────  ║
+// ║  [YYYY-MM-DD] [sección] descripción                                     ║
+// ║  ─────────────────────────────────────────────────────────────────────  ║
+// ║  [2026-05-07] [ÍNDICE]  Índice maestro y comentarios de sección         ║
+// ║                          añadidos en todo el código JS                  ║
+// ║  [2026-05-07] [§H2,§H3] Botón ⚙️ AJUSTES incorporado en player card    ║
+// ║                          (esquina junto al nivel). Tab CONFIGURAR ya    ║
+// ║                          no está en la barra de navegación — se accede  ║
+// ║                          exclusivamente desde el botón de la tarjeta.   ║
+// ║                          CSS nuevo: .pcard-config-btn / .pcard-config-lbl║
+// ║  [2026-05-07] [§H2,§17] Controles de tamaño de texto (T− / 15px / T+)  ║
+// ║              [§17]      y cambio de nombre inline (✏ NOMBRE) movidos a  ║
+// ║                          la player card. Fontbar superior eliminada.     ║
+// ║                          JS nuevo: pcardToggleName(), pcardSaveName()   ║
+// ║  [2026-05-07] [§H2]     Barra superior eliminada. ↩ SALIR integrado    ║
+// ║                          en pcard-actions. saveIndicator → toast.       ║
+// ║  [2026-05-07] [§H2]     Tab PERFIL → botón 📊 PERFIL en pcard-actions. ║
+// ║  [2026-05-07] [§04]     assignDailyMissions reescrita: 1 misión por     ║
+// ║                          DAILY_CAT, sin repetir la del día anterior.    ║
+// ║  [2026-05-07] [§18]     formatCOP: valores exactos. Gráfica HOY usa    ║
+// ║                          emojis. fin-box-val: clamp() para números.     ║
+// ║  [2026-05-07] [§H1]     Botones pcard y tabs escalan con --fs-scale.   ║
+// ║  [2026-05-07] [§11,§13] La X (✕) en "MISIONES FIJAS HOY" ahora llama  ║
+// ║                          swapDailyMission(): reemplaza esa misión por   ║
+// ║                          otra aleatoria de la misma categoría sin       ║
+// ║                          borrarla del banco. La misión completada no    ║
+// ║                          puede cambiarse. En el banco de misiones la    ║
+// ║                          X sigue abriendo el editor inline.             ║
+// ║  [2026-05-07] [§H1,§H3] Color neón morado (--neon-purple: #bf5fff)     ║
+// ║                          aplicado a todos los estados seleccionados:    ║
+// ║                          tabs activos, checkbox completado, mood,       ║
+// ║                          categorías finanzas, inputs con foco,          ║
+// ║                          misión en edición, períodos activos.           ║
+// ║  [2026-05-07] [ÍNDICE]  Índice actualizado: números de línea           ║
+// ║                          corregidos, §18-§22 añadidos, §H1-§H4        ║
+// ║                          para secciones CSS documentadas.              ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §01 — CONSTANTS SECTION                                                ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Define todas las constantes globales del sistema.           ║
+// ║  Ninguna de estas debe ser modificada en runtime; son valores de        ║
+// ║  referencia que el resto del código lee pero nunca sobreescribe         ║
+// ║  (excepto XPR, que puede ser personalizado por el usuario en §16).     ║
+// ║                                                                          ║
+// ║  Variables clave:                                                        ║
+// ║   · CLASSES      — objeto {cat → {name, emoji, avatar, desc, color}}   ║
+// ║                    7 clases: SANADOR, GUERRERO, MAGO, ARCHIMAGO,        ║
+// ║                    ASESINO, BARDO, MONJE. Usadas en §07 y §10.         ║
+// ║   · CAT_LABELS   — etiquetas legibles por humano para cada categoría   ║
+// ║   · DAILY_CATS   — ['salud','guerrero','estudio','habitos']             ║
+// ║                    las 4 categorías que la rotación diaria cubre (§04)  ║
+// ║   · RARLBL       — mapeo de rareza interna → texto UI                  ║
+// ║   · PRANK        — array de {lvl, r} que define los rangos de nivel    ║
+// ║                    E→D→C→B→A→S. Usado en getRank() §06.               ║
+// ║   · XPR          — {D:15, C:30, B:50, A:80, S:120}                    ║
+// ║                    XP base por rareza de misión. Puede ser editado      ║
+// ║                    en §16 (saveXPR) y se persiste en S.xprConfig.      ║
+// ║   · S            — variable global del estado del usuario (se llena    ║
+// ║                    en §02 con loadState())                              ║
+// ║   · shopPeriod   — período activo de la tienda ('day'|'week'|'month')  ║
+// ║   · currentPeriod— período del perfil ('week'|'month')                 ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
 // ═══════════════════════════════════════════════════════
 // CLASES (basadas en categoría dominante — estilo Solo Leveling)
 // ═══════════════════════════════════════════════════════
@@ -1690,6 +2110,40 @@ let XPR = {D:15, C:30, B:50, A:80, S:120};
 let S, pendingId=null, editingMissionId=null, currentUser=null;
 let shopPeriod = 'day'; // 'day' | 'week' | 'month'
 let currentPeriod = 'week'; // 'week' | 'month' — moved here for early access
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §02 — MULTI-USER STORAGE                                               ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Gestiona la persistencia de datos por usuario en            ║
+// ║  localStorage. Cada usuario tiene su propia clave aislada.              ║
+// ║                                                                          ║
+// ║  Funciones:                                                              ║
+// ║   · getUserKey(user)                                                     ║
+// ║       Genera la clave de localStorage: 'sl_v3_' + nombre_normalizado   ║
+// ║       (minúsculas, espacios → _). Ej: 'sl_v3_juan_perez'               ║
+// ║                                                                          ║
+// ║   · loadState(user) → objeto S                                          ║
+// ║       Lee el JSON guardado, hace merge con defaultState() para          ║
+// ║       garantizar que campos nuevos existan en saves antiguos.           ║
+// ║       Si no hay datos, devuelve defaultState() limpio.                  ║
+// ║                                                                          ║
+// ║   · defaultAchievements() → array de 8 logros predeterminados          ║
+// ║       Tipos soportados: totalComp, streak, level, totalXP,             ║
+// ║       catMax, redeem, custom.                                            ║
+// ║                                                                          ║
+// ║   · defaultState() → objeto S vacío con todos los campos               ║
+// ║       Campos: name, lvl, totalXP, curXP, nextXP, streak,               ║
+// ║       totalComp, todayXP, lastDate, claimed, missions[], items[],      ║
+// ║       nMid, nIid, resetHour, catCounts{}, dailyAssigned,               ║
+// ║       xprConfig, dailyLog[], achievements[], shopPeriod,                ║
+// ║       profilePeriod, activeTab, transactions[], nTid, finPeriod,       ║
+// ║       minBalance.                                                        ║
+// ║                                                                          ║
+// ║   · save()                                                               ║
+// ║       Serializa S a JSON y lo guarda. Actualiza S.xprConfig con XPR   ║
+// ║       actual. Muestra el indicador visual #saveIndicator 1.5s.         ║
+// ║       Si falla (cuota llena) muestra notif de error.                    ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 
 // ═══════════════════════════════════════════════════════
 // MULTI-USER STORAGE (localStorage keyed by user)
@@ -1769,6 +2223,34 @@ function save(){
   catch(e){ notif('⚠ ERROR AL GUARDAR — ALMACENAMIENTO LLENO'); }
 }
 
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §03 — LOGIN / LOGOUT                                                   ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Controla el acceso multi-usuario. El login no usa           ║
+// ║  contraseña; el nombre de usuario ES la clave de datos.                 ║
+// ║                                                                          ║
+// ║  Funciones:                                                              ║
+// ║   · doLogin()                                                            ║
+// ║       Lee #loginUser.value, normaliza, guarda 'sl_current_user' en     ║
+// ║       localStorage. Llama loadState() → S. Si S.name sigue siendo      ║
+// ║       'CAZADOR' (default) lo reemplaza por el username.                 ║
+// ║       Restaura: shopPeriod, currentPeriod, finPeriod, tamaño de        ║
+// ║       fuente, selectores de período en UI.                              ║
+// ║       Llama checkReset() → render() → switchTab(S.activeTab).          ║
+// ║       Muestra notif de bienvenida.                                       ║
+// ║                                                                          ║
+// ║   · doLogout()                                                           ║
+// ║       Pide confirm(). Borra currentUser y S. Elimina                    ║
+// ║       'sl_current_user' de localStorage. Muestra #loginOver.           ║
+// ║       Oculta #userBar. Limpia el input de usuario.                      ║
+// ║                                                                          ║
+// ║  HTML relacionado:                                                       ║
+// ║   · #loginOver  — overlay full-screen de login                          ║
+// ║   · #loginUser  — input de nombre de usuario                            ║
+// ║   · #userBar    — barra superior con nombre activo + botón logout       ║
+// ║   · #userBarName— span con nombre en mayúsculas                         ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
 // ═══════════════════════════════════════════════════════
 // LOGIN / LOGOUT
 // ═══════════════════════════════════════════════════════
@@ -1789,8 +2271,8 @@ function doLogin(){
   currentPeriod = S.profilePeriod || 'week';
   finPeriod     = S.finPeriod     || 'day';
   document.getElementById('loginOver').classList.remove('show');
-  document.getElementById('userBar').style.display='flex';
-  document.getElementById('userBarName').textContent = u.toUpperCase();
+  // userBar removed — controls now in player card
+  // userBarName removed — name shown via render() in #pname
   // Restaurar tamaño de fuente
   const savedFont=parseInt(localStorage.getItem(getUserKey(u)+'_font'));
   if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
@@ -1816,11 +2298,39 @@ function doLogout(){
   S = null;
   localStorage.removeItem('sl_current_user');
   document.getElementById('loginOver').classList.add('show');
-  document.getElementById('userBar').style.display='none';
+  // userBar removed — controls now in player card
   // Clear login input for fresh entry
   const inp = document.getElementById('loginUser');
   if(inp) inp.value = '';
 }
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §04 — DAILY ROTATION                                                   ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Selecciona automáticamente 4 misiones diarias del banco     ║
+// ║  completo, garantizando variedad de categorías y rotación equitativa.   ║
+// ║                                                                          ║
+// ║  Funciones:                                                              ║
+// ║   · getTodayKey() → string                                              ║
+// ║       Genera clave única del día considerando S.resetHour.              ║
+// ║       Si hora actual < resetHour, se considera "ayer todavía".          ║
+// ║       Formato: 'Thu May 01 2025_h6' (fecha + hora de reset).           ║
+// ║                                                                          ║
+// ║   · assignDailyMissions()                                               ║
+// ║       Solo ejecuta si la clave del día cambió (evita re-asignar).      ║
+// ║       Algoritmo de prioridad (TARGET = 4):                              ║
+// ║         1. Misiones fixed → siempre incluidas primero                   ║
+// ║         2. Una misión por cada DAILY_CAT (la menos-recientemente hecha) ║
+// ║         3. Resto sin categoría (least-recently-done) hasta llegar a 4  ║
+// ║         4. Si aún faltan, recicla misiones ya usadas                    ║
+// ║       Helper interno pickBest(pool): ordena por lastDoneDate ascendente ║
+// ║       para priorizar las que llevan más tiempo sin hacerse.             ║
+// ║       Guarda resultado en S.dailyAssigned = {key, ids[]}.              ║
+// ║                                                                          ║
+// ║   · getDailyMissions() → array de misiones                             ║
+// ║       Mapea S.dailyAssigned.ids a objetos misión reales.                ║
+// ║       Filtra nulls (misiones eliminadas después de asignar).            ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 
 // ═══════════════════════════════════════════════════════
 // DAILY ROTATION — 4 misiones mínimas (1 por categoría principal)
@@ -1837,23 +2347,55 @@ function assignDailyMissions(){
   const todayKey = getTodayKey();
   if(S.dailyAssigned && S.dailyAssigned.key === todayKey) return;
 
-  const TARGET = 4;
-  const assigned = { key: todayKey, ids: [] };
-  const used = new Set();
+  // ── Fecha de ayer en ISO local (para excluir misiones ya usadas ayer) ──
+  const todayISO = getTodayISODate();
+  const yesterdayDate = new Date();
+  const rh = S.resetHour || 0;
+  if(new Date().getHours() < rh) yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterdayISO = localISO(yesterdayDate);
 
-  // Helper: pick the least-recently-done mission from a pool, excluding used
-  function pickBest(pool){
-    const avail = pool.filter(m=>!used.has(m.id));
-    if(!avail.length) return null;
-    avail.sort((a,b)=>{
-      const da = a.lastDoneDate || '0000';
-      const db = b.lastDoneDate || '0000';
-      return da < db ? -1 : da > db ? 1 : 0;
-    });
-    return avail[0];
+  // ── Utilidades ──────────────────────────────────────────────────────────
+
+  // Shuffle Fisher-Yates para aleatoriedad real
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
   }
 
-  // 1. Fixed missions always go first (but cap at TARGET)
+  // ¿Fue esta misión asignada ayer? (evitar repetición inmediata)
+  function usedYesterday(m){
+    return S.dailyAssigned && S.dailyAssigned.prevKey &&
+           Array.isArray(S.dailyAssigned.prevIds) &&
+           S.dailyAssigned.prevIds.includes(m.id);
+  }
+
+  // Selecciona una misión aleatoria del pool:
+  // Prioridad 1: misiones que NO se hicieron ayer
+  // Prioridad 2: misiones que no se completaron hoy (lastDoneDate !== todayISO)
+  // Prioridad 3: cualquier disponible (si el pool es muy pequeño)
+  function pickRandom(pool, used){
+    const avail = pool.filter(m => !used.has(m.id));
+    if(!avail.length) return null;
+    // Excluir las de ayer si hay alternativas
+    const notYesterday = avail.filter(m => !usedYesterday(m));
+    const candidates = notYesterday.length ? notYesterday : avail;
+    // Excluir las ya completadas hoy si hay alternativas
+    const notDoneToday = candidates.filter(m => m.lastDoneDate !== todayISO);
+    const final = notDoneToday.length ? notDoneToday : candidates;
+    // Elegir aleatoriamente del set final
+    return shuffle(final)[0];
+  }
+
+  const assigned = { key: todayKey, ids: [], prevKey: S.dailyAssigned?.key||null, prevIds: S.dailyAssigned?.ids||[] };
+  const used = new Set();
+
+  // ── Paso 1: Misiones fijas (siempre aparecen, hasta llenar TARGET) ──────
+  const TARGET = 4;
   S.missions.filter(m=>m.fixed).forEach(m=>{
     if(assigned.ids.length < TARGET && !used.has(m.id)){
       assigned.ids.push(m.id);
@@ -1861,41 +2403,35 @@ function assignDailyMissions(){
     }
   });
 
-  // 2. Try to fill one slot per DAILY_CAT (rotating, least-recently-done)
-  DAILY_CATS.forEach(cat=>{
+  // ── Paso 2: Una misión aleatoria por cada DAILY_CAT ──────────────────────
+  // Orden aleatorio de categorías para que no siempre aparezca en el mismo orden
+  const catOrder = shuffle(DAILY_CATS.slice());
+  catOrder.forEach(cat=>{
     if(assigned.ids.length >= TARGET) return;
-    // skip if a fixed mission already covers this category
+    // No duplicar si una misión fija ya cubre esta categoría
     if(S.missions.some(m=>m.fixed && m.cat===cat && used.has(m.id))) return;
     const pool = S.missions.filter(m=>m.cat===cat && !m.fixed);
-    const pick = pickBest(pool);
+    const pick = pickRandom(pool, used);
     if(pick){ assigned.ids.push(pick.id); used.add(pick.id); }
   });
 
-  // 3. If still under TARGET, pull from ANY remaining non-fixed missions (any category)
-  //    sorted by least-recently-done to keep variety
+  // ── Paso 3: Si faltan slots, rellenar de cualquier categoría (aleatoriamente) ──
   if(assigned.ids.length < TARGET){
-    const remaining = S.missions
-      .filter(m=>!m.fixed && !used.has(m.id))
-      .sort((a,b)=>{
-        const da = a.lastDoneDate || '0000';
-        const db = b.lastDoneDate || '0000';
-        return da < db ? -1 : da > db ? 1 : 0;
-      });
-    for(const m of remaining){
+    const remaining = shuffle(S.missions.filter(m=>!m.fixed && !used.has(m.id)));
+    // Preferir las que no se hicieron ayer
+    const notYest = remaining.filter(m=>!usedYesterday(m));
+    const pool3 = notYest.length ? notYest : remaining;
+    for(const m of pool3){
       if(assigned.ids.length >= TARGET) break;
-      assigned.ids.push(m.id);
-      used.add(m.id);
+      assigned.ids.push(m.id); used.add(m.id);
     }
   }
 
-  // 4. If STILL under TARGET (very few missions), fill with fixed missions again
-  //    (cycle through all missions until we hit 4 or run out)
+  // ── Paso 4: Último recurso — cualquier misión restante ──────────────────
   if(assigned.ids.length < TARGET){
-    const all = S.missions.filter(m=>!used.has(m.id));
-    for(const m of all){
+    for(const m of S.missions.filter(m=>!used.has(m.id))){
       if(assigned.ids.length >= TARGET) break;
-      assigned.ids.push(m.id);
-      used.add(m.id);
+      assigned.ids.push(m.id); used.add(m.id);
     }
   }
 
@@ -1907,6 +2443,36 @@ function getDailyMissions(){
   if(!S.dailyAssigned || !S.dailyAssigned.ids) return [];
   return S.dailyAssigned.ids.map(id=>S.missions.find(m=>m.id===id)).filter(Boolean);
 }
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §05 — RESET                                                            ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Maneja el ciclo diario: detecta cambio de día, actualiza   ║
+// ║  racha, aplica penalización, reinicia misiones y asigna las del día.   ║
+// ║                                                                          ║
+// ║  Funciones:                                                              ║
+// ║   · checkReset()                                                         ║
+// ║       Compara S.lastDate con getTodayKey().                             ║
+// ║       Si cambió (nuevo día):                                             ║
+// ║         — Verifica si el día anterior fue consecutivo → streak++        ║
+// ║         — Si no hubo XP ese día → streak = 0                           ║
+// ║         — Si misiones incompletas y hubo actividad → muestra #penbar   ║
+// ║           (auto-oculta en 10s)                                          ║
+// ║         — Resetea: m.done=false en todas, todayXP=0, claimed=false     ║
+// ║         — Llama assignDailyMissions() para el nuevo día                 ║
+// ║       Si NO cambió: solo llama assignDailyMissions() (idempotente).    ║
+// ║                                                                          ║
+// ║   · changeResetHour(delta)                                              ║
+// ║       Mueve S.resetHour ±1 hora (circular 0-23). Guarda y actualiza UI.║
+// ║                                                                          ║
+// ║   · updateResetUI()                                                      ║
+// ║       Sincroniza #resetHourLbl y #rhVal con S.resetHour actual.        ║
+// ║                                                                          ║
+// ║  HTML relacionado:                                                       ║
+// ║   · #penbar    — barra roja de penalización por misiones incompletas    ║
+// ║   · #resetHourLbl — label "RESET A LAS HH:00"                          ║
+// ║   · #rhVal     — valor numérico de la hora de reset                     ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 
 // ═══════════════════════════════════════════════════════
 // RESET
@@ -1964,6 +2530,32 @@ function updateResetUI(){
   const rv=document.getElementById('rhVal');
   if(rv)rv.textContent=s;
 }
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §06 — XP / LEVEL SYSTEM                                                ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Gestiona la ganancia/pérdida de XP, subida de nivel y      ║
+// ║  cálculo del rango actual del jugador.                                  ║
+// ║                                                                          ║
+// ║  Funciones:                                                              ║
+// ║   · gainXP(amt)                                                          ║
+// ║       Suma amt a totalXP, todayXP y curXP.                             ║
+// ║       amt negativo: nunca baja totalXP por debajo de 0.                 ║
+// ║       Loop de nivel: mientras curXP >= nextXP → lvl++,                 ║
+// ║         curXP -= nextXP, nextXP = floor(nextXP * 1.42), doFlash().     ║
+// ║       Si curXP queda negativo tras restar, se fuerza a 0.              ║
+// ║                                                                          ║
+// ║   · doFlash()                                                            ║
+// ║       Añade clase 'show' a #lvlf (overlay de subida de nivel) 700ms.  ║
+// ║       Llama notif() con el nuevo nivel alcanzado.                       ║
+// ║                                                                          ║
+// ║   · getRank() → string                                                  ║
+// ║       Itera PRANK (§01) y devuelve el rango más alto que S.lvl supera. ║
+// ║       Ej: lvl 12 → 'RANGO C', lvl 50 → 'RANGO S'.                    ║
+// ║                                                                          ║
+// ║  Fórmula de escalado: nextXP crece x1.42 por nivel (≈ exponencial).   ║
+// ║  HTML relacionado: #lvlf (flash overlay), #plvlnum (número de nivel)   ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 
 // ═══════════════════════════════════════════════════════
 // XP / NIVEL
@@ -2305,14 +2897,16 @@ function render(){
   updateMinBalStatus();
   updateResetUI();
   updateClassUI();
-  // ── Always render tabs that users navigate quickly between ──
+  // ── Misiones siempre (tab por defecto, datos críticos) ──
   renderDailyMissions();
-  renderAllQuests();
-  renderShop();
-  renderInventory();
-  // ── Perfil tab is expensive (SVG radar) — only render when visible ──
+  // ── Renders condicionales por tab activo ──
   const activeTab = S.activeTab || 'missions';
-  if(activeTab === 'perfil') renderPerfil();
+  if(activeTab === 'missions')   renderAllQuests();
+  if(activeTab === 'shop')       renderShop();
+  if(activeTab === 'inventory')  renderInventory();
+  if(activeTab === 'perfil')     renderPerfil();
+  if(activeTab === 'dinero')     renderFinTab();
+  // ── Mood siempre visible en el tab de misiones ──
   renderMoodWidget();
 }
 
@@ -2355,7 +2949,10 @@ function renderMissionCard(m, fromDaily){
         ${m.fixed?'<span class="fixed-badge">FIJA</span>':''}
         <div class="mactions">
           <button class="act-btn edit" onclick="startEditMission('${m.id}',event)">✏</button>
-          <button class="act-btn del" onclick="delMission('${m.id}',event)">✕</button>
+          ${fromDaily
+            ? `<button class="act-btn del" onclick="swapDailyMission('${m.id}',event)" title="Cambiar por otra misión aleatoria">✕</button>`
+            : `<button class="act-btn del" onclick="startEditMission('${m.id}',event)" title="Cambiar misión">✕</button>`
+          }
         </div>
       </div>
     </div>
@@ -2397,6 +2994,7 @@ function renderMissionCard(m, fromDaily){
     <div class="ie-btns">
       <button class="ie-btn ok" onclick="saveEditMission('${m.id}')">✓ GUARDAR</button>
       <button class="ie-btn ko" onclick="cancelEditMission()">✕ CANCELAR</button>
+      <button class="ie-btn" style="border-color:rgba(255,70,102,.4);color:var(--danger);flex:0.7;" onclick="delMission('${m.id}',event)">🗑 ELIMINAR</button>
     </div>
   </div>
 </div>`;
@@ -2422,9 +3020,34 @@ function renderAllQuests(){
   el.innerHTML=list.map(m=>renderMissionCard(m,false)).join('');
 }
 
-// ═══════════════════════════════════════════════════════
-// MISSION ACTIONS
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §13 — MISSION ACTIONS                                                  ║
+// ╠══════════════════════════════════════════════════════════════════════════╣
+// ║  Propósito: Contiene toda la lógica de interacción sobre misiones:      ║
+// ║  marcar/desmarcar, editar inline, eliminar y reclamar recompensa.       ║
+// ║                                                                          ║
+// ║  ⚠ COMPORTAMIENTO DEL BOTÓN ✕:                                          ║
+// ║    · En "MISIONES FIJAS HOY" (fromDaily=true):                          ║
+// ║        ✕ llama swapDailyMission() — cambia esa misión por otra          ║
+// ║        aleatoria de la misma categoría, sin borrarla del banco.         ║
+// ║    · En "BANCO DE MISIONES" (fromDaily=false):                          ║
+// ║        ✕ abre el editor inline igual que ✏.                            ║
+// ║        El botón 🗑 ELIMINAR aparece dentro del editor.                  ║
+// ║                                                                          ║
+// ║  Funciones:                                                              ║
+// ║   · getTodayISODate()       → fecha local YYYY-MM-DD con resetHour     ║
+// ║   · logDailyMission(cat,xp,add) → actualiza S.dailyLog                 ║
+// ║   · toggle(id)              → marca/desmarca, ajusta XP y catCounts     ║
+// ║   · startEditMission(id,e)  → activa modo edición inline                ║
+// ║   · cancelEditMission()     → cierra editor sin guardar                 ║
+// ║   · saveEditMission(id)     → guarda cambios del editor inline          ║
+// ║   · delMission(id,e)        → elimina con confirm() — desde editor      ║
+// ║   · claimDaily()            → bonus diario si todo completado           ║
+// ║   · swapDailyMission(id,e)  → sustituye la misión del día por otra     ║
+// ║                               aleatoria de la misma categoría           ║
+// ║                                                                          ║
+// ║  HTML relacionado: .mcard, .inline-edit, .mchk, #claimbtn              ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
 function getTodayISODate(){
   const now = new Date();
   const rh = S.resetHour||0;
@@ -2465,7 +3088,7 @@ function toggle(id){
     logDailyMission(m.cat, m.xp||XPR[m.rank]||50, false);
   } else {
     m.done=true;
-    m.lastDoneDate=new Date().toDateString();
+    m.lastDoneDate=getTodayISODate(); // ISO YYYY-MM-DD para comparación exacta
     gainXP(m.xp||XPR[m.rank]||50);
     S.totalComp++;
     if(!S.catCounts) S.catCounts={};
@@ -2513,6 +3136,67 @@ function claimDaily(){
   const bonus=Math.floor(60*(1+S.streak*0.12));
   gainXP(bonus); S.claimed=true; save(); render();
   notif('◈ RECOMPENSA DIARIA: +'+bonus+' XP BONUS ◈');
+}
+
+// ═══════════════════════════════════════════════════════
+// SWAP DAILY MISSION — Cambia una misión del día por otra
+// aleatoria de la misma categoría (sin eliminarla del banco).
+// Llamada desde el botón ✕ en las tarjetas de misiones fijas.
+// ═══════════════════════════════════════════════════════
+function swapDailyMission(id, e){
+  e.stopPropagation();
+  if(!S.dailyAssigned || !S.dailyAssigned.ids) return;
+
+  const current = S.missions.find(m => m.id === id);
+  if(!current) return;
+
+  // Si la misión ya fue completada hoy, no permitir el cambio
+  if(current.done){
+    notif('⚠ NO PUEDES CAMBIAR UNA MISIÓN YA COMPLETADA');
+    return;
+  }
+
+  // IDs ya asignados hoy (para no repetir)
+  const assignedIds = new Set(S.dailyAssigned.ids);
+
+  // Candidatos: misma categoría, no asignada hoy, no completada hoy, no es la misma
+  const todayISO = getTodayISODate();
+  let candidates = S.missions.filter(m =>
+    m.id !== id &&
+    m.cat === current.cat &&
+    !assignedIds.has(m.id) &&
+    m.lastDoneDate !== todayISO
+  );
+
+  // Si no hay de la misma categoría, buscar de cualquier categoría no asignada
+  if(!candidates.length){
+    candidates = S.missions.filter(m =>
+      m.id !== id &&
+      !assignedIds.has(m.id) &&
+      m.lastDoneDate !== todayISO
+    );
+  }
+
+  // Último recurso: cualquier misión no asignada (aunque esté completada hoy)
+  if(!candidates.length){
+    candidates = S.missions.filter(m => m.id !== id && !assignedIds.has(m.id));
+  }
+
+  if(!candidates.length){
+    notif('⚠ NO HAY OTRAS MISIONES DISPONIBLES PARA ROTAR');
+    return;
+  }
+
+  // Elegir aleatoriamente entre los candidatos
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+
+  // Reemplazar en el array de IDs asignados
+  const idx = S.dailyAssigned.ids.indexOf(id);
+  if(idx !== -1) S.dailyAssigned.ids[idx] = pick.id;
+
+  save();
+  render();
+  notif('🔀 MISIÓN CAMBIADA → ' + pick.name);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2914,21 +3598,75 @@ function setFont(size){
 }
 
 // ═══════════════════════════════════════════════════════
+// §17b  CONTROLES INLINE DE LA PLAYER CARD
+// ─────────────────────────────────────────────────────────
+// pcardToggleName() → muestra/oculta el campo de nombre inline en la tarjeta
+// pcardSaveName()   → guarda el nombre sin abrir el tab de configuración
+//
+// El formulario vive en #pcardNameForm (dentro de la player card).
+// Al guardar llama a save() + render() igual que saveName() en config.
+// ═══════════════════════════════════════════════════════
+function pcardToggleName(){
+  const form = document.getElementById('pcardNameForm');
+  const btn  = document.getElementById('pcardNameBtn');
+  if(!form) return;
+  const open = form.style.display === 'none' || form.style.display === '';
+  form.style.display = open ? 'flex' : 'none';
+  if(open){
+    const inp = document.getElementById('pcardNameInp');
+    if(inp){ inp.value = S.name || ''; inp.focus(); inp.select(); }
+    if(btn) btn.style.borderColor = 'rgba(240,192,64,.7)';
+  } else {
+    if(btn) btn.style.borderColor = '';
+  }
+}
+
+function pcardSaveName(){
+  const inp = document.getElementById('pcardNameInp');
+  if(!inp) return;
+  const v = inp.value.trim().toUpperCase();
+  if(!v){ notif('⚠ Escribe un nombre'); return; }
+  S.name = v;
+  save();
+  render();
+  pcardToggleName();
+  notif('✓ NOMBRE ACTUALIZADO — ' + v);
+}
+
+// ═══════════════════════════════════════════════════════
 // TABS
 // ═══════════════════════════════════════════════════════
 function switchTab(tab){
-  const tabs=['missions','allquests','shop','inventory','perfil','dinero','config'];
+  // redirect legacy 'allquests' calls → open missions + expand bank
+  if(tab === 'allquests'){ switchTab('missions'); toggleAllQuests(true); return; }
+  const tabs=['missions','shop','inventory','perfil','dinero'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
   document.querySelectorAll('.tabcontent').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
-  if(tab==='perfil') renderPerfil();
-  if(tab==='config') renderAchievEditor();
-  if(tab==='dinero'){ renderFinTab(); }
+  // Render each tab on demand
+  if(tab==='missions')   renderAllQuests();
+  if(tab==='shop')       renderShop();
+  if(tab==='inventory')  renderInventory();
+  if(tab==='perfil')     renderPerfil();
+  if(tab==='config')     renderAchievEditor();
+  if(tab==='dinero')     renderFinTab();
   // Persist active tab only when it actually changes
   if(S && S.activeTab !== tab){
     S.activeTab = tab;
     save();
   }
+}
+
+function toggleAllQuests(forceOpen){
+  const panel = document.getElementById('allQuestsPanel');
+  const btn   = document.getElementById('allQuestsToggleBtn');
+  if(!panel) return;
+  const isOpen = panel.style.display !== 'none';
+  const open   = forceOpen !== undefined ? forceOpen : !isOpen;
+  panel.style.display = open ? 'block' : 'none';
+  btn.textContent = open ? '−' : '+';
+  btn.style.borderColor = open ? 'rgba(0,170,255,0.7)' : 'rgba(0,170,255,0.4)';
+  if(open) renderAllQuests();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3316,6 +4054,12 @@ const FIN_CAT_LABELS = {
   ocio:'Ocio', compras:'Compras', educacion:'Educación',
   hogar:'Hogar', otro:'Otro', ingreso:'Ingreso'
 };
+// Emojis para usar en la gráfica "HOY" en lugar de texto recortado
+const FIN_CAT_EMOJI = {
+  comida:'🍔', transporte:'🚌', salud:'💊',
+  ocio:'🎮', compras:'🛒', educacion:'📚',
+  hogar:'🏠', otro:'📦', ingreso:'💵'
+};
 const FIN_CAT_COLORS = {
   comida:'#f0c040', transporte:'#60a5fa', salud:'#4ade80',
   ocio:'#c084fc', compras:'#ff6b35', educacion:'#a855f7',
@@ -3323,9 +4067,9 @@ const FIN_CAT_COLORS = {
 };
 
 function formatCOP(n){
-  if(n>=1000000) return '$'+(n/1000000).toFixed(1)+'M';
-  if(n>=1000) return '$'+(n/1000).toFixed(0)+'K';
-  return '$'+n.toLocaleString('es-CO');
+  // Siempre valor exacto, sin abreviaciones K/M — requisito de precisión
+  const abs = Math.abs(Math.round(n));
+  return (n < 0 ? '-$' : '$') + abs.toLocaleString('es-CO');
 }
 
 function setFinPeriod(p){
@@ -3449,7 +4193,7 @@ function renderFinChartBars(txs, period){
     const maxC = cats[0][1];
     el.innerHTML = cats.map(([cat,amt])=>`
       <div class="fin-bar-row">
-        <div class="fin-bar-lbl">${(FIN_CAT_LABELS[cat]||cat).slice(0,6).toUpperCase()}</div>
+        <div class="fin-bar-lbl" title="${FIN_CAT_LABELS[cat]||cat}">${FIN_CAT_EMOJI[cat]||'📦'}</div>
         <div class="fin-bar-track"><div class="fin-bar-fill-exp" style="width:${Math.round(amt/maxC*100)}%"></div></div>
         <div class="fin-bar-val">${formatCOP(amt)}</div>
       </div>`).join('');
@@ -3486,7 +4230,7 @@ function renderFinCatChart(txs){
     const col = FIN_CAT_COLORS[cat]||'#60a5fa';
     const pct = Math.round(amt/total*100);
     return `<div class="fin-bar-row">
-      <div class="fin-bar-lbl" style="width:56px;font-size:8px;">${(FIN_CAT_LABELS[cat]||cat).slice(0,7).toUpperCase()}</div>
+      <div class="fin-bar-lbl" style="width:56px;font-size:8px;" title="${FIN_CAT_LABELS[cat]||cat}">${FIN_CAT_EMOJI[cat]||'📦'} ${(FIN_CAT_LABELS[cat]||cat).slice(0,5).toUpperCase()}</div>
       <div class="fin-bar-track"><div style="height:100%;background:${col};width:${Math.round(amt/maxC*100)}%;transition:width .7s;"></div></div>
       <div class="fin-bar-val" style="color:${col};width:68px;">${formatCOP(amt)} <span style="color:var(--muted);font-size:7px;">${pct}%</span></div>
     </div>`;
@@ -3513,7 +4257,7 @@ function renderFinTab(){
   if(incEl) incEl.textContent = formatCOP(income);
   if(expEl) expEl.textContent = formatCOP(expense);
   if(balEl){
-    balEl.textContent = (balance<0?'-':'')+formatCOP(Math.abs(balance));
+    balEl.textContent = formatCOP(balance);
     balEl.style.color = balance<0?'var(--danger)':balance>0?'var(--green)':'var(--bright)';
   }
 
@@ -3643,8 +4387,8 @@ if(savedUser){
   shopPeriod    = S.shopPeriod    || 'day';
   currentPeriod = S.profilePeriod || 'week';
   finPeriod     = S.finPeriod     || 'day';
-  document.getElementById('userBar').style.display='flex';
-  document.getElementById('userBarName').textContent=savedUser.toUpperCase();
+  // userBar removed — controls now in player card
+  // userBarName removed — name shown via render() in #pname
   // Restaurar tamaño de fuente
   const savedFont=parseInt(localStorage.getItem(getUserKey(savedUser)+'_font'));
   if(savedFont){ currentFontSize=savedFont; setFont(savedFont); }
