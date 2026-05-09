@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/cards.css">
   <link rel="stylesheet" href="css/modals.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="gridbg"></div>
@@ -128,6 +129,7 @@
     <button class="tab" onclick="switchTab('shop')"><span class="txt-short">🛒</span><span class="txt-full">TIENDA</span></button>
     <button class="tab" onclick="switchTab('inventory')"><span class="txt-short">📦</span><span class="txt-full">INVENTARIO</span></button>
     <button class="tab" onclick="switchTab('dinero')">💰<span class="txt-full"> DINERO</span></button>
+    <button class="tab" onclick="switchTab('datos')">💾<span class="txt-full"> DATOS</span></button>
   </div>
   </div>
 
@@ -574,9 +576,94 @@
       <button class="fabtn" id="finAddBtn" onclick="addTransaction()" style="border-color:rgba(255,68,102,0.5);color:#ff6688;">+ REGISTRAR GASTO</button>
     </div>
 
+    <!-- Backup / Restore -->
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ COPIA DE SEGURIDAD</span><div class="sline"></div></div>
+    <div class="fin-backup-bar">
+      <button class="fin-backup-btn export" onclick="exportFinXLSX()">⬇ DESCARGAR XLSX</button>
+      <label class="fin-backup-btn import" title="Cargar respaldo .xlsx">⬆ CARGAR XLSX<input type="file" accept=".xlsx" style="display:none" onchange="importFinXLSX(this)"></label>
+    </div>
+    <div class="fin-backup-hint">Exporta todos tus movimientos por mes. Carga el archivo para restaurarlos en otro dispositivo.</div>
+
     <!-- Transaction list -->
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ MOVIMIENTOS DEL PERÍODO</span><div class="sline"></div></div>
     <div id="finTxList"><div class="fin-empty">Sin movimientos registrados.</div></div>
+  </div>
+
+  <!-- TAB: DATOS -->
+  <div class="tabcontent" id="tab-datos">
+    <div class="bk-hero">
+      <div class="bk-hero-icon">💾</div>
+      <div class="bk-hero-title">SISTEMA DE DATOS</div>
+      <div class="bk-hero-sub">Respalda y restaura tu progreso. Sin servidores — todo local.</div>
+    </div>
+
+    <!-- JSON -->
+    <div class="bk-section">
+      <div class="bk-section-eyebrow">◈ MIGRACIÓN DE DISPOSITIVO</div>
+      <div class="bk-section-title">Respaldo JSON</div>
+      <div class="bk-section-desc">Copia exacta de todo tu perfil: misiones, XP, nivel, racha, logros, inventario, finanzas y estado de ánimo. Usa este archivo para restaurar en otro navegador o dispositivo.</div>
+      <div class="bk-card">
+        <div class="bk-card-row">
+          <div class="bk-card-info">
+            <div class="bk-card-label">EXPORTAR</div>
+            <div class="bk-card-detail">Descarga un archivo <span class="bk-hl">.json</span> con todo tu progreso actual.</div>
+          </div>
+          <button class="bk-btn blue" onclick="exportBackupJSON()">⬇ DESCARGAR</button>
+        </div>
+      </div>
+      <div class="bk-card" style="margin-top:8px;">
+        <div class="bk-card-row">
+          <div class="bk-card-info">
+            <div class="bk-card-label">RESTAURAR</div>
+            <div class="bk-card-detail">Carga un <span class="bk-hl">.json</span> exportado para recuperar tu progreso.</div>
+          </div>
+          <label class="bk-btn green">⬆ CARGAR<input type="file" accept=".json" style="display:none" onchange="importBackupJSON(this)"></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- XLSX completo -->
+    <div class="bk-section">
+      <div class="bk-section-eyebrow">◈ INFORME COMPLETO</div>
+      <div class="bk-section-title">Exportar a Excel</div>
+      <div class="bk-section-desc">Genera un <span class="bk-hl">.xlsx</span> con 5 hojas: Resumen, Misiones, Finanzas, Inventario y Logros. Ideal para revisar tu progreso fuera de la app.</div>
+      <div class="bk-card">
+        <div class="bk-card-row">
+          <div class="bk-card-info">
+            <div class="bk-card-label">XLSX COMPLETO</div>
+            <div class="bk-card-detail">5 hojas · Todos los datos · Legible en Excel / Sheets.</div>
+          </div>
+          <button class="bk-btn purple" onclick="exportBackupXLSX()">📊 DESCARGAR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- XLSX finanzas -->
+    <div class="bk-section">
+      <div class="bk-section-eyebrow">◈ FINANZAS</div>
+      <div class="bk-section-title">Excel de Gastos e Ingresos</div>
+      <div class="bk-section-desc">Exporta o importa únicamente tus transacciones financieras. Una hoja por mes con totales automáticos.</div>
+      <div class="bk-card">
+        <div class="bk-card-row">
+          <div class="bk-card-info">
+            <div class="bk-card-label">EXPORTAR FINANZAS</div>
+            <div class="bk-card-detail">Descarga un <span class="bk-hl">.xlsx</span> con una hoja por mes.</div>
+          </div>
+          <button class="bk-btn blue" onclick="exportFinXLSX()">⬇ DESCARGAR</button>
+        </div>
+      </div>
+      <div class="bk-card" style="margin-top:8px;">
+        <div class="bk-card-row">
+          <div class="bk-card-info">
+            <div class="bk-card-label">IMPORTAR FINANZAS</div>
+            <div class="bk-card-detail">Carga un <span class="bk-hl">.xlsx</span> de finanzas exportado previamente.</div>
+          </div>
+          <label class="bk-btn green">⬆ CARGAR<input type="file" accept=".xlsx" style="display:none" onchange="importFinXLSX(this)"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="bk-footer">◈ Los datos solo existen en este navegador. Sin cuenta. Sin nube. Sin riesgo.</div>
   </div>
 
 </div><!-- end .wrap -->
@@ -878,6 +965,7 @@
   <script src="js/animations.js"></script>
   <script src="js/notifications.js"></script>
   <script src="js/effects.js"></script>
+  <script src="js/ui-backup.js"></script>
   <script src="js/ui-finance.js"></script>
   <script src="js/ui-utils.js"></script>
   <script src="js/ui-mood.js"></script>

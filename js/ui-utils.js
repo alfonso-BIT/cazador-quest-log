@@ -115,7 +115,7 @@ function switchTab(tab){
   // redirect legacy 'allquests' calls → open missions + expand bank
   if(tab === 'allquests'){ switchTab('missions'); toggleAllQuests(true); return; }
   // Only nav-bar tabs get the .active highlight (perfil and config use icon buttons)
-  const navTabs=['missions','shop','inventory','dinero'];
+  const navTabs=['missions','shop','inventory','dinero','datos'];
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',navTabs[i]===tab));
   document.querySelectorAll('.tabcontent').forEach(c=>c.classList.remove('active'));
   const tabEl = document.getElementById('tab-'+tab);
@@ -133,6 +133,7 @@ function switchTab(tab){
   if(tab==='perfil')     renderPerfil();
   if(tab==='config')     renderAchievEditor();
   if(tab==='dinero')     renderFinTab();
+  if(tab==='datos')      renderDatosTab();
   // Persist active tab only when it actually changes
   if(S && S.activeTab !== tab){
     S.activeTab = tab;

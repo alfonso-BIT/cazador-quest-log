@@ -267,3 +267,95 @@ function renderFinTxList(txs){
 // ═══════════════════════════════════════════════════════
 // mood 0=pésimo 1=mal 2=regular 3=bien 4=excelente
 // XP otorgado por registrar el ánimo (independiente del valor)
+
+// ── EXPORT / IMPORT XLSX ──────────────────────────────
+// exportFinXLSX — Genera un .xlsx con una hoja por mes.
+// Columnas: Fecha, Tipo, Categoría, Descripción, Monto.
+// Requiere SheetJS (xlsx.full.min.js).
+function exportFinXLSX(){
+  if(!S||!S.transactions||!S.transactions.length){notif('▸ SIN MOVIMIENTOS PARA EXPORTAR');return;}
+  const wb = XLSX.utils.book_new();
+  // Agrupar por año-mes
+  const months = {};
+  S.transactions.forEach(t=>{
+    const d = new Date(t.ts);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if(!months[key]) months[key]=[];
+    months[key].push(t);
+  });
+  // Ordenar meses cronológicamente
+  Object.keys(months).sort().forEach(key=>{
+    const rows = [['Fecha','Hora','Tipo','Categoría','Emoji','Descripción','Monto (COP)']];
+    months[key].sort((a,b)=>a.ts-b.ts).forEach(t=>{
+      const d=new Date(t.ts);
+      rows.push([
+        d.toLocaleDateString('es-CO'),
+        d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}),
+        t.type==='income'?'Ingreso':'Gasto',
+        FIN_CAT_LABELS[t.cat]||t.cat,
+        t.ico||'',
+        t.desc,
+        t.type==='income'?t.amt:-t.amt
+      ]);
+    });
+    // Fila de totales
+    const inc = months[key].filter(t=>t.type==='income').reduce((s,t)=>s+t.amt,0);
+    const exp = months[key].filter(t=>t.type==='expense').reduce((s,t)=>s+t.amt,0);
+    rows.push([]);
+    rows.push(['','','','','','INGRESOS',inc]);
+    rows.push(['','','','','','GASTOS',-exp]);
+    rows.push(['','','','','','BALANCE',inc-exp]);
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols']=[{wch:12},{wch:8},{wch:10},{wch:14},{wch:6},{wch:32},{wch:16}];
+    // Nombre de hoja: "2025-05 Mayo"
+    const [y,m]=key.split('-');
+    const mName=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][+m];
+    XLSX.utils.book_append_sheet(wb, ws, `${key} ${mName}`);
+  });
+  XLSX.writeFile(wb, `cazador-finanzas-${new Date().toISOString().slice(0,10)}.xlsx`);
+  notif('⬇ XLSX DESCARGADO — ' + Object.keys(months).length + ' MES(ES)');
+}
+
+// importFinXLSX — Lee un .xlsx exportado y restaura transacciones.
+// Combina con las existentes sin duplicar (por id).
+function importFinXLSX(input){
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const wb = XLSX.read(e.target.result,{type:'array'});
+      const imported=[];
+      wb.SheetNames.forEach(sName=>{
+        const ws=wb.Sheets[sName];
+        const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        // Saltar cabecera y filas de totales (sin fecha válida)
+        rows.slice(1).forEach((r,i)=>{
+          const dateStr=r[0], timeStr=r[1], tipo=r[2], cat=r[3], ico=r[4], desc=r[5], monto=r[6];
+          if(!dateStr||!desc||monto===''||isNaN(+monto)||tipo==='') return;
+          if(!['Ingreso','Gasto'].includes(tipo)) return;
+          const amt=Math.abs(+monto);
+          if(amt<=0) return;
+          // Reconstruir timestamp aproximado desde fecha local
+          const parts=String(dateStr).split('/');
+          let ts;
+          if(parts.length===3) ts=new Date(+parts[2],+parts[1]-1,+parts[0]).getTime();
+          else ts=Date.now();
+          const id='imp_'+sName.replace(/\s/g,'_')+'_'+i;
+          imported.push({id,desc:String(desc),amt,type:tipo==='Ingreso'?'income':'expense',
+            cat:Object.keys(FIN_CAT_LABELS).find(k=>FIN_CAT_LABELS[k]===cat)||'otro',
+            ico:String(ico)||'💸',ts,date:new Date(ts).toISOString().slice(0,10)});
+        });
+      });
+      if(!imported.length){notif('▸ NO SE ENCONTRARON MOVIMIENTOS VÁLIDOS');input.value='';return;}
+      if(!S.transactions) S.transactions=[];
+      const existingIds=new Set(S.transactions.map(t=>t.id));
+      const news=imported.filter(t=>!existingIds.has(t.id));
+      S.transactions=[...S.transactions,...news];
+      if(!S.nTid) S.nTid=1;
+      save(); renderWithFlash();
+      notif('⬆ IMPORTADOS: '+news.length+' MOVIMIENTOS NUEVOS');
+    }catch(err){notif('▸ ERROR AL LEER EL ARCHIVO');}
+    input.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
