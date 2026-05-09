@@ -1793,12 +1793,11 @@ function importTemplates(){
     const exists = S.missions.some(m=>m.name===name);
     if(!exists){
       S.missions.push({
-        id: 'm'+S.nMid++,
+        id: S.nMid++,
         name, desc, cat, rank,
         xp: XPR[rank] || 30,
         fixed,
         done: false,
-        createdDate: new Date().toLocaleDateString('es-CO',{year:'numeric',month:'2-digit',day:'2-digit'}),
         lastDoneDate: null
       });
       added++;
