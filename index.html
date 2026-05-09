@@ -93,6 +93,7 @@
           <div class="pcard-icon-actions">
             <button class="pcard-icon-btn" onclick="switchTab('config')" title="⚙️ Ajustes — Configurar misiones, tienda y rangos">⚙️</button>
             <button class="pcard-icon-btn" onclick="switchTab('perfil')" title="📊 Perfil — Estadísticas, radar y logros">📊</button>
+            <button class="pcard-icon-btn" onclick="switchTab('datos')" title="💾 Datos — Respaldo y exportación">💾</button>
           </div>
         </div>
 
@@ -129,7 +130,6 @@
     <button class="tab" onclick="switchTab('shop')"><span class="txt-short">🛒</span><span class="txt-full">TIENDA</span></button>
     <button class="tab" onclick="switchTab('inventory')"><span class="txt-short">📦</span><span class="txt-full">INVENTARIO</span></button>
     <button class="tab" onclick="switchTab('dinero')">💰<span class="txt-full"> DINERO</span></button>
-    <button class="tab" onclick="switchTab('datos')">💾<span class="txt-full"> DATOS</span></button>
   </div>
   </div>
 
@@ -577,13 +577,6 @@
     </div>
 
     <!-- Backup / Restore -->
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ COPIA DE SEGURIDAD</span><div class="sline"></div></div>
-    <div class="fin-backup-bar">
-      <button class="fin-backup-btn export" onclick="exportFinXLSX()">⬇ DESCARGAR XLSX</button>
-      <label class="fin-backup-btn import" title="Cargar respaldo .xlsx">⬆ CARGAR XLSX<input type="file" accept=".xlsx" style="display:none" onchange="importFinXLSX(this)"></label>
-    </div>
-    <div class="fin-backup-hint">Exporta todos tus movimientos por mes. Carga el archivo para restaurarlos en otro dispositivo.</div>
-
     <!-- Transaction list -->
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ MOVIMIENTOS DEL PERÍODO</span><div class="sline"></div></div>
     <div id="finTxList"><div class="fin-empty">Sin movimientos registrados.</div></div>
@@ -597,16 +590,20 @@
       <div class="bk-hero-sub">Respalda y restaura tu progreso. Sin servidores — todo local.</div>
     </div>
 
-    <!-- JSON -->
+    <!-- JSON: cambiar de dispositivo -->
     <div class="bk-section">
-      <div class="bk-section-eyebrow">◈ MIGRACIÓN DE DISPOSITIVO</div>
-      <div class="bk-section-title">Respaldo JSON</div>
-      <div class="bk-section-desc">Copia exacta de todo tu perfil: misiones, XP, nivel, racha, logros, inventario, finanzas y estado de ánimo. Usa este archivo para restaurar en otro navegador o dispositivo.</div>
+      <div class="bk-section-eyebrow">◈ PASO A PASO — CAMBIAR DE DISPOSITIVO</div>
+      <div class="bk-section-title">Respaldo Completo (JSON)</div>
+      <div class="tip-block">
+        <span class="tip-base">¿Qué es esto?</span>
+        <button class="tip-toggle" onclick="tipToggle(this)">ⓘ VER EXPLICACIÓN</button>
+        <div class="tip-detail">El sistema guarda todo tu progreso en este navegador. Si cambias de celular, computador o navegador, perderías todo — a menos que lo respaldes aquí.<br><br>Este botón crea un archivo <strong style="color:var(--blue)">.json</strong> (como una foto de tu perfil). Guárdalo en tu galería, Google Drive o WhatsApp contigo mismo. Cuando lo necesites, cárgalo con el botón "RESTAURAR" y todo volverá exactamente igual.</div>
+      </div>
       <div class="bk-card">
         <div class="bk-card-row">
           <div class="bk-card-info">
-            <div class="bk-card-label">EXPORTAR</div>
-            <div class="bk-card-detail">Descarga un archivo <span class="bk-hl">.json</span> con todo tu progreso actual.</div>
+            <div class="bk-card-label">① GUARDAR MIS DATOS</div>
+            <div class="bk-card-detail">Toca aquí para descargar tu respaldo. Guarda ese archivo en un lugar seguro.</div>
           </div>
           <button class="bk-btn blue" onclick="exportBackupJSON()">⬇ DESCARGAR</button>
         </div>
@@ -614,24 +611,32 @@
       <div class="bk-card" style="margin-top:8px;">
         <div class="bk-card-row">
           <div class="bk-card-info">
-            <div class="bk-card-label">RESTAURAR</div>
-            <div class="bk-card-detail">Carga un <span class="bk-hl">.json</span> exportado para recuperar tu progreso.</div>
+            <div class="bk-card-label">② RESTAURAR EN OTRO DISPOSITIVO</div>
+            <div class="bk-card-detail">En el nuevo dispositivo, abre la app y toca aquí para seleccionar el archivo que descargaste.</div>
           </div>
           <label class="bk-btn green">⬆ CARGAR<input type="file" accept=".json" style="display:none" onchange="importBackupJSON(this)"></label>
         </div>
+      </div>
+      <div class="tip-block" style="margin-top:10px;">
+        <button class="tip-toggle" onclick="tipToggle(this)">⚠ ¿QUÉ PASA AL RESTAURAR?</button>
+        <div class="tip-detail">Al cargar un archivo de respaldo, tus datos actuales se reemplazarán con los del archivo. Si ya tienes progreso en este dispositivo y no quieres perderlo, descárgalo primero con el botón ① antes de restaurar.</div>
       </div>
     </div>
 
     <!-- XLSX completo -->
     <div class="bk-section">
-      <div class="bk-section-eyebrow">◈ INFORME COMPLETO</div>
-      <div class="bk-section-title">Exportar a Excel</div>
-      <div class="bk-section-desc">Genera un <span class="bk-hl">.xlsx</span> con 5 hojas: Resumen, Misiones, Finanzas, Inventario y Logros. Ideal para revisar tu progreso fuera de la app.</div>
+      <div class="bk-section-eyebrow">◈ VER TU PROGRESO EN EXCEL</div>
+      <div class="bk-section-title">Informe Completo (Excel)</div>
+      <div class="tip-block">
+        <span class="tip-base">¿Para qué sirve?</span>
+        <button class="tip-toggle" onclick="tipToggle(this)">ⓘ VER EXPLICACIÓN</button>
+        <div class="tip-detail">Genera un archivo de Excel (.xlsx) con 5 hojas:<br><br>📋 <strong>Resumen</strong> — nivel, XP, balance general<br>⚔️ <strong>Misiones</strong> — todas tus misiones y su estado<br>💰 <strong>Finanzas</strong> — todos tus movimientos de dinero<br>📦 <strong>Inventario</strong> — objetos de tienda y canjeados<br>🏆 <strong>Logros</strong> — logros obtenidos y pendientes<br><br>Puedes abrirlo con Excel, Google Sheets o Numbers.</div>
+      </div>
       <div class="bk-card">
         <div class="bk-card-row">
           <div class="bk-card-info">
-            <div class="bk-card-label">XLSX COMPLETO</div>
-            <div class="bk-card-detail">5 hojas · Todos los datos · Legible en Excel / Sheets.</div>
+            <div class="bk-card-label">DESCARGAR INFORME COMPLETO</div>
+            <div class="bk-card-detail">Crea un Excel con todo tu historial. No borra ni cambia nada en la app.</div>
           </div>
           <button class="bk-btn purple" onclick="exportBackupXLSX()">📊 DESCARGAR</button>
         </div>
@@ -640,14 +645,18 @@
 
     <!-- XLSX finanzas -->
     <div class="bk-section">
-      <div class="bk-section-eyebrow">◈ FINANZAS</div>
-      <div class="bk-section-title">Excel de Gastos e Ingresos</div>
-      <div class="bk-section-desc">Exporta o importa únicamente tus transacciones financieras. Una hoja por mes con totales automáticos.</div>
+      <div class="bk-section-eyebrow">◈ SOLO GASTOS E INGRESOS</div>
+      <div class="bk-section-title">Excel de Finanzas</div>
+      <div class="tip-block">
+        <span class="tip-base">¿Cuándo usarlo?</span>
+        <button class="tip-toggle" onclick="tipToggle(this)">ⓘ VER EXPLICACIÓN</button>
+        <div class="tip-detail">Si solo quieres exportar o importar tus movimientos de dinero (sin tocar misiones, XP ni logros), usa esta opción.<br><br>El archivo tendrá una hoja por cada mes con tus gastos e ingresos organizados. También puedes cargar un Excel de finanzas descargado antes para recuperar movimientos sin afectar el resto de tu progreso.</div>
+      </div>
       <div class="bk-card">
         <div class="bk-card-row">
           <div class="bk-card-info">
             <div class="bk-card-label">EXPORTAR FINANZAS</div>
-            <div class="bk-card-detail">Descarga un <span class="bk-hl">.xlsx</span> con una hoja por mes.</div>
+            <div class="bk-card-detail">Descarga solo tus gastos e ingresos, organizados por mes.</div>
           </div>
           <button class="bk-btn blue" onclick="exportFinXLSX()">⬇ DESCARGAR</button>
         </div>
@@ -656,7 +665,7 @@
         <div class="bk-card-row">
           <div class="bk-card-info">
             <div class="bk-card-label">IMPORTAR FINANZAS</div>
-            <div class="bk-card-detail">Carga un <span class="bk-hl">.xlsx</span> de finanzas exportado previamente.</div>
+            <div class="bk-card-detail">Carga un Excel de finanzas exportado antes. Los movimientos nuevos se agregan sin borrar los actuales.</div>
           </div>
           <label class="bk-btn green">⬆ CARGAR<input type="file" accept=".xlsx" style="display:none" onchange="importFinXLSX(this)"></label>
         </div>
