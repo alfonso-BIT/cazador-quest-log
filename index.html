@@ -4,16 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Daily Quest Log</title>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-
-  <!-- ═══════════════════════════════════════════════
-       MÓDULOS CSS
-       Orden: base → dashboard → cards → modals → responsive
-       ═══════════════════════════════════════════ -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/cards.css">
@@ -865,33 +858,12 @@
 </div>
 
 
-  <!-- ═══════════════════════════════════════════════
-       MÓDULOS JS — orden de carga obligatorio
-       ═══════════════════════════════════════════ -->
-
-  <!-- §01 · Constantes globales: CLASSES, PRANK, XPR, DAILY_CATS, etc. -->
   <script src="js/constants.js"></script>
-
-  <!-- §02 · Almacenamiento: getUserKey, loadState, defaultState, save -->
-  <!-- ✅ CONGELADO — Sesión 2 -->
   <script src="js/storage.js"></script>
-
-  <!-- §03·§04·§05 · Auth, rotación diaria, reset -->
-  <!-- ✅ CONGELADO — Sesión 3 -->
   <script src="js/auth.js"></script>
-
-  <!-- §06·§07 · XP/Level system, detección de clase -->
   <script src="js/rewards.js"></script>
-
-  <!-- §08 · Morph / animación de avatar -->
   <script src="js/animations.js"></script>
-
-  <!-- §09 · Notificaciones (notif) -->
   <script src="js/notifications.js"></script>
-
-  <!-- §10–§22 · UI principal: render, misiones, tienda, inventario,
-       configuración, finanzas, perfil, mood, emoji picker, modal plantillas,
-       control de tabs y fuente, init IIFE -->
   <script src="js/ui.js"></script>
 
 </body>
