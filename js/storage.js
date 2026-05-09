@@ -30,6 +30,29 @@ function loadState(user){
         merged.shopXP = merged.totalXP || 0;
       }
       if(merged.xprConfig) XPR = merged.xprConfig;
+      // Migración: IDs de misión sin prefijo 'm' (versiones anteriores al fix)
+      // Garantiza que toggle(), delMission(), etc. siempre matcheen por string
+      let missionsMigrated = false;
+      merged.missions = merged.missions.map(m => {
+        if(typeof m.id === 'number' || (typeof m.id === 'string' && !m.id.startsWith('m'))) {
+          missionsMigrated = true;
+          return Object.assign({}, m, { id: 'm' + m.id });
+        }
+        return m;
+      });
+      // Migrar también los IDs en dailyAssigned.ids si los hay
+      if(missionsMigrated && merged.dailyAssigned && Array.isArray(merged.dailyAssigned.ids)) {
+        merged.dailyAssigned.ids = merged.dailyAssigned.ids.map(id =>
+          (typeof id === 'number' || (typeof id === 'string' && !String(id).startsWith('m')))
+            ? 'm' + id : id
+        );
+        if(Array.isArray(merged.dailyAssigned.prevIds)) {
+          merged.dailyAssigned.prevIds = merged.dailyAssigned.prevIds.map(id =>
+            (typeof id === 'number' || (typeof id === 'string' && !String(id).startsWith('m')))
+              ? 'm' + id : id
+          );
+        }
+      }
       return merged;
     }
   } catch(e){ console.warn('Error loading state:', e); }

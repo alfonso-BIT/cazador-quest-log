@@ -66,20 +66,24 @@ function render(){
 // ╚══════════════════════════════════════════════════════════════════════════╝
 function renderDailyMissions(){
   const el=document.getElementById('mlist');
+  if(!el) return;
   const daily=getDailyMissions();
+  const progtxt=document.getElementById('progtxt');
+  const cb=document.getElementById('claimbtn');
   if(!daily.length){
     el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:calc(12px * var(--fs-scale));letter-spacing:2px;">SIN MISIONES — AÑADE EN CONFIGURAR</div>';
-    document.getElementById('progtxt').textContent='0 / 0 misiones mínimas completadas';
-    document.getElementById('claimbtn').disabled=true;
+    if(progtxt) progtxt.textContent='0 / 0 misiones mínimas completadas';
+    if(cb) cb.disabled=true;
     return;
   }
   el.innerHTML=daily.map(m=>renderMissionCard(m,true)).join('');
   const done=daily.filter(m=>m.done).length;
-  document.getElementById('progtxt').textContent=done+' / '+daily.length+' misiones mínimas completadas';
+  if(progtxt) progtxt.textContent=done+' / '+daily.length+' misiones mínimas completadas';
   const allDone=daily.length>0&&daily.every(m=>m.done);
-  const cb=document.getElementById('claimbtn');
-  cb.disabled=!allDone||S.claimed;
-  cb.textContent=S.claimed?'◈ RECOMPENSA YA RECLAMADA HOY ◈':'◈ RECLAMAR RECOMPENSA DIARIA ◈';
+  if(cb){
+    cb.disabled=!allDone||S.claimed;
+    cb.textContent=S.claimed?'◈ RECOMPENSA YA RECLAMADA HOY ◈':'◈ RECLAMAR RECOMPENSA DIARIA ◈';
+  }
 }
 
 function renderMissionCard(m, fromDaily){
@@ -829,10 +833,18 @@ function setFont(size){
 function switchTab(tab){
   // redirect legacy 'allquests' calls → open missions + expand bank
   if(tab === 'allquests'){ switchTab('missions'); toggleAllQuests(true); return; }
-  const tabs=['missions','shop','inventory','perfil','dinero'];
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
+  // Only nav-bar tabs get the .active highlight (perfil and config use icon buttons)
+  const navTabs=['missions','shop','inventory','dinero'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',navTabs[i]===tab));
   document.querySelectorAll('.tabcontent').forEach(c=>c.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
+  const tabEl = document.getElementById('tab-'+tab);
+  if(tabEl) tabEl.classList.add('active');
+  // Icon buttons (⚙️ config, 📊 perfil) — highlight the active one
+  document.querySelectorAll('.pcard-icon-btn').forEach(btn=>{
+    const t = btn.getAttribute('onclick')||'';
+    const match = t.match(/switchTab\('(\w+)'\)/);
+    if(match) btn.classList.toggle('active-tab', match[1]===tab);
+  });
   // Render each tab on demand
   if(tab==='missions')   renderAllQuests();
   if(tab==='shop')       renderShop();
@@ -850,7 +862,7 @@ function switchTab(tab){
 function toggleAllQuests(forceOpen){
   const panel = document.getElementById('allQuestsPanel');
   const btn   = document.getElementById('allQuestsToggleBtn');
-  if(!panel) return;
+  if(!panel || !btn) return;
   const isOpen = panel.style.display !== 'none';
   const open   = forceOpen !== undefined ? forceOpen : !isOpen;
   panel.style.display = open ? 'block' : 'none';

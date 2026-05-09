@@ -48,7 +48,7 @@ function gainXP(amt){
 }
 function doFlash(){
   const f=document.getElementById('lvlf');
-  f.classList.add('show'); setTimeout(()=>f.classList.remove('show'),700);
+  if(f){ f.classList.add('show'); setTimeout(()=>f.classList.remove('show'),700); }
   notif('▸ ¡NIVEL ALCANZADO! — LV.'+S.lvl+' ◂');
 }
 function getRank(){

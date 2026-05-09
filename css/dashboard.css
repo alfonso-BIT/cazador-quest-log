@@ -140,3 +140,186 @@
 .tablet .device-banner-dot{background:#c084fc;}
 .desktop .device-banner-dot{background:#4ade80;}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(0.7);}}
+
+/* ═══════════════════════════════════════════════════════
+   CFG-SYS-BAR — Barra de controles de sistema (config tab)
+   Tamaño de texto + botón salir
+   ═══════════════════════════════════════════════════════ */
+.cfg-sys-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: rgba(0,20,50,0.7);
+  border: 1px solid rgba(0,170,255,0.25);
+  border-left: 3px solid var(--blue);
+  border-radius: 2px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+
+.cfg-sys-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.cfg-sys-lbl {
+  font-family: 'Orbitron', monospace;
+  font-size: calc(8px * var(--fs-scale));
+  letter-spacing: 2px;
+  color: var(--blue);
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(0,170,255,0.4);
+}
+
+.cfg-font-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,10,30,0.8);
+  border: 1px solid rgba(0,170,255,0.3);
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+
+.cfg-font-btn {
+  font-family: 'Orbitron', monospace;
+  font-size: calc(11px * var(--fs-scale));
+  font-weight: 700;
+  color: var(--blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: all .15s;
+  line-height: 1;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(0,170,255,0.6);
+}
+.cfg-font-btn:hover {
+  color: var(--bright);
+  text-shadow: 0 0 14px rgba(0,170,255,1);
+}
+
+.cfg-font-val {
+  font-family: 'Orbitron', monospace;
+  font-size: calc(10px * var(--fs-scale));
+  color: var(--bright);
+  min-width: 32px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.cfg-logout-btn {
+  font-family: 'Orbitron', monospace;
+  font-size: calc(8px * var(--fs-scale));
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--danger);
+  background: rgba(255,60,60,0.07);
+  border: 1px solid rgba(255,60,60,0.35);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-shadow: 0 0 8px rgba(255,60,60,0.4);
+}
+.cfg-logout-btn:hover {
+  background: rgba(255,60,60,0.18);
+  border-color: rgba(255,60,60,0.7);
+  color: #fff;
+  text-shadow: 0 0 14px rgba(255,60,60,0.9);
+  box-shadow: 0 0 12px rgba(255,60,60,0.25);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PCARD ICON BUTTONS — ⚙️ Config y 📊 Perfil
+   Botones de acceso rápido en la player card
+   ═══════════════════════════════════════════════════════ */
+.pcard-icon-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.pcard-icon-btn {
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 15, 40, 0.85);
+  border: 1px solid rgba(0, 170, 255, 0.28);
+  color: var(--blue);
+  cursor: pointer;
+  transition: all .2s;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Línea neon inferior tipo tab */
+.pcard-icon-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.pcard-icon-btn:hover {
+  background: rgba(0, 170, 255, 0.1);
+  border-color: rgba(0, 170, 255, 0.6);
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.2);
+}
+.pcard-icon-btn:hover::after {
+  opacity: 0.7;
+}
+
+/* Estado activo — cuando ese tab está abierto */
+.pcard-icon-btn.active-tab {
+  background: var(--neon-purple-dim);
+  border-color: var(--neon-purple-border);
+  box-shadow: 0 0 14px var(--neon-purple-glow);
+}
+.pcard-icon-btn.active-tab::after {
+  background: var(--neon-purple);
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ALLQUESTS TOGGLE BUTTON — +/− expandir banco de misiones
+   ═══════════════════════════════════════════════════════ */
+.allquests-toggle-btn {
+  background: rgba(0,15,40,0.85);
+  border: 1px solid rgba(0,170,255,0.4);
+  color: var(--blue);
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .2s;
+  margin-left: 8px;
+  border-radius: 2px;
+  text-shadow: 0 0 8px rgba(0,170,255,0.5);
+}
+.allquests-toggle-btn:hover {
+  background: rgba(0,170,255,0.1);
+  border-color: var(--blue);
+  box-shadow: 0 0 10px rgba(0,170,255,0.2);
+}
