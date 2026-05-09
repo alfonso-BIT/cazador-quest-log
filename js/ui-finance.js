@@ -1,0 +1,269 @@
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  ui-finance.js — §18 FINANCE MODULE                                    ║
+// ║  Exporta: formatCOP(), getTotalBalance(), setFinPeriod(), setFinType(),║
+// ║           selectFinCat(), addTransaction(), delTransaction(),          ║
+// ║           renderFinTab(), renderFinTxList(), renderFinChartBars()      ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  §18 — FINANCE MODULE                                                   ║
+// ║  Propósito: Registra y visualiza gastos e ingresos. Calcula el balance  ║
+// ║  total y lo muestra en la player card. Respeta el colchón de seguridad. ║
+// ║  Funciones: formatCOP(), setFinPeriod(), setFinType(), selectFinCat(),  ║
+// ║             getFinCutoff(), getFinTransactions(), addTransaction(),      ║
+// ║             delTransaction(), renderFinChartBars(), renderFinCatChart(), ║
+// ║             renderFinTab(), renderFinTxList()                            ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+let finPeriod = 'day';
+let finType   = 'expense';
+let finCat    = 'comida';
+
+const FIN_CAT_LABELS = {
+  comida:'Comida', transporte:'Transporte', salud:'Salud',
+  ocio:'Ocio', compras:'Compras', educacion:'Educación',
+  hogar:'Hogar', otro:'Otro', ingreso:'Ingreso'
+};
+// Emojis para usar en la gráfica "HOY" en lugar de texto recortado
+const FIN_CAT_EMOJI = {
+  comida:'🍔', transporte:'🚌', salud:'💊',
+  ocio:'🎮', compras:'🛒', educacion:'📚',
+  hogar:'🏠', otro:'📦', ingreso:'💵'
+};
+const FIN_CAT_COLORS = {
+  comida:'#f0c040', transporte:'#60a5fa', salud:'#4ade80',
+  ocio:'#c084fc', compras:'#ff6b35', educacion:'#a855f7',
+  hogar:'#94a3b8', otro:'#6b7280', ingreso:'#4ade80'
+};
+
+function formatCOP(n){
+  // Siempre valor exacto, sin abreviaciones K/M — requisito de precisión
+  const abs = Math.abs(Math.round(n));
+  return (n < 0 ? '-$' : '$') + abs.toLocaleString('es-CO');
+}
+
+function setFinPeriod(p){
+  finPeriod = p;
+  if(S){ S.finPeriod = p; save(); }
+  ['day','week','month'].forEach(x=>{
+    const el=document.getElementById('fp-'+x);
+    if(el) el.classList.toggle('active', x===p);
+  });
+  renderFinTab();
+}
+
+function setFinType(t){
+  finType = t;
+  const eb = document.getElementById('fin-btn-expense');
+  const ib = document.getElementById('fin-btn-income');
+  const ab = document.getElementById('finAddBtn');
+  const cg = document.getElementById('finCatGrid');
+  if(eb) eb.className = 'fin-type-btn' + (t==='expense'?' active-expense':'');
+  if(ib) ib.className = 'fin-type-btn' + (t==='income'?' active-income':'');
+  if(cg) cg.style.opacity = t==='income'?'0.35':'1';
+  if(cg) cg.style.pointerEvents = t==='income'?'none':'auto';
+  if(ab){
+    if(t==='income'){
+      ab.textContent='+ REGISTRAR INGRESO';
+      ab.style.borderColor='rgba(74,222,128,0.5)';
+      ab.style.color='#4ade80';
+    } else {
+      ab.textContent='+ REGISTRAR GASTO';
+      ab.style.borderColor='rgba(255,68,102,0.5)';
+      ab.style.color='#ff6688';
+    }
+  }
+}
+
+function selectFinCat(el){
+  document.querySelectorAll('.fin-cat-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  finCat = el.dataset.cat;
+}
+
+function getFinCutoff(period){
+  const now = new Date();
+  if(period==='day') return new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(period==='week'){ const d=new Date(now); d.setDate(d.getDate()-6); d.setHours(0,0,0,0); return d; }
+  const d=new Date(now); d.setDate(d.getDate()-29); d.setHours(0,0,0,0); return d;
+}
+
+function getFinTransactions(period){
+  if(!S||!S.transactions) return [];
+  const cutoff = getFinCutoff(period).getTime();
+  return S.transactions.filter(t=>t.ts>=cutoff).sort((a,b)=>b.ts-a.ts);
+}
+
+function addTransaction(){
+  const desc = (document.getElementById('finDesc').value||'').trim();
+  const amt  = parseFloat(document.getElementById('finAmt').value);
+  const ico  = (document.getElementById('finIco').value||'').trim();
+  if(!desc){ notif('▸ INGRESA UNA DESCRIPCIÓN'); return; }
+  if(!amt||amt<=0){ notif('▸ INGRESA UN MONTO VÁLIDO'); return; }
+  if(!S.transactions) S.transactions=[];
+  if(!S.nTid) S.nTid=1;
+  const now2 = new Date();
+  const localDate = localISO(now2);
+  const tx = {
+    id: 't'+S.nTid++,
+    desc, amt, type: finType,
+    cat: finType==='income' ? 'ingreso' : finCat,
+    ico: ico || (finType==='income'?'💵':'💸'),
+    ts: Date.now(),
+    date: localDate
+  };
+  S.transactions.push(tx);
+  // Keep max 500 transactions (oldest first)
+  if(S.transactions.length>500) S.transactions=S.transactions.slice(-500);
+  document.getElementById('finDesc').value='';
+  document.getElementById('finAmt').value='';
+  document.getElementById('finIco').value='';
+  save();
+  renderWithFlash();
+  notif((finType==='income'?'▲ INGRESO: ':'▼ GASTO: ')+formatCOP(amt)+' — '+desc);
+  // Efecto visual de transacción
+  if(typeof FX !== 'undefined'){
+    if(finType === 'income') FX.income(amt);
+    else                     FX.expense(amt);
+  }
+}
+
+function delTransaction(id){
+  if(!S.transactions) return;
+  S.transactions = S.transactions.filter(t=>t.id!==id);
+  save(); renderWithFlash();
+  notif('▸ MOVIMIENTO ELIMINADO');
+}
+
+// ── Charts ──
+function renderFinChartBars(txs, period){
+  const el = document.getElementById('finChartBars'); if(!el) return;
+  // Build day buckets
+  const now = new Date();
+  const buckets = [];
+  let numDays = period==='day'?1:period==='week'?7:30;
+
+  for(let i=numDays-1;i>=0;i--){
+    const d = new Date(now); d.setDate(now.getDate()-i); d.setHours(0,0,0,0);
+    const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const lbl = numDays===1 ? 'HOY' : d.toLocaleDateString('es-CO',{day:'numeric',month:'short'}).toUpperCase();
+    buckets.push({iso, lbl, income:0, expense:0});
+  }
+
+  txs.forEach(t=>{
+    const b = buckets.find(b=>b.iso===t.date);
+    if(!b) return;
+    if(t.type==='income') b.income+=t.amt;
+    else b.expense+=t.amt;
+  });
+
+  const maxVal = Math.max(...buckets.map(b=>Math.max(b.income,b.expense)), 1);
+
+  if(numDays===1){
+    // Single day: category breakdown bars
+    const catTotals = {};
+    txs.filter(t=>t.type==='expense').forEach(t=>{ catTotals[t.cat]=(catTotals[t.cat]||0)+t.amt; });
+    const cats = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+    if(!cats.length){ el.innerHTML='<div class="fin-empty" style="padding:14px">Sin gastos hoy.</div>'; return; }
+    const maxC = cats[0][1];
+    el.innerHTML = cats.map(([cat,amt])=>`
+      <div class="fin-bar-row">
+        <div class="fin-bar-lbl" title="${FIN_CAT_LABELS[cat]||cat}">${FIN_CAT_EMOJI[cat]||'📦'}</div>
+        <div class="fin-bar-track"><div class="fin-bar-fill-exp" style="width:${Math.round(amt/maxC*100)}%"></div></div>
+        <div class="fin-bar-val">${formatCOP(amt)}</div>
+      </div>`).join('');
+    return;
+  }
+
+  // Multi-day bars: show income (green) and expense (red) side by side using simple HTML bars
+  el.innerHTML = buckets.map(b=>`
+    <div style="margin-bottom:7px;">
+      <div style="font-size:8px;color:var(--muted);letter-spacing:1px;margin-bottom:3px;">${b.lbl}</div>
+      ${b.income>0?`<div class="fin-bar-row" style="margin-bottom:3px;">
+        <div style="font-size:8px;color:var(--green);width:22px;flex-shrink:0;">ING</div>
+        <div class="fin-bar-track"><div class="fin-bar-fill-inc" style="width:${Math.round(b.income/maxVal*100)}%"></div></div>
+        <div class="fin-bar-val" style="color:var(--green);">${formatCOP(b.income)}</div>
+      </div>`:''}
+      ${b.expense>0?`<div class="fin-bar-row">
+        <div style="font-size:8px;color:var(--danger);width:22px;flex-shrink:0;">GAS</div>
+        <div class="fin-bar-track"><div class="fin-bar-fill-exp" style="width:${Math.round(b.expense/maxVal*100)}%"></div></div>
+        <div class="fin-bar-val" style="color:var(--danger);">${formatCOP(b.expense)}</div>
+      </div>`:''}
+      ${b.income===0&&b.expense===0?`<div style="font-size:9px;color:rgba(96,130,180,0.3);padding-left:26px;letter-spacing:1px;">SIN MOVIMIENTOS</div>`:''}
+    </div>`).join('');
+}
+
+function renderFinCatChart(txs){
+  const el = document.getElementById('finCatChart'); if(!el) return;
+  const catTotals = {};
+  txs.filter(t=>t.type==='expense').forEach(t=>{ catTotals[t.cat]=(catTotals[t.cat]||0)+t.amt; });
+  const cats = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  if(!cats.length){ el.innerHTML='<div class="fin-empty" style="padding:10px">Sin gastos en este período.</div>'; return; }
+  const total = cats.reduce((s,[,v])=>s+v,0);
+  const maxC = cats[0][1];
+  el.innerHTML = cats.map(([cat,amt])=>{
+    const col = FIN_CAT_COLORS[cat]||'#60a5fa';
+    const pct = Math.round(amt/total*100);
+    return `<div class="fin-bar-row">
+      <div class="fin-bar-lbl" style="width:56px;font-size:8px;" title="${FIN_CAT_LABELS[cat]||cat}">${FIN_CAT_EMOJI[cat]||'📦'} ${(FIN_CAT_LABELS[cat]||cat).slice(0,5).toUpperCase()}</div>
+      <div class="fin-bar-track"><div style="height:100%;background:${col};width:${Math.round(amt/maxC*100)}%;transition:width .7s;"></div></div>
+      <div class="fin-bar-val" style="color:${col};width:68px;">${formatCOP(amt)} <span style="color:var(--muted);font-size:7px;">${pct}%</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderFinTab(){
+  if(!S) return;
+  // Restore period preference
+  finPeriod = S.finPeriod || 'day';
+  ['day','week','month'].forEach(x=>{
+    const el=document.getElementById('fp-'+x);
+    if(el) el.classList.toggle('active', x===finPeriod);
+  });
+
+  const txs = getFinTransactions(finPeriod);
+  const income  = txs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amt,0);
+  const expense = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amt,0);
+  const balance = income - expense;
+
+  const incEl = document.getElementById('finIncome');
+  const expEl = document.getElementById('finExpense');
+  const balEl = document.getElementById('finBalance');
+  if(incEl) incEl.textContent = formatCOP(income);
+  if(expEl) expEl.textContent = formatCOP(expense);
+  if(balEl){
+    balEl.textContent = formatCOP(balance);
+    balEl.style.color = balance<0?'var(--danger)':balance>0?'var(--green)':'var(--bright)';
+  }
+
+  renderFinChartBars(txs, finPeriod);
+  renderFinCatChart(txs);
+  renderFinTxList(txs);
+}
+
+function renderFinTxList(txs){
+  const el = document.getElementById('finTxList'); if(!el) return;
+  if(!txs.length){
+    el.innerHTML='<div class="fin-empty">Sin movimientos en este período.<br><span style="font-size:10px;opacity:.5">Registra tu primer movimiento arriba.</span></div>';
+    return;
+  }
+  el.innerHTML = '<div class="fin-txlist">'+txs.map(t=>{
+    const isInc = t.type==='income';
+    const d = new Date(t.ts);
+    const dateStr = d.toLocaleDateString('es-CO',{day:'numeric',month:'short'}).toUpperCase()
+      +' '+d.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="fin-tx">
+      <div class="fin-tx-ico">${t.ico||'💸'}</div>
+      <div class="fin-tx-info">
+        <div class="fin-tx-name">${escH(t.desc)}</div>
+        <div class="fin-tx-meta">${(FIN_CAT_LABELS[t.cat]||t.cat).toUpperCase()} — ${dateStr}</div>
+      </div>
+      <div class="fin-tx-amt ${isInc?'pos':'neg'}">${isInc?'+':'-'}${formatCOP(t.amt)}</div>
+      <button class="fin-tx-del" onclick="delTransaction('${t.id}')">✕</button>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+// ═══════════════════════════════════════════════════════
+// ESTADO DE ÁNIMO (MOOD)
+// ═══════════════════════════════════════════════════════
+// mood 0=pésimo 1=mal 2=regular 3=bien 4=excelente
+// XP otorgado por registrar el ánimo (independiente del valor)

@@ -50,6 +50,7 @@ function doFlash(){
   const f=document.getElementById('lvlf');
   if(f){ f.classList.add('show'); setTimeout(()=>f.classList.remove('show'),700); }
   notif('▸ ¡NIVEL ALCANZADO! — LV.'+S.lvl+' ◂');
+  if(typeof FX !== 'undefined') FX.levelUp(S.lvl);
 }
 function getRank(){
   let r=PRANK[0];

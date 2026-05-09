@@ -388,25 +388,27 @@
   *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}
 }
 
-/* ── SMALL PHONE (≤360px) ────────────────────────────── */
+/* ── SMALL PHONE (≤360px) — pantallas muy compactas ──── */
+/* applyMobileTypography() fija --mob-hero:18px aquí      */
 @media(max-width:360px){
-  .tab{padding:9px 8px;letter-spacing:0.5px;}
-  .claimbtn{font-size:8px;letter-spacing:1px;}
-  .login-sub{font-size:11px;}
-  .hdr-title{font-size:13px;}
-  .stitle{font-size:8px;letter-spacing:1px;}
-  .rlbl{font-size:7px;}
-  .rcd{font-size:14px;}
+  .tab{padding:9px 8px;letter-spacing:0.5px; font-size:var(--mob-title,10px) !important;}
+  .claimbtn{font-size:var(--mob-title,10px) !important;letter-spacing:1px;}
+  .login-sub{font-size:var(--mob-label,12px);}
+  .hdr-title{font-size:clamp(13px,4vw,16px) !important;}
+  .stitle{font-size:var(--mob-micro,10px) !important;letter-spacing:1px;}
+  .rlbl{font-size:var(--mob-micro,10px);}
+  .rcd{font-size:var(--mob-label,12px);}
   .modal{width:97%;padding:14px 10px;}
   .invgrid{grid-template-columns:repeat(2,1fr);gap:5px;}
   .icard{padding:8px;}
-  .iname{font-size:11px;}
+  .iname{font-size:var(--mob-label,12px) !important;}
   .stats3{gap:4px;}
-  .sval{font-size:14px;}
-  .skey{font-size:7px;}
+  .sval{font-size:var(--mob-hero,18px) !important;}
+  .skey{font-size:var(--mob-micro,10px) !important;}
+  .fin-box-val{font-size:var(--mob-hero,18px) !important;}
   .rank-cfg-grid{grid-template-columns:repeat(3,1fr);}
   .fin-cat-grid{grid-template-columns:repeat(4,1fr);}
-  .fin-cat-btn{font-size:8px;padding:5px 2px;}
+  .fin-cat-btn{font-size:var(--mob-micro,10px);padding:5px 2px;}
   .profile-hero{flex-direction:column;align-items:flex-start;}
   .summary-grid{grid-template-columns:repeat(2,1fr);}
   .achiev-edit-row{grid-template-columns:30px 1fr 80px 28px;}
@@ -452,4 +454,137 @@
     width: 100%;
     text-align: center;
   }
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE UX STANDARDS — Navegador de celular
+   Basado en: Material Design 3, Apple HIG, WCAG 2.1
+   ══════════════════════════════════════════════════════ */
+
+/* ── MÍNIMOS DE LEGIBILIDAD EN MÓVIL ─────────────────── */
+/* Estándares aplicados:
+   · Material Design 3: body ≥14sp, label ≥12sp, micro ≥10sp
+   · Apple HIG: Dynamic Type mínimo visible 11pt
+   · WCAG 2.1 AA: texto normal ≥14px, texto bold ≥11px
+   · iOS Safari: inputs ≥16px para evitar zoom automático al focus
+   Variables definidas por applyMobileTypography() en ui.js:
+     --mob-body (14px), --mob-label (12px), --mob-micro (10px),
+     --mob-input (16px), --mob-title (11px), --mob-hero (22px)        */
+@media (max-width: 480px) {
+  /* ── Cuerpo de contenido (14px mínimo legible) ── */
+  .mname       { font-size: var(--mob-body,  14px) !important; }
+  .mdesc       { font-size: var(--mob-label, 12px) !important; }
+  .fin-tx-name { font-size: var(--mob-body,  14px) !important; }
+  .fin-tx-amt  { font-size: var(--mob-body,  14px) !important; }
+  .iname       { font-size: var(--mob-body,  14px) !important; }
+  .profile-class { font-size: var(--mob-label, 12px) !important; }
+
+  /* ── Etiquetas y metadatos (12px mínimo) ── */
+  .mxp         { font-size: var(--mob-label, 12px) !important; }
+  .mrnk        { font-size: var(--mob-micro, 10px) !important; }
+  .flbl        { font-size: var(--mob-label, 12px) !important; }
+  .iprice      { font-size: var(--mob-label, 12px) !important; }
+  .icostval    { font-size: var(--mob-label, 12px) !important; }
+  .fin-tx-meta { font-size: var(--mob-micro, 10px) !important; }
+  .notif       { font-size: var(--mob-label, 12px) !important; padding: 10px 18px; }
+  .hdr-sub     { font-size: var(--mob-micro, 10px) !important; letter-spacing: 4px; }
+  .hdr-time    { font-size: var(--mob-micro, 10px) !important; }
+
+  /* ── Microtextos — badges, fechas, lettering (10px mínimo) ── */
+  .achiev-badge { font-size: var(--mob-micro, 10px) !important; }
+  .idate        { font-size: var(--mob-micro, 10px) !important; }
+  .ipct         { font-size: var(--mob-micro, 10px) !important; }
+  .ilock        { font-size: var(--mob-label, 12px) !important; }
+  .iunlbdg      { font-size: var(--mob-micro, 10px) !important; }
+
+  /* ── Valores numéricos y stats (más prominentes) ── */
+  .sval        { font-size: var(--mob-hero,  22px) !important; }
+  .skey        { font-size: var(--mob-micro, 10px) !important; }
+  .smval       { font-size: var(--mob-hero,  22px) !important; }
+  .smkey       { font-size: var(--mob-micro, 10px) !important; }
+  .rcd         { font-size: var(--mob-body,  14px) !important; }
+  .xpval       { font-size: var(--mob-label, 12px) !important; }
+  .fin-box-val { font-size: var(--mob-hero,  22px) !important; }
+  .fin-box-lbl { font-size: var(--mob-micro, 10px) !important; }
+  .profile-lvlbig { font-size: clamp(24px, 7vw, 32px) !important; }
+  .profile-name   { font-size: clamp(16px, 5vw, 20px) !important; }
+
+  /* ── Títulos de sección Orbitron (11px mínimo legible monospace) ── */
+  .tab         { font-size: var(--mob-title, 11px) !important; letter-spacing: 1px; }
+  .stitle      { font-size: var(--mob-title, 11px) !important; }
+  .claimbtn    { font-size: var(--mob-title, 11px) !important; }
+  .hdr-title   { font-size: clamp(16px, 5vw, 22px) !important; letter-spacing: 3px; }
+
+  /* ── Inputs — 16px fijo previene zoom automático en iOS/Android ── */
+  .finput, .fselect { font-size: var(--mob-input, 16px) !important; }
+}
+
+/* ── TAP TARGETS MÍNIMOS — 44×44px (Apple HIG / WCAG) ── */
+@media (hover: none) and (pointer: coarse) {
+  /* Todos los botones de acción táctil */
+  .tab         { min-height: 44px; padding: 10px 11px; }
+  .mchk        { width: 28px; height: 28px; font-size: 15px; }
+  .act-btn     { min-height: 36px; min-width: 36px; padding: 6px 10px; }
+  .rhbtn       { width: 38px; height: 38px; font-size: 16px; }
+  .mood-btn    { min-height: 64px; min-width: 52px; }
+  .claimbtn    { min-height: 52px; font-size: 11px !important; }
+  .fabtn       { min-height: 46px; }
+  .mbtn        { min-height: 46px; }
+  .login-btn   { min-height: 50px; }
+  .ptbtn       { min-height: 40px; }
+  .fin-type-btn{ min-height: 44px; }
+  .fin-ptbtn   { min-height: 40px; }
+  .pcard-icon-btn { width: 40px; height: 40px; font-size: 18px; }
+  .allquests-toggle-btn { width: 36px; height: 36px; font-size: 16px; }
+  .ep-open-btn { min-height: 46px; min-width: 60px; }
+  .ep-emoji-btn { min-width: 38px; min-height: 38px; font-size: 22px; }
+  .fin-cat-btn { min-height: 42px; }
+
+  /* Inputs táctiles — padding más amplio */
+  .finput, .fselect, .search-inp, .login-inp {
+    padding: 13px 12px;
+    font-size: 16px !important; /* Previene zoom automático en iOS */
+  }
+  .rank-inp { font-size: 16px !important; }
+  .ie-inp   { font-size: 16px !important; }
+
+  /* Espaciado entre cards táctiles */
+  .mcard    { margin-bottom: 10px; }
+  .icard    { padding: 12px; }
+}
+
+/* ── AVATAR MÓVIL — proporción mejorada ─────────────── */
+@media (max-width: 480px) {
+  .avatar {
+    width: 52px !important;
+    height: 70px !important;
+    font-size: 26px !important;
+    border-radius: 4px;
+  }
+  /* Aumentar legibilidad del nombre en móvil */
+  .pname       { font-size: clamp(14px, 4.5vw, 18px) !important; }
+  .pclass      { font-size: clamp(10px, 2.8vw, 12px) !important; }
+  .pmeta-lvlnum{ font-size: 14px !important; }
+  .prank       { font-size: clamp(10px, 2.8vw, 12px) !important; }
+}
+
+/* ── SAFE AREA — notch/home bar de iPhone ────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .wrap {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+}
+
+/* ── LANDSCAPE COMPACTO — mantener usabilidad ────────── */
+@media (max-width: 767px) and (orientation: landscape) {
+  .hdr         { padding: 6px 0 5px; margin-bottom: 8px; }
+  .hdr-title   { font-size: clamp(13px, 3.5vw, 16px) !important; }
+  .pcard       { padding: 8px 10px; margin-bottom: 6px; }
+  .avatar      { width: 36px !important; height: 52px !important; font-size: 20px !important; }
+  .xpsec       { margin-top: 6px; }
+  .xptrack     { height: 7px; }
+  .stats3      { margin-top: 6px; gap: 5px; }
+  .sval        { font-size: 14px !important; }
+  .tabs        { margin-bottom: 6px; }
+  .tab         { min-height: 36px; }
 }

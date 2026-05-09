@@ -87,10 +87,47 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .xprow{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
 .xplbl{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
 .xpval{font-family:'Orbitron',monospace;font-size:13px;color:var(--gold);}
-.xptrack{height:8px;background:rgba(0,100,200,0.12);border:1px solid rgba(0,100,200,0.25);position:relative;overflow:hidden;}
-.xpfill{height:100%;background:linear-gradient(90deg,#0044aa,#00aaff);transition:width 1s cubic-bezier(.4,0,.2,1);position:relative;}
-.xpfill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:18px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4));animation:sh 2s infinite;}
-@keyframes sh{0%,100%{opacity:.3}50%{opacity:1}}
+.xptrack{
+  height:10px;
+  background:rgba(0,100,200,0.1);
+  border:1px solid rgba(0,100,200,0.28);
+  position:relative;
+  overflow:hidden;
+  border-radius:1px;
+}
+.xpfill{
+  height:100%;
+  background:linear-gradient(90deg,#002266,#0055cc,#00aaff,#33ccff);
+  background-size:200% 100%;
+  transition:width 1s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  border-radius:1px;
+  animation:xpPulse 3s ease-in-out infinite;
+}
+/* Shimmer: brillo que recorre la barra simulando carga */
+.xpfill::after{
+  content:'';
+  position:absolute;
+  top:0; bottom:0;
+  width:60px;
+  background:linear-gradient(90deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    rgba(180,230,255,0.6),
+    transparent
+  );
+  animation:xpShimmer 2s ease-in-out infinite;
+}
+@keyframes xpShimmer{
+  0%   {left:-60px; opacity:0;}
+  10%  {opacity:1;}
+  90%  {opacity:1;}
+  100% {left:calc(100% + 60px); opacity:0;}
+}
+@keyframes xpPulse{
+  0%,100%{background-position:0% 50%;}
+  50%    {background-position:100% 50%;}
+}
 
 /* ── STATS 3-COL ─────────────────────────────────────── */
 .stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
@@ -160,3 +197,222 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .ep-emoji-btn{background:none;border:1px solid transparent;border-radius:2px;font-size:20px;line-height:1;padding:4px 2px;cursor:pointer;text-align:center;transition:all .12s;}
 .ep-emoji-btn:hover{background:rgba(0,170,255,0.1);border-color:rgba(0,170,255,0.3);transform:scale(1.2);}
 .ep-empty{text-align:center;color:var(--muted);font-size:10px;letter-spacing:2px;padding:14px;}
+
+/* ══════════════════════════════════════════════════════
+   HEADER — .hdr
+   ══════════════════════════════════════════════════════ */
+.hdr {
+  text-align: center;
+  padding: 20px 0 14px;
+  position: relative;
+  border-bottom: 1px solid rgba(0,170,255,0.15);
+  margin-bottom: 14px;
+}
+.hdr::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  opacity: 0.5;
+}
+.hdr-sub {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.hdr-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: var(--bright);
+  text-shadow: 0 0 20px rgba(0,170,255,0.4), 0 0 40px rgba(0,170,255,0.15);
+  line-height: 1.1;
+}
+.hdr-time {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+/* ══════════════════════════════════════════════════════
+   PLAYER CARD — .pcard .phdr .avatar
+   ══════════════════════════════════════════════════════ */
+.pcard {
+  background: rgba(0, 10, 28, 0.92);
+  border: 1px solid rgba(0, 170, 255, 0.22);
+  border-top: 2px solid rgba(0, 170, 255, 0.45);
+  padding: 14px 14px 12px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.pcard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue), var(--neon-purple), var(--blue), transparent);
+  opacity: 0.7;
+}
+
+.phdr {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+/* ── AVATAR ──────────────────────────────────────────── */
+.avatar {
+  width: 60px;
+  height: 80px;
+  flex-shrink: 0;
+  background: rgba(0, 20, 50, 0.85);
+  border: 1px solid rgba(0, 170, 255, 0.35);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  position: relative;
+  overflow: hidden;
+  /* Neon glow around avatar */
+  box-shadow:
+    0 0 0 1px rgba(0,170,255,0.1),
+    0 0 12px rgba(0,170,255,0.15),
+    inset 0 0 20px rgba(0,20,60,0.5);
+  transition: box-shadow 0.3s ease;
+}
+.avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,170,255,0.08) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(0,100,200,0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+/* Scan line effect on avatar */
+.avatar::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0,170,255,0.06),
+    transparent
+  );
+  animation: avatarScan 4s ease-in-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+@keyframes avatarScan {
+  0%   { top: -40%; }
+  50%  { top: 110%; }
+  100% { top: 110%; }
+}
+
+.avatar-morph-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+.avatar-morph-ring {
+  position: absolute;
+  inset: -4px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  z-index: 4;
+  pointer-events: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.avatar-morph-ring.active {
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 16px var(--neon-purple-glow), inset 0 0 8px var(--neon-purple-glow);
+}
+
+/* ── BALANCE en pcard ────────────────────────────────── */
+.pmeta-balance {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(9px, 2.5vw, 11px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 2px;
+  color: var(--gold);
+}
+
+/* ══════════════════════════════════════════════════════
+   EFFECTS.CSS — Animaciones de FX
+   ══════════════════════════════════════════════════════ */
+
+/* Pulso de player card al subir de nivel */
+@keyframes lvlupPulse {
+  0%   { border-color: rgba(0,170,255,0.22); box-shadow: none; }
+  20%  { border-color: #00aaff; box-shadow: 0 0 0 2px rgba(0,170,255,0.3), 0 0 24px rgba(0,170,255,0.25); }
+  50%  { border-color: #bf5fff; box-shadow: 0 0 0 2px rgba(191,95,255,0.4), 0 0 32px rgba(191,95,255,0.3); }
+  80%  { border-color: #00aaff; box-shadow: 0 0 0 1px rgba(0,170,255,0.3), 0 0 16px rgba(0,170,255,0.15); }
+  100% { border-color: rgba(0,170,255,0.22); box-shadow: none; }
+}
+.pcard.fx-lvlup-pulse {
+  animation: lvlupPulse 1s ease-out forwards;
+}
+
+/* Partículas — base invisible, posicionadas por JS */
+.fx-particle {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+/* ── Refresh flash: destello sutil al ejecutar una acción ── */
+@keyframes actionFlash {
+  0%   { outline: 2px solid transparent; outline-offset: 0px; }
+  25%  { outline: 2px solid rgba(0,255,180,0.55); outline-offset: 3px; box-shadow: 0 0 18px rgba(0,255,180,0.18); }
+  60%  { outline: 2px solid rgba(0,200,255,0.3); outline-offset: 2px; }
+  100% { outline: 2px solid transparent; outline-offset: 0px; box-shadow: none; }
+}
+.wrap.action-flash {
+  animation: actionFlash 0.45s ease-out forwards;
+}
+
+/* ── FX: misión completada ──────────────────────────────────────────── */
+@keyframes questDone {
+  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0); background: inherit; }
+  20%  { box-shadow: 0 0 0 3px rgba(74,222,128,0.7), 0 0 18px rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
+  60%  { box-shadow: 0 0 0 2px rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
+  100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); background: inherit; }
+}
+.mcard.fx-quest-done {
+  animation: questDone 0.6s ease-out forwards;
+}
+
+/* ── FX: objeto eliminado del inventario ────────────────────────────── */
+@keyframes itemRemoved {
+  0%   { transform: translateX(0); opacity: 1; }
+  15%  { transform: translateX(-6px); }
+  30%  { transform: translateX(5px); box-shadow: 0 0 12px rgba(255,68,102,0.5); }
+  50%  { transform: translateX(-4px); opacity: 0.8; }
+  70%  { transform: translateX(3px); opacity: 0.5; }
+  100% { transform: translateX(0) scaleY(0.9); opacity: 0; }
+}
+.icard.fx-item-removed {
+  animation: itemRemoved 0.45s ease-out forwards;
+  pointer-events: none;
+}
