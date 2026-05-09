@@ -482,23 +482,32 @@ function delItem(id){
 }
 
 // ─────────────────────────────────────────────────────────────────
-// deleteInventoryItem — Elimina un objeto del inventario (ya canjeado).
+// deleteInventoryItem — Abre modal gamer de confirmación antes de borrar.
 // ⚠ No devuelve XP ni dinero. El objeto desaparece del array S.items.
 // Para que vuelva a aparecer en tienda hay que recrearlo en Configurar.
 // ─────────────────────────────────────────────────────────────────
+let _delInvId = null;
 function deleteInventoryItem(id){
   const it = S.items.find(x => x.id === id);
   if(!it || !it.red) return;
-  const priceInfo = it.realPrice > 0 ? '\nPrecio pagado: ' + formatCOP(it.realPrice) : '';
-  if(!confirm('¿Eliminar "' + it.name + '" del inventario?\n\n⚠ Esta acción es permanente.\nNo se recupera el XP (' + it.cost + ' XP) ni el dinero invertido.' + priceInfo)) return;
-  // Capturar referencia y disparar efecto antes de que el render destruya el elemento
+  _delInvId = id;
+  document.getElementById('delInvName').textContent = it.ico ? it.ico + ' ' + it.name : it.name;
+  const price = it.realPrice > 0 ? ' · ' + formatCOP(it.realPrice) + ' pagados' : '';
+  document.getElementById('delInvBody').textContent = 'Costo: ' + it.cost + ' XP' + price + ' · El XP y dinero no se recuperan.';
+  document.getElementById('delInvModal').classList.add('show');
+}
+function confirmDelInv(){
+  const id = _delInvId; _delInvId = null;
+  closDelInv();
+  const it = S.items.find(x => x.id === id);
+  if(!it) return;
   const cardEl = document.getElementById('ic-' + id);
   if(typeof FX !== 'undefined') FX.itemRemoved(cardEl, it.name);
   S.items = S.items.filter(x => x.id !== id);
-  save();
-  renderWithFlash();
+  save(); renderWithFlash();
   notif('🗑 ' + it.name + ' — ELIMINADO DEL INVENTARIO');
 }
+function closDelInv(){ document.getElementById('delInvModal').classList.remove('show'); _delInvId = null; }
 
 function closeModal(){ document.getElementById('modal').classList.remove('show'); pendingId=null; }
 

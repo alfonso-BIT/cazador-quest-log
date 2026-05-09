@@ -48,6 +48,19 @@
     </div>
   </div>
 </div>
+<div class="modover" id="delInvModal">
+  <div class="modal del-modal">
+    <div class="del-modal-eyebrow">⚠ ADVERTENCIA DEL SISTEMA</div>
+    <div class="del-modal-title">ELIMINAR OBJETO</div>
+    <div class="del-modal-item" id="delInvName">—</div>
+    <div class="del-modal-body" id="delInvBody"></div>
+    <div class="del-modal-warn">Esta acción es <span class="del-modal-warn-hl">permanente</span> e irreversible.</div>
+    <div class="modacts" style="margin-top:18px;">
+      <button class="mbtn del-confirm" onclick="confirmDelInv()">🗑 ELIMINAR</button>
+      <button class="mbtn no" onclick="closDelInv()">CANCELAR</button>
+    </div>
+  </div>
+</div>
 
 <div class="wrap">
   <!-- saveIndicator: elemento oculto requerido por save() — no renderiza nada visible -->

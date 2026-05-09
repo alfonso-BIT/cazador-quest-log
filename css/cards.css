@@ -37,7 +37,7 @@
 
 /* ── PERIOD TOGGLE (shared: shop, profile, finance) ──── */
 .period-toggle{display:flex;gap:0;margin-bottom:14px;border:1px solid rgba(0,170,255,0.25);}
-.ptbtn{flex:1;padding:8px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);cursor:pointer;border:1px solid rgba(0,100,200,0.2);background:transparent;transition:all .2s;}
+.ptbtn{flex:1;padding:8px;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:var(--muted);cursor:pointer;border:1px solid rgba(0,100,200,0.2);background:transparent;transition:all .2s;}
 .ptbtn:hover:not(.active){color:#8bb8d0;border-color:rgba(0,170,255,0.4);background:rgba(0,170,255,0.04);}
 
 /* ── PROFILE HERO ────────────────────────────────────── */
