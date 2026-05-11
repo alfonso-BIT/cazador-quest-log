@@ -121,5 +121,66 @@ function exportBackupXLSX(){
 
 // renderDatosTab — llamado por switchTab; actualiza stats en la página
 function renderDatosTab(){
-  // placeholder: la página es estática, no necesita render dinámico por ahora
+  renderGistSection();
+}
+
+// ── §02-B GIST SYNC UI ────────────────────────────────────────────────────
+// renderGistSection — inyecta el estado actual en la sección del tab Datos
+function renderGistSection(){
+  const cfg = gistGetCfg();
+  const statusEl = document.getElementById('gistStatus');
+  const btnDisconnect = document.getElementById('gistBtnDisconnect');
+  const btnPull = document.getElementById('gistBtnPull');
+  const formEl = document.getElementById('gistForm');
+  const connectedEl = document.getElementById('gistConnected');
+  if(!statusEl) return;
+
+  if(cfg?.token && cfg?.gistId){
+    if(formEl)      formEl.style.display      = 'none';
+    if(connectedEl) connectedEl.style.display = 'block';
+    statusEl.textContent = '● CONECTADO';
+    statusEl.style.color = '#4ade80';
+  } else {
+    if(formEl)      formEl.style.display      = 'block';
+    if(connectedEl) connectedEl.style.display = 'none';
+    statusEl.textContent = '○ SIN CONFIGURAR';
+    statusEl.style.color = 'var(--muted)';
+  }
+}
+
+// gistConnect — valida y guarda token+gistId
+async function gistConnect(){
+  const token  = document.getElementById('gistToken')?.value?.trim();
+  const gistId = document.getElementById('gistId')?.value?.trim();
+  const btn    = document.getElementById('gistBtnConnect');
+  if(!token || !gistId){ notif('▸ COMPLETA TOKEN Y GIST ID'); return; }
+  if(btn){ btn.textContent = '⏳ VERIFICANDO…'; btn.disabled = true; }
+  const result = await gistVerify(token, gistId);
+  if(btn){ btn.textContent = '✓ CONECTAR'; btn.disabled = false; }
+  if(!result.ok){ notif('▸ ERROR: ' + result.error.toUpperCase()); return; }
+  gistSaveCfg({ token, gistId });
+  renderGistSection();
+  notif('☁ GIST CONECTADO — AUTO-SYNC ACTIVO');
+}
+
+// gistDisconnect — borra config local (no borra el gist)
+function gistDisconnect(){
+  gistClearCfg();
+  renderGistSection();
+  notif('○ GIST DESCONECTADO');
+}
+
+// gistPullNow — descarga datos del gist y recarga la app
+async function gistPullNow(){
+  const btn = document.getElementById('gistBtnPull');
+  if(btn){ btn.textContent = '⏳ DESCARGANDO…'; btn.disabled = true; }
+  const ok = await gistPull();
+  if(btn){ btn.textContent = '⬇ TRAER DATOS'; btn.disabled = false; }
+  if(ok){
+    S = loadState(currentUser);
+    renderWithFlash();
+    notif('⬇ DATOS RESTAURADOS DESDE GIST');
+  } else {
+    notif('▸ SIN DATOS EN EL GIST PARA ESTE USUARIO');
+  }
 }

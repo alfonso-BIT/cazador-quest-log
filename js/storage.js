@@ -2,7 +2,62 @@
 // ║  §02 — MULTI-USER STORAGE                                               ║
 // ║  Dependencias: constants.js (XPR, S, currentUser)                      ║
 // ║  Consumido por: todos los módulos (todos llaman save()/load())          ║
+// ║  §02-B GitHub Gist sync (opcional — no rompe nada si no se configura)  ║
 // ╚══════════════════════════════════════════════════════════════════════════╝
+
+// ── §02-B GIST CONFIG ────────────────────────────────────────────────────
+// Clave de localStorage donde se guarda {token, gistId}
+const GIST_CFG_KEY = 'cazador_gist_cfg';
+
+function gistGetCfg(){ try{ return JSON.parse(localStorage.getItem(GIST_CFG_KEY)||'null'); }catch(e){ return null; } }
+function gistSaveCfg(cfg){ localStorage.setItem(GIST_CFG_KEY, JSON.stringify(cfg)); }
+function gistClearCfg(){ localStorage.removeItem(GIST_CFG_KEY); }
+
+// Nombre del archivo dentro del Gist para este usuario
+function gistFileName(user){ return getUserKey(user) + '.json'; }
+
+// Push: sube localStorage → Gist (silencioso, no bloquea)
+async function gistPush(){
+  const cfg = gistGetCfg();
+  if(!cfg?.token || !cfg?.gistId || !currentUser) return;
+  const content = localStorage.getItem(getUserKey(currentUser));
+  if(!content) return;
+  try {
+    await fetch('https://api.github.com/gists/' + cfg.gistId, {
+      method: 'PATCH',
+      headers: { 'Authorization': 'token ' + cfg.token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ files: { [gistFileName(currentUser)]: { content } } })
+    });
+  } catch(e){ /* sin internet — silencioso */ }
+}
+
+// Pull: baja Gist → localStorage y retorna true si encontró datos
+async function gistPull(){
+  const cfg = gistGetCfg();
+  if(!cfg?.token || !cfg?.gistId || !currentUser) return false;
+  try {
+    const r = await fetch('https://api.github.com/gists/' + cfg.gistId,
+      { headers: { 'Authorization': 'token ' + cfg.token } });
+    if(!r.ok) return false;
+    const data = await r.json();
+    const file = data.files?.[gistFileName(currentUser)];
+    if(file?.content){ localStorage.setItem(getUserKey(currentUser), file.content); return true; }
+  } catch(e){ /* sin internet */ }
+  return false;
+}
+
+// Verifica token+gist y retorna {ok, error}
+async function gistVerify(token, gistId){
+  try {
+    const r = await fetch('https://api.github.com/gists/' + gistId,
+      { headers: { 'Authorization': 'token ' + token } });
+    if(r.status === 401) return { ok:false, error:'Token inválido' };
+    if(r.status === 404) return { ok:false, error:'Gist no encontrado' };
+    if(!r.ok)           return { ok:false, error:'Error ' + r.status };
+    return { ok:true };
+  } catch(e){ return { ok:false, error:'Sin conexión' }; }
+}
+// ── FIN §02-B ─────────────────────────────────────────────────────────────
 
 function getUserKey(user){
   return 'sl_v3_' + user.toLowerCase().replace(/\s+/g, '_');
@@ -102,5 +157,7 @@ function save(){
       clearTimeout(ind._t);
       ind._t = setTimeout(() => { ind.style.opacity = '0'; }, 1500);
     }
+    // §02-B: push a Gist en segundo plano (no bloquea, falla silenciosamente)
+    if(gistGetCfg()?.token) gistPush();
   } catch(e){ notif('⚠ ERROR AL GUARDAR — ALMACENAMIENTO LLENO'); }
 }
