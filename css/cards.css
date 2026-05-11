@@ -95,7 +95,7 @@
 .achiev-ico{font-size:18px;width:24px;text-align:center;}
 .achiev-txt{flex:1;}
 .achiev-name{font-size:12px;font-weight:600;color:var(--bright);}
-.achiev-desc{font-size:calc(10px * var(--fs-scale));color:var(--muted);}
+.achiev-desc{font-size:10px;color:var(--muted);}
 .achiev-badge{font-family:'Orbitron',monospace;font-size:8px;padding:2px 7px;border:1px solid;letter-spacing:1px;}
 .achiev-badge.done{color:var(--green);border-color:rgba(74,222,128,.4);}
 .achiev-badge.pend{color:var(--muted);border-color:rgba(0,100,200,.25);}
@@ -197,16 +197,16 @@
 .bk-hero{text-align:center;padding:24px 16px 18px;border-bottom:1px solid rgba(0,100,200,0.15);margin-bottom:20px;}
 .bk-hero-icon{font-size:36px;margin-bottom:8px;}
 .bk-hero-title{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--bright);letter-spacing:3px;margin-bottom:6px;}
-.bk-hero-sub{font-size:calc(12px * var(--fs-scale));color:var(--muted);letter-spacing:1px;line-height:1.6;}
+.bk-hero-sub{font-size:12px;color:var(--muted);letter-spacing:1px;line-height:1.6;}
 .bk-section{margin-bottom:20px;}
 .bk-section-eyebrow{font-family:'Orbitron',monospace;font-size:9px;color:var(--blue);letter-spacing:3px;margin-bottom:4px;opacity:.8;}
 .bk-section-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--bright);letter-spacing:2px;margin-bottom:6px;}
-.bk-section-desc{font-size:calc(12px * var(--fs-scale));color:var(--muted);line-height:1.7;letter-spacing:.5px;margin-bottom:10px;}
+.bk-section-desc{font-size:12px;color:var(--muted);line-height:1.7;letter-spacing:.5px;margin-bottom:10px;}
 .bk-card{background:rgba(0,20,50,0.6);border:1px solid rgba(0,100,200,0.2);padding:12px 14px;}
 .bk-card-row{display:flex;align-items:center;gap:12px;}
 .bk-card-info{flex:1;min-width:0;}
 .bk-card-label{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;color:var(--bright);letter-spacing:2px;margin-bottom:3px;}
-.bk-card-detail{font-size:calc(11px * var(--fs-scale));color:var(--muted);letter-spacing:.5px;line-height:1.5;}
+.bk-card-detail{font-size:11px;color:var(--muted);letter-spacing:.5px;line-height:1.5;}
 .bk-hl{color:var(--blue);font-weight:700;}
 .bk-btn{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;padding:9px 14px;border:1px solid;background:transparent;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;display:inline-block;text-align:center;}
 .bk-btn.blue{border-color:rgba(0,170,255,0.5);color:var(--blue);}

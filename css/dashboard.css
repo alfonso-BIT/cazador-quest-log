@@ -15,7 +15,7 @@
 /* ── PENALTY BAR ─────────────────────────────────────── */
 .penbar{background:rgba(255,30,60,0.07);border:1px solid rgba(255,30,60,0.28);border-left:3px solid var(--danger);padding:10px 14px;margin-bottom:10px;display:none;}
 .pentitle{font-family:'Orbitron',monospace;font-size:9px;color:var(--danger);letter-spacing:3px;margin-bottom:3px;}
-.pentext{font-size:calc(12px * var(--fs-scale));color:#ff8899;}
+.pentext{font-size:12px;color:#ff8899;}
 
 /* ── MISSION CARDS ───────────────────────────────────── */
 .mcard{background:var(--panel);border:1px solid rgba(0,100,200,0.22);border-left:3px solid var(--blue);padding:12px 14px;margin-bottom:8px;transition:all .18s;position:relative;overflow:hidden;}
@@ -29,7 +29,7 @@
 .mchk.yes{background:var(--neon-purple);border-color:var(--neon-purple);color:#fff;box-shadow:0 0 10px var(--neon-purple-glow);}
 .mcontent{flex:1;}
 .mname{font-size:15px;font-weight:600;color:var(--bright);line-height:1.3;}
-.mdesc{font-size:calc(11px * var(--fs-scale));color:var(--muted);margin-top:2px;}
+.mdesc{font-size:11px;color:var(--muted);margin-top:2px;}
 .mfoot{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
 .mxp{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--gold);background:rgba(240,192,64,0.09);border:1px solid rgba(240,192,64,0.28);padding:2px 8px;}
 .mrnk{font-size:10px;font-weight:700;padding:2px 8px;border:1px solid;letter-spacing:1px;}
@@ -51,7 +51,7 @@
 .act-btn.swap{color:rgba(191,95,255,.8);border-color:rgba(191,95,255,.35);font-size:12px;padding:2px 6px;}
 .act-btn.swap:hover{color:var(--neon-purple);border-color:var(--neon-purple-border);background:var(--neon-purple-dim);box-shadow:0 0 8px var(--neon-purple-glow);}
 .fixed-badge{font-size:8px;letter-spacing:2px;color:var(--gold);background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);padding:1px 5px;font-family:'Orbitron',monospace;}
-.progtxt{font-size:calc(11px * var(--fs-scale));color:var(--muted);text-align:right;margin-top:4px;}
+.progtxt{font-size:11px;color:var(--muted);text-align:right;margin-top:4px;}
 
 /* ── INLINE EDIT ─────────────────────────────────────── */
 .inline-edit{background:rgba(0,20,50,0.95);border:1px solid rgba(240,192,64,0.3);padding:12px;margin-top:10px;display:none;}
@@ -86,7 +86,7 @@
 /* ── MOOD WIDGET ─────────────────────────────────────── */
 .mood-card{background:var(--panel);border:1px solid rgba(0,100,200,0.22);border-left:3px solid #60a5fa;padding:14px 16px;margin-bottom:12px;position:relative;}
 .mood-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;color:#60a5fa;margin-bottom:4px;}
-.mood-subtitle{font-size:calc(11px * var(--fs-scale));color:var(--muted);margin-bottom:12px;line-height:1.6;}
+.mood-subtitle{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6;}
 .mood-faces{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
 .mood-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(0,20,50,0.7);border:2px solid rgba(0,100,200,0.18);padding:10px 14px;cursor:pointer;transition:all .2s;min-width:56px;flex:1;max-width:90px;}
 .mood-btn:hover{border-color:rgba(96,165,250,0.5);background:rgba(0,30,70,0.9);}

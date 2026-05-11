@@ -177,13 +177,29 @@ function delAchiev(i){
 }
 
 function addAchiev(){
+  const n=document.getElementById('aNameInp').value.trim();
+  if(!n){notif('▸ INGRESA UN NOMBRE PARA EL LOGRO');return;}
+  const type=document.getElementById('aTypeInp').value;
+  const needsTarget=type!=='redeem'&&type!=='custom';
+  const target=needsTarget?(parseInt(document.getElementById('aTargetInp').value)||10):1;
   if(!S.achievements) S.achievements=[];
   S.achievements.push({
-    id:'a'+Date.now(), ico:'⭐',
-    name:'Nuevo Logro', desc:'Descripción del logro',
-    type:'totalComp', target:10
+    id:'a'+Date.now(),
+    ico:document.getElementById('aIcoInp').value.trim()||'⭐',
+    name:n,
+    desc:document.getElementById('aDescInp').value.trim(),
+    type, target
   });
-  save(); renderAchievEditor();
-  notif('▸ LOGRO AÑADIDO');
+  document.getElementById('aNameInp').value='';
+  document.getElementById('aDescInp').value='';
+  document.getElementById('aIcoInp').value='';
+  document.getElementById('aTargetInp').value='10';
+  save();
+  notif('▸ LOGRO AÑADIDO: '+n);
+}
+
+function aTypeChange(val){
+  const row=document.getElementById('aTargetRow');
+  if(row) row.style.display=(val==='redeem'||val==='custom')?'none':'block';
 }
 

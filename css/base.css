@@ -51,7 +51,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .loginover.show{display:flex;}
 .login-box{background:#020c1e;border:1px solid var(--blue);box-shadow:0 0 40px rgba(0,170,255,0.15);padding:30px;width:90%;max-width:380px;}
 .login-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:3px;color:var(--bright);margin-bottom:6px;}
-.login-sub{font-size:calc(11px * var(--fs-scale));color:var(--muted);letter-spacing:1px;margin-bottom:18px;line-height:1.7;}
+.login-sub{font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:18px;line-height:1.7;}
 .login-inp{width:100%;background:rgba(0,20,50,0.85);border:1px solid rgba(0,100,200,0.35);color:var(--bright);padding:10px 12px;font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;margin-bottom:10px;}
 .login-inp:focus{border-color:var(--blue);}
 .login-btn{width:100%;background:transparent;border:1px solid var(--blue);color:var(--blue);font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;padding:11px;cursor:pointer;transition:all .2s;margin-top:4px;}
@@ -80,7 +80,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .class-banner.show{display:block;}
 .class-banner-title{font-family:'Orbitron',monospace;font-size:11px;color:var(--blue);letter-spacing:3px;margin-bottom:3px;}
 .class-banner-name{font-size:14px;font-weight:700;color:var(--bright);}
-.class-banner-desc{font-size:calc(13px * var(--fs-scale));color:var(--muted);margin-top:2px;}
+.class-banner-desc{font-size:13px;color:var(--muted);margin-top:2px;}
 
 /* ── XP BAR ──────────────────────────────────────────── */
 .xpsec{margin-top:14px;}
@@ -159,7 +159,7 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
 .modover.show{display:flex;}
 .modal{background:#020c1e;border:1px solid var(--blue);box-shadow:0 0 40px rgba(0,170,255,0.15);padding:24px;width:90%;max-width:420px;max-height:85vh;overflow-y:auto;}
 .modtitle{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;color:var(--bright);margin-bottom:16px;border-bottom:1px solid rgba(0,170,255,0.2);padding-bottom:12px;}
-.modbody{font-size:calc(13px * var(--fs-scale));color:var(--muted);line-height:1.8;}
+.modbody{font-size:13px;color:var(--muted);line-height:1.8;}
 .modacts{display:flex;gap:8px;margin-top:16px;}
 .mbtn{flex:1;padding:10px;font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;font-weight:700;cursor:pointer;border:1px solid;background:transparent;transition:all .2s;}
 .mbtn.ok{border-color:var(--gold);color:var(--gold);}
