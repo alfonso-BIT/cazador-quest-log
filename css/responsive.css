@@ -467,13 +467,25 @@
    · Apple HIG: Dynamic Type mínimo visible 11pt
    · WCAG 2.1 AA: texto normal ≥14px, texto bold ≥11px
    · iOS Safari: inputs ≥16px para evitar zoom automático al focus
-   Variables definidas por applyMobileTypography() en ui.js:
-     --mob-body (14px), --mob-label (12px), --mob-micro (10px),
-     --mob-input (16px), --mob-title (11px), --mob-hero (22px)        */
+   Variables definidas por applyMobileTypography() en ui.js (escaladas a base 22px):
+     --mob-body (21px), --mob-label (18px), --mob-micro (15px),
+     --mob-input (16px fijo), --mob-title (16px), --mob-hero (32px)        */
 @media (max-width: 480px) {
   /* ── Cuerpo de contenido (14px mínimo legible) ── */
   .mname       { font-size: var(--mob-body,  14px) !important; }
   .mdesc       { font-size: var(--mob-label, 12px) !important; }
+  .tpl-desc    { font-size: var(--mob-label, 12px) !important; }
+  .tut-mdesc   { font-size: var(--mob-label, 12px) !important; }
+  .achiev-desc { font-size: var(--mob-label, 12px) !important; }
+  .class-banner-desc { font-size: var(--mob-label, 12px) !important; }
+  .modbody     { font-size: var(--mob-label, 12px) !important; }
+  .mood-subtitle { font-size: var(--mob-label, 12px) !important; }
+  .progtxt     { font-size: var(--mob-label, 12px) !important; }
+  .pentext     { font-size: var(--mob-label, 12px) !important; }
+  .bk-section-desc { font-size: var(--mob-label, 12px) !important; }
+  .bk-card-detail  { font-size: var(--mob-label, 12px) !important; }
+  .bk-hero-sub     { font-size: var(--mob-label, 12px) !important; }
+  .tut-xpg-desc    { font-size: var(--mob-label, 12px) !important; }
   .fin-tx-name { font-size: var(--mob-body,  14px) !important; }
   .fin-tx-amt  { font-size: var(--mob-body,  14px) !important; }
   .iname       { font-size: var(--mob-body,  14px) !important; }

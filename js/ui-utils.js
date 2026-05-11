@@ -86,14 +86,17 @@ function applyMobileTypography(userHasSavedFont){
   // --mob-input: inputs (16px fijo para evitar zoom iOS)
   // --mob-title: títulos de sección
   // --mob-hero: valores grandes (nivel, XP total)
+  // Escala base 22px (ratio 22/15 ≈ 1.4667) para igualar tamaño desktop en 22px
   const root = document.documentElement;
   if(isNarrow || isTouch){
-    root.style.setProperty('--mob-body',  '14px');
-    root.style.setProperty('--mob-label', '12px');
-    root.style.setProperty('--mob-micro', '10px');
-    root.style.setProperty('--mob-input', '16px');
-    root.style.setProperty('--mob-title', '11px');
-    root.style.setProperty('--mob-hero',  isTiny ? '18px' : '22px');
+    const MOB_SCALE = 22 / 15; // base móvil equivalente a 22px desktop
+    const ms = v => Math.round(v * MOB_SCALE) + 'px';
+    root.style.setProperty('--mob-body',  ms(14));
+    root.style.setProperty('--mob-label', ms(12));
+    root.style.setProperty('--mob-micro', ms(10));
+    root.style.setProperty('--mob-input', '16px'); // fijo: evita zoom iOS
+    root.style.setProperty('--mob-title', ms(11));
+    root.style.setProperty('--mob-hero',  isTiny ? ms(18) : ms(22));
     document.body.setAttribute('data-mob', isTouch ? 'touch' : 'narrow');
   } else {
     // Desktop/tablet — usar variables neutras que no fuercen nada
