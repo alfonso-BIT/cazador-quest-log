@@ -568,6 +568,47 @@
   .prank       { font-size: clamp(10px, 2.8vw, 12px) !important; }
 }
 
+/* ── BIBLIOTECA — legibilidad móvil ──────────────────── */
+@media (max-width: 480px) {
+  .bcard-title       { font-size: var(--mob-body,   14px) !important; }
+  .bcard-author      { font-size: var(--mob-label,  12px) !important; }
+  .bcard-list-title  { font-size: var(--mob-body,   14px) !important; }
+  .bcard-list-meta   { font-size: var(--mob-label,  12px) !important; }
+  .bcard-list-pct    { font-size: var(--mob-label,  12px) !important; }
+  .bcard-medal       { font-size: 10px !important; padding: 3px 9px; }
+  .bcard-reading-badge { font-size: 10px !important; }
+  .lib-stat-num      { font-size: var(--mob-hero,   22px) !important; }
+  .lib-stat-lbl      { font-size: var(--mob-micro,  10px) !important; }
+  .lib-current-title { font-size: var(--mob-body,   14px) !important; }
+  .lib-current-author{ font-size: var(--mob-label,  12px) !important; }
+  .lib-current-lbl   { font-size: var(--mob-micro,  10px) !important; }
+  .lib-current-pct   { font-size: var(--mob-label,  12px) !important; }
+  .lib-prog-btn      { font-size: var(--mob-micro,  10px) !important; }
+  .lib-section-title { font-size: var(--mob-micro,  10px) !important; }
+  .lib-search        { font-size: var(--mob-input,  16px) !important; }
+  .lib-filter-btn    { font-size: var(--mob-label,  12px) !important; }
+  .lib-achiev-name   { font-size: var(--mob-label,  12px) !important; }
+  .lib-achiev-prog   { font-size: var(--mob-micro,  10px) !important; }
+  .lib-pace-num      { font-size: var(--mob-hero,   22px) !important; }
+  .lib-pace-lbl      { font-size: var(--mob-label,  12px) !important; }
+  .lib-pace-sub      { font-size: var(--mob-micro,  10px) !important; }
+  .lib-pace-eta      { font-size: var(--mob-label,  12px) !important; }
+  .lib-pace-note     { font-size: var(--mob-micro,  10px) !important; }
+  .bom-title         { font-size: var(--mob-body,   14px) !important; }
+  .bom-author        { font-size: var(--mob-label,  12px) !important; }
+  .bom-stats         { font-size: var(--mob-label,  12px) !important; }
+  .bom-month-count   { font-size: var(--mob-label,  12px) !important; }
+  .bom-month-lbl     { font-size: var(--mob-micro,  10px) !important; }
+  .bom-month-book    { font-size: var(--mob-label,  12px) !important; }
+  .lib-modal-lbl     { font-size: var(--mob-label,  12px) !important; }
+  .lib-modal-inp, .lib-modal-sel, .lib-modal-textarea { font-size: var(--mob-input, 16px) !important; }
+  .lib-mbtn          { font-size: var(--mob-micro,  10px) !important; }
+  .lib-modal-title   { font-size: var(--mob-label,  12px) !important; }
+  .lib-add-btn       { font-size: var(--mob-label,  12px) !important; }
+  /* Grid más cómodo en móvil — 2 columnas anchas */
+  .lib-grid          { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
+
 /* ── SAFE AREA — notch/home bar de iPhone ────────────── */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .wrap {

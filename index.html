@@ -137,6 +137,8 @@
 
   <!-- TAB: MISIONES DIARIAS -->
   <div class="tabcontent active" id="tab-missions">
+    <!-- Libro del Mes widget (renderizado por biblioteca.js) -->
+    <div id="bookOfMonthWidget"></div>
     <div class="resetbar">
       <div>
         <div class="rlbl"><span class="txt-short">RESET EN</span><span class="txt-full">RESET DIARIO EN</span></div>
@@ -330,35 +332,7 @@
       <button class="cfg-logout-btn" onclick="if(confirm('¿Seguro que deseas salir?')) doLogout()" title="Cerrar sesión y cambiar de usuario">↩ SALIR</button>
     </div>
 
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ PERFIL DE CAZADOR</span><div class="sline"></div></div>
-    <button class="fabtn" onclick="toggleNameForm()" id="nameToggleBtn"><span class="txt-short">✏ NOMBRE</span><span class="txt-full">✏ CAMBIAR NOMBRE</span></button>
-    <div class="aform" id="nameFormBox" style="display:none;margin-top:8px;">
-      <div class="frow">
-        <label class="flbl">Nombre visible en pantalla</label>
-        <input class="finput" id="nameInp" placeholder="Ej: SUNG JIN-WOO" onkeydown="if(event.key==='Enter')saveName()">
-      </div>
-      <div style="display:flex;gap:6px;margin-top:4px;">
-        <button class="fabtn" style="flex:1" onclick="saveName()">✓ GUARDAR NOMBRE</button>
-        <button class="fabtn" style="flex:1;border-color:rgba(0,100,200,0.3);color:var(--muted);" onclick="toggleNameForm()">✕ CANCELAR</button>
-      </div>
-    </div>
 
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">RANGOS XP</span><span class="txt-full">CONFIGURAR RANGOS (XP)</span></span><div class="sline"></div></div>
-    <div class="aform">
-      <div class="tip-block">
-        <span class="tip-base">Ajusta cuánto XP otorga cada rango de misión.</span>
-        <button class="tip-toggle" onclick="tipToggle(this)">ⓘ ¿QUÉ ES CADA RANGO?</button>
-        <div class="tip-detail">Los rangos van de D (fácil) a S (épico). Al crear una misión le asignas un rango, y ese rango determina cuántos XP ganas al completarla. Por defecto: D=15, C=30, B=50, A=80, S=120. Puedes ajustarlos aquí para que el juego se adapte a tu ritmo.</div>
-      </div>
-      <div class="rank-cfg-grid">
-        <div class="rank-box"><div class="rank-box-lbl rd" style="color:var(--d)">D</div><input class="rank-inp" id="xp-D" type="number" min="1"></div>
-        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--c)">C</div><input class="rank-inp" id="xp-C" type="number" min="1"></div>
-        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--b)">B</div><input class="rank-inp" id="xp-B" type="number" min="1"></div>
-        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--a)">A</div><input class="rank-inp" id="xp-A" type="number" min="1"></div>
-        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--s)">S</div><input class="rank-inp" id="xp-S" type="number" min="1"></div>
-      </div>
-      <button class="fabtn" style="margin-top:10px" onclick="saveRanks()"><span class="txt-short">✓ GUARDAR</span><span class="txt-full">GUARDAR RANGOS</span></button>
-    </div>
 
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">AÑADIR MISIÓN</span><span class="txt-full">AÑADIR MISIÓN AL BANCO</span></span><div class="sline"></div></div>
     <div class="aform">
@@ -519,7 +493,39 @@
       <button class="fabtn" style="margin-top:6px;" onclick="S.achievements=defaultAchievements();save();notif('LOGROS RESTAURADOS');">↺ RESTAURAR LOGROS ORIGINALES</button>
     </div>
 
-    <div class="shdr"><div class="sline"></div><span class="stitle">◈ ZONA DE PELIGRO</span><div class="sline"></div></div>
+
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ PERFIL DE CAZADOR</span><div class="sline"></div></div>
+    <button class="fabtn" onclick="toggleNameForm()" id="nameToggleBtn"><span class="txt-short">✏ NOMBRE</span><span class="txt-full">✏ CAMBIAR NOMBRE</span></button>
+    <div class="aform" id="nameFormBox" style="display:none;margin-top:8px;">
+      <div class="frow">
+        <label class="flbl">Nombre visible en pantalla</label>
+        <input class="finput" id="nameInp" placeholder="Ej: SUNG JIN-WOO" onkeydown="if(event.key==='Enter')saveName()">
+      </div>
+      <div style="display:flex;gap:6px;margin-top:4px;">
+        <button class="fabtn" style="flex:1" onclick="saveName()">✓ GUARDAR NOMBRE</button>
+        <button class="fabtn" style="flex:1;border-color:rgba(0,100,200,0.3);color:var(--muted);" onclick="toggleNameForm()">✕ CANCELAR</button>
+      </div>
+    </div>
+
+    <div class="shdr"><div class="sline"></div><span class="stitle">◈ <span class="txt-short">RANGOS XP</span><span class="txt-full">CONFIGURAR RANGOS (XP)</span></span><div class="sline"></div></div>
+    <div class="aform">
+      <div class="tip-block">
+        <span class="tip-base">Ajusta cuánto XP otorga cada rango de misión.</span>
+        <button class="tip-toggle" onclick="tipToggle(this)">ⓘ ¿QUÉ ES CADA RANGO?</button>
+        <div class="tip-detail">Los rangos van de D (fácil) a S (épico). Al crear una misión le asignas un rango, y ese rango determina cuántos XP ganas al completarla. Por defecto: D=15, C=30, B=50, A=80, S=120. Puedes ajustarlos aquí para que el juego se adapte a tu ritmo.</div>
+      </div>
+      <div class="rank-cfg-grid">
+        <div class="rank-box"><div class="rank-box-lbl rd" style="color:var(--d)">D</div><input class="rank-inp" id="xp-D" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--c)">C</div><input class="rank-inp" id="xp-C" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--b)">B</div><input class="rank-inp" id="xp-B" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--a)">A</div><input class="rank-inp" id="xp-A" type="number" min="1"></div>
+        <div class="rank-box"><div class="rank-box-lbl" style="color:var(--s)">S</div><input class="rank-inp" id="xp-S" type="number" min="1"></div>
+      </div>
+      <button class="fabtn" style="margin-top:10px" onclick="saveRanks()"><span class="txt-short">✓ GUARDAR</span><span class="txt-full">GUARDAR RANGOS</span></button>
+    </div>
+
+        <div class="shdr"><div class="sline"></div><span class="stitle">◈ ZONA DE PELIGRO</span><div class="sline"></div></div>
     <button class="fabtn red" style="width:100%" onclick="resetAll()">⚠ REINICIAR TODO EL SISTEMA</button>
     <div class="tip-block" style="text-align:center;margin-top:8px;">
       <span class="tip-base" style="font-size:calc(10px * var(--fs-scale));">Esto borrará todo tu progreso permanentemente.</span>

@@ -29,28 +29,15 @@ let _libEditId   = null;    // id del libro en edición (null = nuevo)
 const BOOK_EMOJIS = ['📚','📖','📕','📗','📘','📙','📔','📒','📓','🔮','⚔️','🧬','🎭','🗺️','🔭','🧪','🎨','🧠','⚡','🌌'];
 
 // ── Categorías de libro ────────────────────────────────────────────────────
-const BOOK_CATS_BASE = {
+const BOOK_CATS = {
   ficcion:    '🗡️ Ficción',
   noFiccion:  '📊 No Ficción',
   ciencia:    '🔬 Ciencia',
   historia:   '🏛️ Historia',
   desarrollo: '🧠 Desarrollo',
   filosofia:  '☯️ Filosofía',
-  arte:       '🎨 Arte',
-  tecnologia: '💻 Tecnología',
-  economia:   '💰 Economía',
-  psicologia: '🧩 Psicología',
-  politica:   '⚖️ Política',
-  viajes:     '✈️ Viajes',
-  salud:      '🏥 Salud',
-  biografia:  '👤 Biografía',
-  religion:   '🕌 Religión / Espiritualidad',
-  derecho:    '📜 Derecho',
-  educacion:  '🎓 Educación',
   otro:       '📂 Otro',
 };
-// Devuelve categorías base + personalizadas del usuario (S.customCats)
-function libGetCats(){ return Object.assign({}, BOOK_CATS_BASE, S.customCats||{}); }
 
 // ── Logros de lectura (independientes de logros de misiones) ───────────────
 function libDefaultAchievements(){
@@ -128,8 +115,6 @@ function libEnsureState(){
                             S.libAchievements    = libDefaultAchievements();
   if(!S.libAchievCompleted) S.libAchievCompleted = {};
   if(!S.nBid)               S.nBid               = 1;
-  if(!S.customCats)         S.customCats         = {};
-  // bookOfMonth: id del libro marcado como objetivo del mes
 }
 
 // ── Evaluación de logro de lectura ────────────────────────────────────────
@@ -236,22 +221,19 @@ function renderLibReadingPace(){
       <div class="lib-pace-row">
         <div class="lib-pace-stat">
           <span class="lib-pace-num">${p.pDay>0?p.pDay:'—'}</span>
-          <span class="lib-pace-lbl">páginas por día</span>
-          <span class="lib-pace-sub">ritmo promedio</span>
+          <span class="lib-pace-lbl">pág/día</span>
         </div>
         <div class="lib-pace-stat">
           <span class="lib-pace-num">${p.projW||'—'}</span>
-          <span class="lib-pace-lbl">páginas en 7 días</span>
-          <span class="lib-pace-sub">si mantienes el ritmo</span>
+          <span class="lib-pace-lbl">proyección 7 días</span>
         </div>
         <div class="lib-pace-stat">
           <span class="lib-pace-num">${p.projM||'—'}</span>
-          <span class="lib-pace-lbl">páginas en 30 días</span>
-          <span class="lib-pace-sub">si mantienes el ritmo</span>
+          <span class="lib-pace-lbl">proyección 30 días</span>
         </div>
       </div>
       ${etaHtml}
-      <div class="lib-pace-note">Calculado con libros terminados en los últimos 30 días</div>
+      <div class="lib-pace-note">Basado en libros completados los últimos 30 días</div>
     </div>`;
 }
 
@@ -290,105 +272,6 @@ function libStatusLabel(status){
 function libStatusIcon(status){
   const map = { reading:'📖', done:'✅', wishlist:'🔖', paused:'⏸️' };
   return map[status] || '📚';
-}
-
-// ══════════════════════════════════════════════════════
-// LIBRO DEL MES
-// ══════════════════════════════════════════════════════
-function libSetBookOfMonth(id){
-  // Toggle: si ya era el mismo, lo deselecciona
-  libEnsureState();
-  S.bookOfMonth = (S.bookOfMonth === id) ? null : id;
-  save();
-  renderBiblioteca();
-  renderLibBookOfMonth();
-}
-
-// Widget para el dashboard (tab misiones)
-function renderLibBookOfMonth(){
-  const el = document.getElementById('bookOfMonthWidget');
-  if(!el) return;
-  libEnsureState();
-
-  // ── Libros terminados este mes natural ──────────────
-  const now  = new Date();
-  const ym   = now.getFullYear()*100 + now.getMonth();
-  const daysLeft = Math.ceil((new Date(now.getFullYear(), now.getMonth()+1, 1) - now) / 86400000);
-  const doneThisMonth = (S.books||[]).filter(b=>{
-    if(b.status!=='done'||!b.finishedAt) return false;
-    const d = new Date(b.finishedAt);
-    return d.getFullYear()*100 + d.getMonth() === ym;
-  });
-  const count = doneThisMonth.length;
-
-  // ── Nivel de logro mensual ───────────────────────────
-  // 1 libro = normal, 2 = bronce, 3 = plata, 5+ = oro
-  const BADGES = [
-    { min:5, ico:'🏆', lbl:'¡IMPARABLE!',      cls:'gold'   },
-    { min:3, ico:'🌪️', lbl:'¡TORBELLINO!',     cls:'silver' },
-    { min:2, ico:'⚡', lbl:'¡SPRINT LITERARIO!',cls:'bronze' },
-    { min:1, ico:'📖', lbl:'EN RACHA',          cls:'base'   },
-  ];
-  const badge = count ? BADGES.find(b=>count>=b.min) : null;
-
-  // ── Widget libro del mes (objetivo marcado) ──────────
-  const b = S.bookOfMonth ? (S.books||[]).find(x=>x.id===S.bookOfMonth) : null;
-  const pct = b ? (b.progress||0) : 0;
-  const cover = b ? (b.coverUrl
-    ? `<img src="${escH(b.coverUrl)}" class="bom-cover-img" alt=""
-           onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-       <span class="bom-cover-emoji" style="display:none">${b.ico||'📚'}</span>`
-    : `<span class="bom-cover-emoji">${b.ico||'📚'}</span>`) : '';
-
-  // ── Medalla lateral del BOM ──────────────────────────
-  const bomMedal = pct>=100
-    ? `<div class="bom-medal bom-medal-done">
-         <div class="bom-medal-ico">🏅</div>
-         <div class="bom-medal-lbl">LEÍDO</div>
-         ${count ? `<div class="bom-medal-sep"></div>
-         <div class="bom-medal-count-ico">${badge?badge.ico:'📚'}</div>
-         <div class="bom-medal-count-txt">${count} LEÍDO${count>1?'S':''}<br>ESTE MES</div>` : ''}
-       </div>`
-    : `<div class="bom-medal">
-         <div class="bom-medal-ring">
-           <svg viewBox="0 0 44 44" class="bom-medal-svg">
-             <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(0,100,200,0.2)" stroke-width="3"/>
-             <circle cx="22" cy="22" r="18" fill="none" stroke="#f0c040" stroke-width="3"
-               stroke-dasharray="${Math.round(113*pct/100)} 113"
-               stroke-linecap="round"
-               transform="rotate(-90 22 22)"/>
-           </svg>
-           <div class="bom-medal-num">${pct}<span class="bom-medal-sym">%</span></div>
-         </div>
-         <div class="bom-medal-lbl">${daysLeft}d REST.</div>
-         ${count ? `<div class="bom-medal-sep"></div>
-         <div class="bom-medal-count-ico">${badge?badge.ico:'📚'}</div>
-         <div class="bom-medal-count-txt">${count} LEÍDO${count>1?'S':''}<br>ESTE MES</div>` : ''}
-       </div>`;
-
-  const bomHtml = b ? `
-    <div class="bom-widget">
-      <div class="bom-label">◈ LIBRO DEL MES</div>
-      <div class="bom-body">
-        <div class="bom-cover">${cover}</div>
-        <div class="bom-info">
-          <div class="bom-title">${escH(b.title||'Sin título')}</div>
-          <div class="bom-author">${escH(b.author||'')}</div>
-          <div class="bom-bar-wrap"><div class="bom-bar-fill" style="width:${pct}%"></div></div>
-          <div class="bom-stats">
-            <span class="bom-pct">${pct}%</span>
-            ${b.pages?`<span class="bom-pages">· ${Math.round(b.pages*pct/100)} / ${b.pages} pág</span>`:''}
-            <span class="bom-days">· ${daysLeft}d restantes</span>
-          </div>
-          ${pct>=100
-            ? `<div class="bom-done">✓ ¡COMPLETADO ESTE MES!</div>`
-            : `<button class="bom-cta" onclick="switchTab('biblioteca')">→ Actualizar progreso</button>`}
-        </div>
-        ${bomMedal}
-      </div>
-    </div>` : '';
-
-  el.innerHTML = bomHtml;
 }
 
 // ══════════════════════════════════════════════════════
@@ -484,13 +367,7 @@ function renderLibCurrentHero(b){
   const pct = b.progress||0;
   return `
     <div class="lib-current-hero" onclick="openBookModal('${escH(b.id)}')">
-      <div class="lib-current-hero-ico">
-        ${b.coverUrl
-          ? `<img src="${escH(b.coverUrl)}" alt="" loading="lazy" class="lib-hero-img"
-               onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-             <span style="display:none">${b.ico||'📖'}</span>`
-          : b.ico||'📖'}
-      </div>
+      <div class="lib-current-hero-ico">${b.ico||'📖'}</div>
       <div class="lib-current-hero-body">
         <div class="lib-current-lbl">▸ LEYENDO AHORA</div>
         <div class="lib-current-title">${escH(b.title||'Sin título')}</div>
@@ -503,9 +380,6 @@ function renderLibCurrentHero(b){
       <div class="lib-current-actions" onclick="event.stopPropagation()">
         <button class="lib-prog-btn" onclick="libQuickProgress('${escH(b.id)}',10)">+10%</button>
         <button class="lib-prog-btn" onclick="libMarkDone('${escH(b.id)}')">✓ FIN</button>
-        <button class="lib-prog-btn${S.bookOfMonth===b.id?' bom-active':''}"
-                onclick="libSetBookOfMonth('${escH(b.id)}')"
-                title="Libro del mes">${S.bookOfMonth===b.id?'★':'☆'} MES</button>
       </div>
     </div>`;
 }
@@ -518,14 +392,8 @@ function renderLibGridCard(b){
     <div class="bcard ${b.status}" onclick="openBookModal('${escH(b.id)}')">
       <div class="bcard-cover">
         <div class="bcard-cover-stripe" style="background:${color}"></div>
-        ${b.coverUrl
-          ? `<img src="${escH(b.coverUrl)}" alt="" loading="lazy" class="bcard-cover-img"
-               onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-             <div class="bcard-cover-emoji" style="display:none">${b.ico||'📚'}</div>`
-          : `<div class="bcard-cover-emoji">${b.ico||'📚'}</div>`}
+        <div class="bcard-cover-emoji">${b.ico||'📚'}</div>
         <div class="bcard-cover-status">${libStatusIcon(b.status)}</div>
-        ${b.status==='done'?`<div class="bcard-medal">✓ LEÍDO</div>`:''}
-        ${b.status==='reading'?`<div class="bcard-reading-badge">${pct}%</div>`:''}
         <div class="bcard-progress-bar">
           <div class="bcard-progress-fill" style="width:${pct}%"></div>
         </div>
@@ -533,11 +401,7 @@ function renderLibGridCard(b){
       <div class="bcard-info">
         <div class="bcard-title">${escH(b.title||'Sin título')}</div>
         <div class="bcard-author">${escH(b.author||'')}</div>
-        <button class="bcard-bom-btn${S.bookOfMonth===b.id?' active':''}"
-                onclick="event.stopPropagation();libSetBookOfMonth('${escH(b.id)}')"
-                title="${S.bookOfMonth===b.id?'Quitar como libro del mes':'Marcar como libro del mes'}">
-          ${S.bookOfMonth===b.id?'★ MES':'☆ MES'}
-        </button>
+        <div class="bcard-pct">${b.status==='done'?'✓ LEÍDO':b.status==='wishlist'?'🔖':pct+'%'}</div>
       </div>
     </div>`;
 }
@@ -548,16 +412,10 @@ function renderLibListCard(b){
   const color = libStatusColor(b.status);
   return `
     <div class="bcard-list ${b.status}" onclick="openBookModal('${escH(b.id)}')">
-      <div class="bcard-list-ico">
-        ${b.coverUrl
-          ? `<img src="${escH(b.coverUrl)}" alt="" loading="lazy" class="bcard-list-img"
-               onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-             <span style="display:none">${b.ico||'📚'}</span>`
-          : b.ico||'📚'}
-      </div>
+      <div class="bcard-list-ico">${b.ico||'📚'}</div>
       <div class="bcard-list-body">
         <div class="bcard-list-title">${escH(b.title||'Sin título')}</div>
-        <div class="bcard-list-meta">${escH(b.author||'')}${b.cat&&libGetCats()[b.cat]?' · '+libGetCats()[b.cat]:''}</div>
+        <div class="bcard-list-meta">${escH(b.author||'')}${b.cat&&BOOK_CATS[b.cat]?' · '+BOOK_CATS[b.cat]:''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
         <div>
@@ -579,7 +437,7 @@ function _libAchievCard(a){
   const prog = getLibAchievProgress(a);
   const pct  = Math.min(100, Math.round((prog.cur/prog.max)*100));
   const xpR  = a.target>=50 ? 80 : a.target>=20 ? 50 : a.target>=10 ? 30 : a.target>=5 ? 20 : 10;
-  return `<div class="lib-achiev-card${done?' done':''}" onclick="libShowAchievDetail('${a.id}')">
+  return `<div class="lib-achiev-card${done?' done':''}">
     <div class="lib-achiev-ico">${done?a.ico:'🔒'}</div>
     <div class="lib-achiev-name">${escH(a.name)}</div>
     <div class="lib-achiev-desc" style="font-size:calc(9px * var(--fs-scale));color:var(--muted);margin-bottom:4px;line-height:1.3;">${escH(a.desc)}</div>
@@ -609,40 +467,6 @@ function renderLibAchievements(){
     ${!_libAchievExpanded&&unlocked===0?`<div style="text-align:center;color:var(--muted);font-size:calc(10px * var(--fs-scale));padding:12px;">Completa libros para desbloquear logros 🔒</div>`:''}`;
 }
 
-// ── Detalle de logro (overlay al click) ──────────────────────────────────
-function libShowAchievDetail(id){
-  libEnsureState();
-  const a = S.libAchievements.find(x=>x.id===id);
-  if(!a) return;
-  const done = evalLibAchievement(a);
-  const prog = getLibAchievProgress(a);
-  const pct  = Math.min(100, Math.round((prog.cur/prog.max)*100));
-  const xpR  = a.target>=50?80:a.target>=20?50:a.target>=10?30:a.target>=5?20:10;
-  // Reutilizar overlay o crearlo
-  let ov = document.getElementById('libAchievOverlay');
-  if(!ov){
-    ov = document.createElement('div');
-    ov.id = 'libAchievOverlay';
-    ov.onclick = e=>{ if(e.target===ov) ov.classList.remove('show'); };
-    document.body.appendChild(ov);
-  }
-  ov.innerHTML = `
-    <div class="lib-achiev-detail-box">
-      <div class="lib-achiev-detail-ico">${done?a.ico:'🔒'}</div>
-      <div class="lib-achiev-detail-name">${escH(a.name)}</div>
-      <div class="lib-achiev-detail-desc">${escH(a.desc)}</div>
-      <div class="lib-achiev-detail-pbar">
-        <div class="lib-achiev-detail-pfill" style="width:${pct}%"></div>
-      </div>
-      <div class="lib-achiev-detail-prog">${prog.cur} / ${prog.max}</div>
-      <div class="lib-achiev-detail-xp" style="color:${done?'#f0c040':'var(--muted)'}">
-        ${done?'✓ DESBLOQUEADO · +'+xpR+' XP ganados':'⭐ +'+xpR+' XP al desbloquear'}
-      </div>
-      <button class="lib-achiev-detail-close" onclick="document.getElementById('libAchievOverlay').classList.remove('show')">CERRAR</button>
-    </div>`;
-  ov.classList.add('show');
-}
-
 // ══════════════════════════════════════════════════════
 // MODAL HTML (renderizado en el tab, no fuera)
 // ══════════════════════════════════════════════════════
@@ -653,19 +477,11 @@ function renderLibModalHTML(){
       <div class="lib-modal-title" id="libModalTitle">◈ AÑADIR LIBRO</div>
 
       <div class="lib-modal-row">
-        <span class="lib-modal-lbl">Portada</span>
+        <span class="lib-modal-lbl">Portada (emoji)</span>
         <div class="lib-modal-emoji-row" id="libEmojiRow">
           ${BOOK_EMOJIS.map(e=>`<span class="lib-emoji-opt" onclick="libSelectEmoji('${e}')">${e}</span>`).join('')}
         </div>
         <input type="hidden" id="libIco" value="📚">
-        <input class="lib-modal-inp" id="libCoverUrl" type="url"
-               placeholder="URL de portada (opcional) — pegar link de imagen"
-               style="margin-top:6px;font-size:calc(9px * var(--fs-scale));"
-               oninput="libPreviewCover(this.value)">
-        <div id="libCoverPreview" style="display:none;margin-top:6px;text-align:center;">
-          <img id="libCoverImg" src="" alt="portada"
-               style="max-height:90px;max-width:70px;object-fit:cover;border:1px solid rgba(0,170,255,0.3);">
-        </div>
       </div>
 
       <div class="lib-modal-row">
@@ -690,14 +506,9 @@ function renderLibModalHTML(){
         </div>
         <div class="lib-modal-row" style="flex:1">
           <span class="lib-modal-lbl">Categoría</span>
-          <select class="lib-modal-sel" id="libCat" onchange="libCatSelectChange()">
-            ${Object.entries(libGetCats()).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}
-            <option value="__new__">＋ Nueva categoría…</option>
+          <select class="lib-modal-sel" id="libCat">
+            ${Object.entries(BOOK_CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}
           </select>
-          <div id="libNewCatRow" style="display:none;margin-top:6px;gap:6px;display:none;flex-direction:row;">
-            <input class="lib-modal-inp" id="libNewCatEmoji" placeholder="emoji" maxlength="4" style="width:48px;text-align:center;">
-            <input class="lib-modal-inp" id="libNewCatName" placeholder="Nombre categoría" style="flex:1;">
-          </div>
         </div>
       </div>
 
@@ -755,28 +566,6 @@ function libSelectEmoji(e){
     el.classList.toggle('selected', el.textContent===e);
   });
 }
-// ── Portada: helper render y preview ─────────────────────────────────────
-// Devuelve HTML de portada: img si hay URL, emoji si no
-function _libCover(b, size){
-  // size: 'hero' | 'grid' | 'list'
-  if(b.coverUrl){
-    const s = size==='hero'?'70px':size==='grid'?'100%':'40px';
-    const h = size==='hero'?'90px':size==='grid'?'100%':'52px';
-    return `<img src="${escH(b.coverUrl)}" alt="" loading="lazy"
-             style="width:${s};height:${h};object-fit:cover;display:block;"
-             onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-            <span style="display:none">${b.ico||'📚'}</span>`;
-  }
-  return b.ico||'📚';
-}
-function libPreviewCover(url){
-  const prev = document.getElementById('libCoverPreview');
-  const img  = document.getElementById('libCoverImg');
-  if(!prev||!img) return;
-  if(url){ img.src=url; prev.style.display='block'; }
-  else   { prev.style.display='none'; img.src=''; }
-}
-
 // Sincroniza slider ↔ página actual ↔ porcentaje
 function libSyncProgress(src){
   const sliderEl  = document.getElementById('libProgress');
@@ -857,8 +646,6 @@ function openBookModal(id){
     document.querySelectorAll('.lib-emoji-opt').forEach(el=>
       el.classList.toggle('selected', el.textContent===ico)
     );
-    const urlEl = document.getElementById('libCoverUrl');
-    if(urlEl){ urlEl.value = b.coverUrl||''; libPreviewCover(b.coverUrl||''); }
   } else {
     titleEl.textContent = '◈ AÑADIR LIBRO';
     delBtn.style.display='none';
@@ -875,8 +662,6 @@ function openBookModal(id){
     document.getElementById('libIco').value = '📚';
     document.querySelectorAll('.lib-emoji-opt').forEach(el=>el.classList.remove('selected'));
     document.querySelector('.lib-emoji-opt')?.classList.add('selected');
-    const urlEl2 = document.getElementById('libCoverUrl');
-    if(urlEl2){ urlEl2.value=''; libPreviewCover(''); }
   }
   libModalStatusChange();
   modal.classList.add('show');
@@ -888,28 +673,6 @@ function closeLibModal(){
   _libEditId = null;
 }
 
-// ── Categorías personalizadas ─────────────────────────────────────────────
-function libCatSelectChange(){
-  const sel = document.getElementById('libCat');
-  const row = document.getElementById('libNewCatRow');
-  if(!sel||!row) return;
-  row.style.display = sel.value==='__new__' ? 'flex' : 'none';
-}
-function _libSaveCustomCat(){
-  // Guarda nueva cat si el select está en __new__, devuelve key guardada o null
-  libEnsureState();
-  const sel  = document.getElementById('libCat');
-  if(!sel||sel.value!=='__new__') return null;
-  const emoji= (document.getElementById('libNewCatEmoji')?.value||'📂').trim();
-  const name = (document.getElementById('libNewCatName')?.value||'').trim();
-  if(!name){ notif('⚠ Escribe un nombre para la categoría'); return null; }
-  const key  = 'c_'+name.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,16)||('c'+Date.now());
-  if(!S.customCats) S.customCats = {};
-  S.customCats[key] = emoji+' '+name;
-  save();
-  return key;
-}
-
 function saveBook(){
   libEnsureState();
   const title  = (document.getElementById('libTitle').value||'').trim();
@@ -917,21 +680,18 @@ function saveBook(){
 
   const author = (document.getElementById('libAuthor').value||'').trim();
   const status = document.getElementById('libStatus').value;
-  const _catRaw = document.getElementById('libCat').value;
-  const cat    = _catRaw==='__new__' ? (_libSaveCustomCat()||'otro') : _catRaw;
-  if(_catRaw==='__new__' && cat==='otro') return; // validación falló
+  const cat    = document.getElementById('libCat').value;
   const pages  = parseInt(document.getElementById('libPages').value)||0;
   const notes  = (document.getElementById('libNotes').value||'').trim();
   const progress= parseInt(document.getElementById('libProgress').value)||0;
-  const ico      = document.getElementById('libIco').value||'📚';
-  const coverUrl = (document.getElementById('libCoverUrl')?.value||'').trim();
+  const ico    = document.getElementById('libIco').value||'📚';
 
   if(_libEditId){
     const idx = S.books.findIndex(b=>b.id===_libEditId);
     if(idx<0) return;
     const prev = S.books[idx];
     const prevProg = prev.progress||0;
-    S.books[idx] = {...prev, title, author, status, cat, pages, notes, progress, ico, coverUrl,
+    S.books[idx] = {...prev, title, author, status, cat, pages, notes, progress, ico,
       finishedAt: status==='done'&&prev.status!=='done' ? localISO() : (prev.finishedAt||null)
     };
     // XP: libro recién terminado
@@ -958,7 +718,7 @@ function saveBook(){
   } else {
     const id = 'b'+S.nBid;
     S.nBid++;
-    S.books.push({ id, title, author, status, cat, pages, notes, progress, ico, coverUrl,
+    S.books.push({ id, title, author, status, cat, pages, notes, progress, ico,
       addedAt: localISO(), finishedAt: status==='done'?localISO():null });
     // XP: añadir libro
     gainXP(40);

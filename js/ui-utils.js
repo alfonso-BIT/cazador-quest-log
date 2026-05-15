@@ -127,7 +127,7 @@ function switchTab(tab){
     if(match) btn.classList.toggle('active-tab', match[1]===tab);
   });
   // Render each tab on demand
-  if(tab==='missions')   renderAllQuests();
+  if(tab==='missions'){  renderAllQuests(); renderLibBookOfMonth(); }
   if(tab==='shop')       renderShop();
   if(tab==='inventory')  renderInventory();
   if(tab==='perfil')     renderPerfil();
