@@ -417,3 +417,103 @@ html,body{min-height:100vh;background:#020810;color:#c8e6ff;font-family:'Rajdhan
   animation: itemRemoved 0.45s ease-out forwards;
   pointer-events: none;
 }
+
+/* ═══════════════════════════════════════════════════════
+   TOOLTIP MODAL GLOBAL
+   ═══════════════════════════════════════════════════════ */
+#tipModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,5,15,0.88);
+  z-index: 9000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  animation: tipModalIn .2s ease;
+}
+#tipModal.show { display: flex; }
+
+@keyframes tipModalIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.tip-modal-box {
+  background: #020c1e;
+  border: 1px solid rgba(0,170,255,0.45);
+  box-shadow: 0 0 60px rgba(0,100,200,0.25), 0 0 0 1px rgba(0,170,255,0.08);
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  animation: tipBoxIn .22s cubic-bezier(.2,.8,.3,1);
+}
+
+@keyframes tipBoxIn {
+  from { transform: translateY(16px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.tip-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid rgba(0,170,255,0.18);
+  background: rgba(0,20,60,0.6);
+}
+
+.tip-modal-icon {
+  font-family: sans-serif;
+  font-size: 18px;
+  color: var(--blue);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.tip-modal-title {
+  font-family: 'Orbitron', monospace;
+  font-size: calc(9px * var(--fs-scale));
+  color: var(--blue);
+  letter-spacing: 2px;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.tip-modal-close {
+  background: none;
+  border: 1px solid rgba(255,70,102,0.3);
+  color: rgba(255,70,102,0.7);
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .15s;
+}
+.tip-modal-close:hover {
+  background: rgba(255,70,102,0.12);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.tip-modal-body {
+  padding: 18px 18px 20px;
+  color: #8bb8d0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: calc(13px * var(--fs-scale));
+  line-height: 1.85;
+  border-left: 3px solid var(--blue);
+}
+
+.tip-modal-body strong {
+  font-weight: 700;
+}

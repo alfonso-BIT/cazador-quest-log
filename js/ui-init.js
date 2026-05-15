@@ -333,17 +333,56 @@ function importTemplates(){
 }
 
 // ═══════════════════════════════════════════════════════
-// TOOLTIP TOGGLE
+// TOOLTIP MODAL — abre modal flotante en lugar de expandir inline
 // ═══════════════════════════════════════════════════════
 function tipToggle(btn){
   const detail = btn.nextElementSibling;
   if(!detail || !detail.classList.contains('tip-detail')) return;
-  // Save original label on first interaction
-  if(!btn.dataset.label) btn.dataset.label = btn.textContent.trim();
-  const isOpen = detail.classList.contains('open');
-  detail.classList.toggle('open', !isOpen);
-  btn.textContent = isOpen ? btn.dataset.label : 'ⓘ CERRAR';
+
+  // Obtener título desde tip-base hermano anterior, o desde el botón
+  let title = '';
+  const block = btn.closest('.tip-block') || btn.parentElement;
+  if(block){
+    const base = block.querySelector('.tip-base');
+    if(base) title = base.textContent.trim();
+  }
+  if(!title){
+    if(!btn.dataset.label) btn.dataset.label = btn.textContent.trim();
+    title = btn.dataset.label;
+  }
+
+  // Abrir modal global con el contenido del tip-detail
+  const modal = document.getElementById('tipModal');
+  const titleEl = document.getElementById('tipModalTitle');
+  const bodyEl = document.getElementById('tipModalBody');
+  if(!modal || !bodyEl) return;
+
+  titleEl.textContent = title.toUpperCase();
+  bodyEl.innerHTML = detail.innerHTML;
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeTipModal(e){
+  const modal = document.getElementById('tipModal');
+  if(!modal) return;
+  // e puede venir del overlay (click en fondo) o undefined (botón X)
+  // Si vino del overlay, solo cerrar si el clic fue directo sobre él
+  if(e && e.target && e.target !== modal) return;
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// Cerrar modal con Escape
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
+    const modal = document.getElementById('tipModal');
+    if(modal && modal.classList.contains('show')){
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  }
+});
 
 // ═══════════════════════════════════════════════════════
 // DEVICE DETECTION — Responsive Adaptive UI

@@ -162,6 +162,7 @@
       <div class="pentitle">⚠ AVISO DEL SISTEMA</div>
       <div class="pentext">No completaste todas tus misiones mínimas ayer. El Sistema observa tu progreso, Cazador.</div>
     </div>
+    <div id="daily-section">
     <div class="shdr"><div class="sline"></div><span class="stitle">◈ MISIONES FIJAS HOY</span><div class="sline"></div></div>
     <div class="tip-block">
       <span class="tip-base">4 misiones mínimas de hoy, una por categoría.</span>
@@ -171,6 +172,7 @@
     <div id="mlist"></div>
     <div class="progtxt" id="progtxt">0 / 4 misiones mínimas completadas</div>
     <button class="claimbtn" id="claimbtn" onclick="claimDaily()" disabled><span class="txt-short">◈ RECLAMAR ◈</span><span class="txt-full">◈ RECLAMAR RECOMPENSA DIARIA ◈</span></button>
+    </div><!-- end daily-section -->
 
     <!-- BANCO DE MISIONES — expandible con botón + -->
     <div style="margin-top:16px;">
@@ -1085,6 +1087,19 @@
   <script src="js/ui-render.js"></script>
   <script src="js/ui-init.js"></script>
   <script src="js/biblioteca.js"></script>
+
+
+  <!-- TOOLTIP MODAL GLOBAL -->
+  <div id="tipModal" onclick="closeTipModal(event)">
+    <div class="tip-modal-box" onclick="event.stopPropagation()">
+      <div class="tip-modal-header">
+        <div class="tip-modal-icon">ⓘ</div>
+        <div class="tip-modal-title" id="tipModalTitle"></div>
+        <button class="tip-modal-close" onclick="closeTipModal()">✕</button>
+      </div>
+      <div class="tip-modal-body" id="tipModalBody"></div>
+    </div>
+  </div>
 
 </body>
 </html>

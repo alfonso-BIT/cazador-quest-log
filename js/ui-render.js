@@ -89,6 +89,13 @@ function renderDailyMissions(){
   const daily=getDailyMissions();
   const progtxt=document.getElementById('progtxt');
   const cb=document.getElementById('claimbtn');
+  const dailySection=document.getElementById('daily-section');
+
+  // Si todas completadas Y recompensa ya reclamada → ocultar sección de misiones diarias
+  const allDone=daily.length>0&&daily.every(m=>m.done);
+  const completed=allDone&&S.claimed;
+  if(dailySection) dailySection.style.display=completed?'none':'';
+
   if(!daily.length){
     el.innerHTML='<div style="text-align:center;color:var(--muted);padding:28px;font-size:calc(12px * var(--fs-scale));letter-spacing:2px;">SIN MISIONES — AÑADE EN CONFIGURAR</div>';
     if(progtxt) progtxt.textContent='0 / 0 misiones mínimas completadas';
@@ -98,7 +105,6 @@ function renderDailyMissions(){
   el.innerHTML=daily.map(m=>renderMissionCard(m,true)).join('');
   const done=daily.filter(m=>m.done).length;
   if(progtxt) progtxt.textContent=done+' / '+daily.length+' misiones mínimas completadas';
-  const allDone=daily.length>0&&daily.every(m=>m.done);
   if(cb){
     cb.disabled=!allDone||S.claimed;
     cb.textContent=S.claimed?'◈ RECOMPENSA YA RECLAMADA HOY ◈':'◈ RECLAMAR RECOMPENSA DIARIA ◈';
